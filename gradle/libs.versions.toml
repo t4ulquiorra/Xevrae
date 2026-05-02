@@ -180,7 +180,7 @@ commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 liquid-glass = { module = "io.github.kyant0:backdrop", version.ref = "liquid-glass" }
 liquid-glass-shape = { module = "io.github.kyant0:shapes", version.ref = "liquid-glass-shapes" }
 
-ffmpeg-kit-audio = { module = "io.github.-dev:ffmpeg-kit-audio", version.ref = "ffmpeg-kit-audio" }
+ffmpeg-kit-audio = { module = "io.github.maxrave-dev:ffmpeg-kit-audio", version.ref = "ffmpeg-kit-audio" }
 
 # KMP
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
