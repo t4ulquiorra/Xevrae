@@ -204,8 +204,8 @@ native-tray = { module = "io.github.kdroidfilter:composenativetray", version.ref
 vlcj = { module = "uk.co.caprica:vlcj", version.ref = "vlcj" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jnaPlatform" }
-nowplaying = { module = "org.xevrae:nowplayingcenter", version = "0.0.1" }
-jmtc = { module = "org.xevrae:jmtc", version = "0.0.1" }
+nowplaying = { module = "org.maxrave-dev:nowplayingcenter", version = "0.0.1" }
+jmtc = { module = "org.maxrave-dev:jmtc", version = "0.0.1" }
 
 #Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
