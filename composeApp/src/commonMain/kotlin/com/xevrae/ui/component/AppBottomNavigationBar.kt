@@ -170,8 +170,7 @@ fun AppNavigationRail(
                     contentDescription = null,
                     modifier =
                         Modifier
-                            .height(32.dp)
-                            .clip(CircleShape),
+                            .fillMaxSize()
                 )
             }
         }
