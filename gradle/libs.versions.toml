@@ -1,4 +1,6 @@
 [versions]
+protobuf = "3.25.3"
+protobufPlugin = "0.9.4"
 napier = "2.7.1"
 # App version
 version-name = "1.1.1"
@@ -87,6 +89,7 @@ commonsIo = "2.5"
 packagedeps = "0.2.5"
 
 [libraries]
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf" }
 napier-logging = { module = "io.github.aakira:napier", version.ref = "napier" }
 desugaring = { group = "com.android.tools", name = "desugar_jdk_libs_nio", version.ref = "desugaring"}
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -226,6 +229,7 @@ androidx-paging-common = { group = "androidx.paging", name = "paging-common", ve
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
