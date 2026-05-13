@@ -36,6 +36,7 @@ fun AppBottomNavigationBar(
     navController: NavController,
     isTranslucentBackground: Boolean = false,
     containerColor: androidx.compose.ui.graphics.Color? = null,
+    showLabels: Boolean = true,
     reloadDestinationIfNeeded: (KClass<*>) -> Unit = { _ -> },
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -111,7 +112,7 @@ fun AppBottomNavigationBar(
                             }
                         }
                     },
-                    label = {
+                    label = if (showLabels) {{
                         Text(
                             stringResource(screen.title),
                             style =
@@ -121,7 +122,7 @@ fun AppBottomNavigationBar(
                                     typo().bodySmall.greyScale()
                                 },
                         )
-                    },
+                    }} else null,
                     icon = screen.icon,
                     modifier =
                         Modifier.windowInsetsPadding(

@@ -324,7 +324,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
         mutableStateOf(false)
     }
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
-    val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE
+    val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } > 1.2f)
 
     val backdrop = rememberBackdrop()
 
@@ -451,12 +451,13 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                                     Modifier.fillMaxWidth()
                                             )
                                             .padding(horizontal = 4.dp)
-                                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
+                                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                                     ) {
                                         AppBottomNavigationBar(
                                             navController = navController,
                                             isTranslucentBackground = false,
                                             containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                            showLabels = false,
                                         ) { klass ->
                                             viewModel.reloadDestination(klass)
                                         }
