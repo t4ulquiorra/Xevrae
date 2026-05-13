@@ -398,13 +398,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     Row(
                         Modifier.fillMaxSize(),
                     ) {
-                        if (isTablet && !isInFullscreen) {
-                            AppNavigationRail(
-                                navController = navController,
-                            ) { klass ->
-                                viewModel.reloadDestination(klass)
-                            }
-                        }
+
                         Box(
                             Modifier
                                 .fillMaxSize()
@@ -438,43 +432,41 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     },
                                 )
                             }
-                            this@Row.AnimatedVisibility(
-                                modifier =
-                                    Modifier
+                            if (isTablet && isTabletLandscape && !isInFullscreen) {
+                                Row(
+                                    modifier = Modifier
                                         .padding(innerPadding)
+                                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                                        .height(56.dp)
                                         .align(Alignment.BottomCenter),
-                                visible = isShowMiniPlayer && isTablet && !isInFullscreen,
-                                enter = fadeIn() + slideInHorizontally(),
-                                exit = fadeOut(),
-                            ) {
-                                MiniPlayer(
-                                    if (getPlatform() == Platform.Android) {
-                                        Modifier
-                                            .height(56.dp)
-                                            .fillMaxWidth(0.8f)
-                                            .padding(
-                                                horizontal = 12.dp,
-                                            ).padding(
-                                                bottom = 4.dp,
-                                            )
-                                    } else {
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .height(84.dp)
-                                            .background(Color.Transparent)
-                                            .hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
-                                                blurEnabled = true
-                                            }
-                                    },
-                                    backdrop = backdrop,
-                                    onClick = {
-                                        isShowNowPlaylistScreen = true
-                                    },
-                                    onClose = {
-                                        viewModel.stopPlayer()
-                                        viewModel.isServiceRunning = false
-                                    },
-                                )
+                                ) {
+                                    AnimatedVisibility(
+                                        visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
+                                        enter = fadeIn() + slideInHorizontally(),
+                                        exit = fadeOut() + slideInHorizontally(),
+                                    ) {
+                                        MiniPlayer(
+                                            Modifier
+                                                .fillMaxHeight()
+                                                .fillMaxWidth(0.35f)
+                                                .padding(end = 8.dp),
+                                            backdrop = backdrop,
+                                            onClick = {
+                                                isShowNowPlaylistScreen = true
+                                            },
+                                            onClose = {
+                                                viewModel.stopPlayer()
+                                                viewModel.isServiceRunning = false
+                                            },
+                                        )
+                                    }
+                                    AppBottomNavigationBar(
+                                        navController = navController,
+                                        isTranslucentBackground = isTranslucentBottomBar == TRUE,
+                                    ) { klass ->
+                                        viewModel.reloadDestination(klass)
+                                    }
+                                }
                             }
                         }
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
