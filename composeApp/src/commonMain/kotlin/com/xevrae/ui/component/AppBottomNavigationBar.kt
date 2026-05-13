@@ -35,6 +35,7 @@ fun AppBottomNavigationBar(
     startDestination: Any = HomeDestination,
     navController: NavController,
     isTranslucentBackground: Boolean = false,
+    containerColor: androidx.compose.ui.graphics.Color? = null,
     reloadDestinationIfNeeded: (KClass<*>) -> Unit = { _ -> },
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -78,7 +79,7 @@ fun AppBottomNavigationBar(
         NavigationBar(
             windowInsets = WindowInsets(0, 0, 0, 0),
             containerColor =
-                if (isTranslucentBackground) {
+                containerColor ?: if (isTranslucentBackground) {
                     Color.Transparent
                 } else {
                     Color.Black

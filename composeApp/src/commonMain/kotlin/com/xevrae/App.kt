@@ -441,6 +441,13 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .height(56.dp)
                                         .align(Alignment.BottomCenter),
                                 ) {
+                                    AppBottomNavigationBar(
+                                        navController = navController,
+                                        isTranslucentBackground = false,
+                                        containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                    ) { klass ->
+                                        viewModel.reloadDestination(klass)
+                                    }
                                     AnimatedVisibility(
                                         visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
                                         enter = fadeIn() + slideInHorizontally(),
@@ -450,7 +457,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                             Modifier
                                                 .fillMaxHeight()
                                                 .fillMaxWidth(0.35f)
-                                                .padding(end = 8.dp),
+                                                .padding(start = 8.dp),
                                             backdrop = backdrop,
                                             onClick = {
                                                 isShowNowPlaylistScreen = true
@@ -460,12 +467,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                                 viewModel.isServiceRunning = false
                                             },
                                         )
-                                    }
-                                    AppBottomNavigationBar(
-                                        navController = navController,
-                                        isTranslucentBackground = isTranslucentBottomBar == TRUE,
-                                    ) { klass ->
-                                        viewModel.reloadDestination(klass)
                                     }
                                 }
                             }
