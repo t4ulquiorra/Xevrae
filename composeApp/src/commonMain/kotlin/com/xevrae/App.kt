@@ -441,12 +441,25 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .height(56.dp)
                                         .align(Alignment.BottomCenter),
                                 ) {
-                                    AppBottomNavigationBar(
-                                        navController = navController,
-                                        isTranslucentBackground = false,
-                                        containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
-                                    ) { klass ->
-                                        viewModel.reloadDestination(klass)
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .then(
+                                                if (isShowMiniPlayer && !isShowNowPlaylistScreen)
+                                                    Modifier.fillMaxWidth(0.65f)
+                                                else
+                                                    Modifier.fillMaxWidth()
+                                            )
+                                            .padding(horizontal = 4.dp)
+                                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
+                                    ) {
+                                        AppBottomNavigationBar(
+                                            navController = navController,
+                                            isTranslucentBackground = false,
+                                            containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                        ) { klass ->
+                                            viewModel.reloadDestination(klass)
+                                        }
                                     }
                                     AnimatedVisibility(
                                         visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
@@ -456,8 +469,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         MiniPlayer(
                                             Modifier
                                                 .fillMaxHeight()
-                                                .fillMaxWidth(0.35f)
-                                                .padding(start = 8.dp),
+                                                .fillMaxWidth()
+                                                .padding(start = 4.dp),
                                             backdrop = backdrop,
                                             onClick = {
                                                 isShowNowPlaylistScreen = true
