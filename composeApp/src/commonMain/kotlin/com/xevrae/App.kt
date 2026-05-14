@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -442,15 +443,19 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .height(56.dp)
                                         .align(Alignment.BottomCenter),
                                 ) {
+                                    val navBarFraction by animateFloatAsState(
+                                        targetValue = when {
+                                            isShowNowPlaylistScreen -> 0.97f
+                                            isShowMiniPlayer -> 0.65f
+                                            else -> 1f
+                                        },
+                                        animationSpec = tween(300),
+                                        label = "navBarFraction",
+                                    )
                                     Box(
                                         modifier = Modifier
                                             .fillMaxHeight()
-                                            .then(
-                                                if (isShowMiniPlayer && !isShowNowPlaylistScreen)
-                                                    Modifier.fillMaxWidth(0.65f)
-                                                else
-                                                    Modifier.fillMaxWidth()
-                                            )
+                                            .fillMaxWidth(navBarFraction)
                                             .padding(horizontal = 4.dp)
                                             .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                                     ) {
@@ -465,8 +470,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     }
                                     AnimatedVisibility(
                                         visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
-                                        enter = fadeIn(tween(300)) + expandHorizontally(tween(300)),
-                                        exit = fadeOut(tween(300)) + shrinkHorizontally(tween(300)),
+                                        enter = fadeIn() + slideInHorizontally(),
+                                        exit = fadeOut(),
                                     ) {
                                         MiniPlayer(
                                             Modifier
