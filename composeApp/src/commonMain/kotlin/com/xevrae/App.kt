@@ -464,8 +464,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     }
                                     AnimatedVisibility(
                                         visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
-                                        enter = fadeIn() + slideInHorizontally(),
-                                        exit = fadeOut() + slideOutHorizontally(),
+                                        enter = fadeIn(tween(300)) + expandHorizontally(tween(300)),
+                                        exit = fadeOut(tween(300)) + shrinkHorizontally(tween(300)),
                                     ) {
                                         MiniPlayer(
                                             Modifier

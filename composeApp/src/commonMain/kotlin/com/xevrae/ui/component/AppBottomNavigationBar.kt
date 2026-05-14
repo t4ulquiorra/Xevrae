@@ -124,10 +124,6 @@ fun AppBottomNavigationBar(
                         )
                     }} else null,
                     icon = screen.icon,
-                    modifier =
-                        Modifier.windowInsetsPadding(
-                            NavigationBarDefaults.windowInsets,
-                        ),
                 )
             }
         }
