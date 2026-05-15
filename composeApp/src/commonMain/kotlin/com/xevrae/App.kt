@@ -436,58 +436,48 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 )
                             }
                             if (isTablet && isTabletLandscape && !isInFullscreen) {
-                                Row(
+                                // Nav bar: always fixed at bottom-start, never resizes
+                                Box(
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                                        .padding(start = 16.dp, bottom = 8.dp)
                                         .height(56.dp)
-                                        .align(Alignment.BottomCenter),
+                                        .fillMaxWidth(0.62f)
+                                        .align(Alignment.BottomStart)
+                                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                                 ) {
-                                    val navBarFraction by animateFloatAsState(
-                                        targetValue = when {
-                                            isShowNowPlaylistScreen -> 0.97f
-                                            isShowMiniPlayer -> 0.65f
-                                            else -> 1f
+                                    AppBottomNavigationBar(
+                                        navController = navController,
+                                        isTranslucentBackground = false,
+                                        containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                        showLabels = false,
+                                    ) { klass ->
+                                        viewModel.reloadDestination(klass)
+                                    }
+                                }
+                                // Mini player: separate fixed element at bottom-end, never affects nav bar
+                                AnimatedVisibility(
+                                    modifier = Modifier
+                                        .padding(innerPadding)
+                                        .padding(end = 16.dp, bottom = 8.dp)
+                                        .height(56.dp)
+                                        .fillMaxWidth(0.36f)
+                                        .align(Alignment.BottomEnd),
+                                    visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
+                                    enter = fadeIn() + slideInHorizontally { it },
+                                    exit = fadeOut(),
+                                ) {
+                                    MiniPlayer(
+                                        Modifier.fillMaxSize(),
+                                        backdrop = backdrop,
+                                        onClick = {
+                                            isShowNowPlaylistScreen = true
                                         },
-                                        animationSpec = tween(300),
-                                        label = "navBarFraction",
+                                        onClose = {
+                                            viewModel.stopPlayer()
+                                            viewModel.isServiceRunning = false
+                                        },
                                     )
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .fillMaxWidth(navBarFraction)
-                                            .padding(horizontal = 4.dp)
-                                            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
-                                    ) {
-                                        AppBottomNavigationBar(
-                                            navController = navController,
-                                            isTranslucentBackground = false,
-                                            containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
-                                            showLabels = false,
-                                        ) { klass ->
-                                            viewModel.reloadDestination(klass)
-                                        }
-                                    }
-                                    AnimatedVisibility(
-                                        visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
-                                        enter = fadeIn() + slideInHorizontally(),
-                                        exit = fadeOut(),
-                                    ) {
-                                        MiniPlayer(
-                                            Modifier
-                                                .fillMaxHeight()
-                                                .fillMaxWidth()
-                                                .padding(start = 4.dp),
-                                            backdrop = backdrop,
-                                            onClick = {
-                                                isShowNowPlaylistScreen = true
-                                            },
-                                            onClose = {
-                                                viewModel.stopPlayer()
-                                                viewModel.isServiceRunning = false
-                                            },
-                                        )
-                                    }
                                 }
                             }
                         }
