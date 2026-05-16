@@ -456,28 +456,31 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     }
                                 }
                                 // Mini player: separate fixed element at bottom-end, never affects nav bar
-                                AnimatedVisibility(
+                                Box(
                                     modifier = Modifier
                                         .padding(innerPadding)
                                         .padding(end = 16.dp, bottom = 8.dp)
                                         .height(56.dp)
                                         .fillMaxWidth(0.36f)
                                         .align(Alignment.BottomEnd),
-                                    visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
-                                    enter = fadeIn() + slideInHorizontally { it },
-                                    exit = fadeOut(),
                                 ) {
-                                    MiniPlayer(
-                                        Modifier.fillMaxSize(),
-                                        backdrop = backdrop,
-                                        onClick = {
-                                            isShowNowPlaylistScreen = true
-                                        },
-                                        onClose = {
-                                            viewModel.stopPlayer()
-                                            viewModel.isServiceRunning = false
-                                        },
-                                    )
+                                    AnimatedVisibility(
+                                        visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
+                                        enter = fadeIn() + slideInHorizontally { it },
+                                        exit = fadeOut(),
+                                    ) {
+                                        MiniPlayer(
+                                            Modifier.fillMaxSize(),
+                                            backdrop = backdrop,
+                                            onClick = {
+                                                isShowNowPlaylistScreen = true
+                                            },
+                                            onClose = {
+                                                viewModel.stopPlayer()
+                                                viewModel.isServiceRunning = false
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
