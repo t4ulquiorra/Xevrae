@@ -195,6 +195,8 @@ import xevrae.composeapp.generated.resources.artists
 import xevrae.composeapp.generated.resources.baseline_fullscreen_24
 import xevrae.composeapp.generated.resources.baseline_more_vert_24
 import xevrae.composeapp.generated.resources.baseline_playlist_add_24
+import xevrae.composeapp.generated.resources.addtoqueue
+import xevrae.composeapp.generated.resources.queue
 import xevrae.composeapp.generated.resources.crossfading
 import xevrae.composeapp.generated.resources.description
 import xevrae.composeapp.generated.resources.downvote
@@ -1536,7 +1538,7 @@ fun NowPlayingScreenContent(
                                                 },
                                             ) {
                                                 Icon(
-                                                    painter = painterResource(Res.drawable.baseline_playlist_add_24),
+                                                    painter = painterResource(Res.drawable.addtoqueue),
                                                     tint = Color.White,
                                                     contentDescription = "Add to Playlist",
                                                 )
@@ -1554,7 +1556,7 @@ fun NowPlayingScreenContent(
                                                 },
                                             ) {
                                                 Icon(
-                                                    imageVector = Icons.AutoMirrored.Rounded.QueueMusic,
+                                                    painter = painterResource(Res.drawable.queue),
                                                     tint = Color.White,
                                                     contentDescription = "",
                                                 )

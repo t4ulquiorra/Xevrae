@@ -18,6 +18,13 @@ import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Shuffle
+import org.jetbrains.compose.resources.painterResource
+import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.shuffle_off
+import xevrae.composeapp.generated.resources.shuffle_on
+import xevrae.composeapp.generated.resources.repeat_off
+import xevrae.composeapp.generated.resources.repeat_all
+import xevrae.composeapp.generated.resources.repeat_one
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.Icon
@@ -70,14 +77,14 @@ fun PlayerControlLayout(
                 Crossfade(targetState = controllerState.isShuffle, label = "Shuffle Button") { isShuffle ->
                     if (!isShuffle) {
                         Icon(
-                            imageVector = Icons.Rounded.Shuffle,
+                            painter = painterResource(Res.drawable.shuffle_off),
                             tint = Color.White,
                             contentDescription = "",
                             modifier = Modifier.size(smallIcon.first),
                         )
                     } else {
                         Icon(
-                            imageVector = Icons.Rounded.Shuffle,
+                            painter = painterResource(Res.drawable.shuffle_on),
                             tint = seed,
                             contentDescription = "",
                             modifier = Modifier.size(smallIcon.first),
@@ -188,7 +195,7 @@ fun PlayerControlLayout(
                     when (rs) {
                         is RepeatState.None -> {
                             Icon(
-                                imageVector = Icons.Rounded.Repeat,
+                                painter = painterResource(Res.drawable.repeat_off),
                                 tint = Color.White,
                                 contentDescription = "",
                                 modifier = Modifier.size(smallIcon.first),
@@ -197,7 +204,7 @@ fun PlayerControlLayout(
 
                         RepeatState.All -> {
                             Icon(
-                                imageVector = Icons.Rounded.Repeat,
+                                painter = painterResource(Res.drawable.repeat_all),
                                 tint = seed,
                                 contentDescription = "",
                                 modifier = Modifier.size(smallIcon.first),
@@ -206,7 +213,7 @@ fun PlayerControlLayout(
 
                         RepeatState.One -> {
                             Icon(
-                                imageVector = Icons.Rounded.RepeatOne,
+                                painter = painterResource(Res.drawable.repeat_one),
                                 tint = seed,
                                 contentDescription = "",
                                 modifier = Modifier.size(smallIcon.first),
