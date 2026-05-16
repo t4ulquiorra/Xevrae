@@ -486,7 +486,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 label = "navBarFraction",
                             )
                             val navBarExtraPadding by animateFloatAsState(
-                                targetValue = if (isShowNowPlaylistScreen) 12f else 0f,
+                                targetValue = if (isShowNowPlaylistScreen) 24f else 0f,
                                 animationSpec = tween(300),
                                 label = "navBarExtraPadding",
                             )
