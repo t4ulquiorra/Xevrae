@@ -352,7 +352,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .padding(
                                             horizontal = 12.dp,
                                         ).padding(
-                                            bottom = 4.dp,
+                                            bottom = 8.dp,
                                         ),
                                     backdrop = backdrop,
                                     onClick = {
@@ -488,7 +488,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(start = 16.dp, bottom = 8.dp)
+                                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                                     .height(56.dp)
                                     .fillMaxWidth(navBarFraction)
                                     .align(Alignment.BottomStart)
