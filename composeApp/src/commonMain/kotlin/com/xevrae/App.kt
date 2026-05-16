@@ -464,7 +464,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .fillMaxWidth(0.36f)
                                         .align(Alignment.BottomEnd),
                                 ) {
-                                    AnimatedVisibility(
+                                    androidx.compose.animation.AnimatedVisibility(
                                         visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
                                         enter = fadeIn() + slideInHorizontally { it },
                                         exit = fadeOut(),
