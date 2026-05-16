@@ -1528,11 +1528,7 @@ fun NowPlayingScreenContent(
                                         ) {
                                             // NEW: Add to Playlist Button (Center-Right)
                                             IconButton(
-                                                modifier =
-                                                    Modifier
-                                                        .size(24.dp)
-                                                        .aspectRatio(1f)
-                                                        .clip(CircleShape),
+                                                modifier = Modifier.size(36.dp),
                                                 onClick = {
                                                     showAddToPlaylistDirectly = true
                                                 },
@@ -1541,16 +1537,13 @@ fun NowPlayingScreenContent(
                                                     painter = painterResource(Res.drawable.addtoqueue),
                                                     tint = Color.White,
                                                     contentDescription = "Add to Playlist",
+                                                    modifier = Modifier.size(16.dp),
                                                 )
                                             }
 
                                             // Queue Button (Right)
                                             IconButton(
-                                                modifier =
-                                                    Modifier
-                                                        .size(24.dp)
-                                                        .aspectRatio(1f)
-                                                        .clip(CircleShape),
+                                                modifier = Modifier.size(36.dp),
                                                 onClick = {
                                                     showQueueBottomSheet = true
                                                 },
@@ -1559,6 +1552,7 @@ fun NowPlayingScreenContent(
                                                     painter = painterResource(Res.drawable.queue),
                                                     tint = Color.White,
                                                     contentDescription = "",
+                                                    modifier = Modifier.size(16.dp),
                                                 )
                                             }
                                         }
