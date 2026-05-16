@@ -406,7 +406,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             Modifier
                                 .fillMaxSize()
                                 .weight(1f),
-                        ) {
+                        ) mainBox@{
                             Box(
                                 Modifier
                                     .fillMaxSize()
