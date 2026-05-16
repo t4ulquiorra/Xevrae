@@ -398,125 +398,135 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             },
                         ),
                 ) {
-                    Row(
+                    Box(
                         Modifier.fillMaxSize(),
                     ) {
-
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                        ) mainBox@{
+                        // Content area + now playing panel side by side
+                        Row(Modifier.fillMaxSize()) {
                             Box(
                                 Modifier
                                     .fillMaxSize()
-                                    .then(
-                                        if (isLiquidGlassEnabled == TRUE && isTablet && !isInFullscreen) {
-                                            Modifier.layerBackdrop(backdrop)
-                                        } else {
-                                            Modifier
-                                        },
-                                    ).hazeSource(hazeState),
+                                    .weight(1f),
                             ) {
-                                AppNavigationGraph(
-                                    innerPadding = innerPadding,
-                                    navController = navController,
-                                    hideNavBar = {
-                                        isNavBarVisible = false
-                                    },
-                                    showNavBar = {
-                                        isNavBarVisible = true
-                                    },
-                                    showNowPlayingSheet = {
-                                        isShowNowPlaylistScreen = true
-                                    },
-                                    onScrolling = {
-                                        isScrolledToTop = it
-                                    },
-                                )
+                                Box(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .then(
+                                            if (isLiquidGlassEnabled == TRUE && isTablet && !isInFullscreen) {
+                                                Modifier.layerBackdrop(backdrop)
+                                            } else {
+                                                Modifier
+                                            },
+                                        ).hazeSource(hazeState),
+                                ) {
+                                    AppNavigationGraph(
+                                        innerPadding = innerPadding,
+                                        navController = navController,
+                                        hideNavBar = {
+                                            isNavBarVisible = false
+                                        },
+                                        showNavBar = {
+                                            isNavBarVisible = true
+                                        },
+                                        showNowPlayingSheet = {
+                                            isShowNowPlaylistScreen = true
+                                        },
+                                        onScrolling = {
+                                            isScrolledToTop = it
+                                        },
+                                    )
+                                }
                             }
                             if (isTablet && isTabletLandscape && !isInFullscreen) {
-                                // Nav bar: always fixed at bottom-start, never resizes
-                                Box(
-                                    modifier = Modifier
-                                        .padding(innerPadding)
-                                        .padding(start = 16.dp, bottom = 8.dp)
-                                        .height(56.dp)
-                                        .fillMaxWidth(0.62f)
-                                        .align(Alignment.BottomStart)
-                                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                                AnimatedVisibility(
+                                    isShowNowPlaylistScreen,
+                                    enter = expandHorizontally() + fadeIn(),
+                                    exit = fadeOut() + shrinkHorizontally(),
                                 ) {
-                                    AppBottomNavigationBar(
-                                        navController = navController,
-                                        isTranslucentBackground = false,
-                                        containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
-                                        showLabels = false,
-                                    ) { klass ->
-                                        viewModel.reloadDestination(klass)
-                                    }
-                                }
-                                // Mini player: separate fixed element at bottom-end, never affects nav bar
-                                Box(
-                                    modifier = Modifier
-                                        .padding(innerPadding)
-                                        .padding(end = 16.dp, bottom = 8.dp)
-                                        .height(56.dp)
-                                        .fillMaxWidth(0.36f)
-                                        .align(Alignment.BottomEnd),
-                                ) {
-                                    androidx.compose.animation.AnimatedVisibility(
-                                        visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
-                                        enter = fadeIn() + slideInHorizontally { it },
-                                        exit = fadeOut(),
+                                    Row(
+                                        Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth(0.35f),
                                     ) {
-                                        MiniPlayer(
-                                            Modifier.fillMaxSize(),
-                                            backdrop = backdrop,
-                                            onClick = {
-                                                isShowNowPlaylistScreen = true
-                                            },
-                                            onClose = {
-                                                viewModel.stopPlayer()
-                                                viewModel.isServiceRunning = false
-                                            },
-                                        )
+                                        Spacer(Modifier.width(8.dp))
+                                        Box(
+                                            Modifier
+                                                .padding(
+                                                    innerPadding.copy(
+                                                        start = 0.dp,
+                                                        top = 0.dp,
+                                                        bottom = 0.dp,
+                                                    ),
+                                                ).clip(
+                                                    RoundedCornerShape(12.dp),
+                                                ),
+                                        ) {
+                                            NowPlayingScreenContent(
+                                                navController = navController,
+                                                sharedViewModel = viewModel,
+                                                isExpanded = true,
+                                                dismissIcon = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                                            ) {
+                                                isShowNowPlaylistScreen = false
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
+                        // Nav bar and mini player: overlaid on full screen, never affected by content layout
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
-                            AnimatedVisibility(
-                                isShowNowPlaylistScreen,
-                                enter = expandHorizontally() + fadeIn(),
-                                exit = fadeOut() + shrinkHorizontally(),
+                            val navBarFraction by animateFloatAsState(
+                                targetValue = when {
+                                    isShowNowPlaylistScreen -> 0.60f
+                                    isShowMiniPlayer -> 0.62f
+                                    else -> 1f
+                                },
+                                animationSpec = tween(300),
+                                label = "navBarFraction",
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .padding(innerPadding)
+                                    .padding(start = 16.dp, bottom = 8.dp)
+                                    .height(56.dp)
+                                    .fillMaxWidth(navBarFraction)
+                                    .align(Alignment.BottomStart)
+                                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                             ) {
-                                Row(
-                                    Modifier
-                                        .fillMaxHeight()
-                                        .fillMaxWidth(0.35f),
+                                AppBottomNavigationBar(
+                                    navController = navController,
+                                    isTranslucentBackground = false,
+                                    containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                    showLabels = false,
+                                ) { klass ->
+                                    viewModel.reloadDestination(klass)
+                                }
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .padding(innerPadding)
+                                    .padding(end = 16.dp, bottom = 8.dp)
+                                    .height(56.dp)
+                                    .fillMaxWidth(0.36f)
+                                    .align(Alignment.BottomEnd),
+                            ) {
+                                androidx.compose.animation.AnimatedVisibility(
+                                    visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
+                                    enter = fadeIn() + slideInHorizontally { it },
+                                    exit = fadeOut(),
                                 ) {
-                                    Spacer(Modifier.width(8.dp))
-                                    Box(
-                                        Modifier
-                                            .padding(
-                                                innerPadding.copy(
-                                                    start = 0.dp,
-                                                    top = 0.dp,
-                                                    bottom = 0.dp,
-                                                ),
-                                            ).clip(
-                                                RoundedCornerShape(12.dp),
-                                            ),
-                                    ) {
-                                        NowPlayingScreenContent(
-                                            navController = navController,
-                                            sharedViewModel = viewModel,
-                                            isExpanded = true,
-                                            dismissIcon = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                                        ) {
-                                            isShowNowPlaylistScreen = false
-                                        }
-                                    }
+                                    MiniPlayer(
+                                        Modifier.fillMaxSize(),
+                                        backdrop = backdrop,
+                                        onClick = {
+                                            isShowNowPlaylistScreen = true
+                                        },
+                                        onClose = {
+                                            viewModel.stopPlayer()
+                                            viewModel.isServiceRunning = false
+                                        },
+                                    )
                                 }
                             }
                         }
