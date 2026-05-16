@@ -485,10 +485,15 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 animationSpec = tween(300),
                                 label = "navBarFraction",
                             )
+                            val navBarExtraPadding by animateFloatAsState(
+                                targetValue = if (isShowNowPlaylistScreen) 12f else 0f,
+                                animationSpec = tween(300),
+                                label = "navBarExtraPadding",
+                            )
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                                    .padding(start = (16 + navBarExtraPadding).dp, end = (16 + navBarExtraPadding).dp, bottom = 8.dp)
                                     .height(56.dp)
                                     .fillMaxWidth(navBarFraction)
                                     .align(Alignment.BottomStart)
