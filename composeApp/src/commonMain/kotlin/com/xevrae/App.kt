@@ -326,14 +326,14 @@ fun App(viewModel: SharedViewModel = koinInject()) {
         mutableStateOf(false)
     }
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
-    val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } > 1.2f)
+    val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.2f)
 
     val backdrop = rememberBackdrop()
 
     AppTheme {
         Scaffold(
             bottomBar = {
-                if (!isTablet) {
+                if (!isTablet || (isTablet && !isTabletLandscape)) {
                     AnimatedVisibility(
                         isNavBarVisible,
                         enter = fadeIn() + slideInHorizontally(),
