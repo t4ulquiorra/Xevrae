@@ -497,12 +497,21 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .height(56.dp)
                                     .fillMaxWidth(navBarFraction)
                                     .align(Alignment.BottomStart)
-                                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                                    .then(
+                                        if (isLiquidGlassEnabled == TRUE) {
+                                            Modifier.layerBackdrop(backdrop)
+                                        } else {
+                                            Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                                        }
+                                    )
                             ) {
                                 AppBottomNavigationBar(
                                     navController = navController,
                                     isTranslucentBackground = false,
-                                    containerColor = androidx.compose.ui.graphics.Color(0xFF28282B),
+                                    containerColor = if (isLiquidGlassEnabled == TRUE)
+                                        androidx.compose.ui.graphics.Color.Transparent
+                                    else
+                                        androidx.compose.ui.graphics.Color(0xFF28282B),
                                     showLabels = false,
                                 ) { klass ->
                                     viewModel.reloadDestination(klass)
