@@ -17,6 +17,12 @@ import xevrae.composeapp.generated.resources.Res
 import xevrae.composeapp.generated.resources.home
 import xevrae.composeapp.generated.resources.library
 import xevrae.composeapp.generated.resources.search
+import xevrae.composeapp.generated.resources.home_filled
+import xevrae.composeapp.generated.resources.home_lined
+import xevrae.composeapp.generated.resources.search_filled
+import xevrae.composeapp.generated.resources.search_lined
+import xevrae.composeapp.generated.resources.library_filled
+import xevrae.composeapp.generated.resources.library_lined
 import kotlin.reflect.KClass
 
 @Composable
@@ -29,13 +35,6 @@ expect fun LiquidGlassAppBottomNavigationBar(
     onOpenNowPlaying: () -> Unit = {},
     reloadDestinationIfNeeded: (KClass<*>) -> Unit = { _ -> },
 )
-
-import xevrae.composeapp.generated.resources.home_filled
-import xevrae.composeapp.generated.resources.home_lined
-import xevrae.composeapp.generated.resources.search_filled
-import xevrae.composeapp.generated.resources.search_lined
-import xevrae.composeapp.generated.resources.library_filled
-import xevrae.composeapp.generated.resources.library_lined
 
 sealed class BottomNavScreen(
     val ordinal: Int,

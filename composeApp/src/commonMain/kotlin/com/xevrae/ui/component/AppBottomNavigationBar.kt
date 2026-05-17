@@ -178,7 +178,7 @@ fun AppNavigationRail(
         Spacer(Modifier.weight(1f))
         bottomNavScreens.forEachIndexed { index, screen ->
             NavigationRailItem(
-                icon = screen.icon,
+                icon = { screen.icon(selectedIndex == index) },
                 label = {
                     Text(
                         stringResource(screen.title),
