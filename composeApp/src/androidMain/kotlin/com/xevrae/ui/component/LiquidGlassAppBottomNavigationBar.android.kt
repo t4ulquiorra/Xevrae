@@ -91,6 +91,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import xevrae.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
 import xevrae.composeapp.generated.resources.home_filled
 import xevrae.composeapp.generated.resources.home_lined
