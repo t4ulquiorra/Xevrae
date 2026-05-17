@@ -1,11 +1,11 @@
 package com.xevrae.ui.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.size
+import org.jetbrains.compose.resources.painterResource
 import androidx.navigation.NavController
 import com.xevrae.expect.ui.PlatformBackdrop
 import com.xevrae.ui.navigation.destination.home.HomeDestination
@@ -30,20 +30,28 @@ expect fun LiquidGlassAppBottomNavigationBar(
     reloadDestinationIfNeeded: (KClass<*>) -> Unit = { _ -> },
 )
 
+import xevrae.composeapp.generated.resources.home_filled
+import xevrae.composeapp.generated.resources.home_lined
+import xevrae.composeapp.generated.resources.search_filled
+import xevrae.composeapp.generated.resources.search_lined
+import xevrae.composeapp.generated.resources.library_filled
+import xevrae.composeapp.generated.resources.library_lined
+
 sealed class BottomNavScreen(
     val ordinal: Int,
     val destination: Any,
     val title: StringResource,
-    val icon: @Composable () -> Unit,
+    val icon: @Composable (selected: Boolean) -> Unit,
 ) {
     data object Home : BottomNavScreen(
         ordinal = 0,
         destination = HomeDestination,
         title = Res.string.home,
-        icon = {
+        icon = { selected ->
             Icon(
-                Icons.Rounded.Home,
+                painter = painterResource(if (selected) Res.drawable.home_filled else Res.drawable.home_lined),
                 contentDescription = null,
+                modifier = Modifier.size(24.dp),
             )
         },
     )
@@ -52,10 +60,11 @@ sealed class BottomNavScreen(
         ordinal = 1,
         destination = SearchDestination,
         title = Res.string.search,
-        icon = {
+        icon = { selected ->
             Icon(
-                Icons.Rounded.Search,
+                painter = painterResource(if (selected) Res.drawable.search_filled else Res.drawable.search_lined),
                 contentDescription = null,
+                modifier = Modifier.size(24.dp),
             )
         },
     )
@@ -64,10 +73,11 @@ sealed class BottomNavScreen(
         ordinal = 2,
         destination = LibraryDestination,
         title = Res.string.library,
-        icon = {
+        icon = { selected ->
             Icon(
-                imageVector = Icons.Filled.LibraryMusic,
+                painter = painterResource(if (selected) Res.drawable.library_filled else Res.drawable.library_lined),
                 contentDescription = null,
+                modifier = Modifier.size(24.dp),
             )
         },
     )

@@ -89,6 +89,9 @@ fun AppBottomNavigationBar(
             bottomNavScreens.forEach { screen ->
                 NavigationBarItem(
                     selected = selectedIndex == screen.ordinal,
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+                    ),
                     onClick = {
                         if (selectedIndex == screen.ordinal) {
                             if (currentBackStackEntry?.destination?.hierarchy?.any {
@@ -123,7 +126,7 @@ fun AppBottomNavigationBar(
                                 },
                         )
                     }} else null,
-                    icon = screen.icon,
+                    icon = { screen.icon(selectedIndex == screen.ordinal) },
                 )
             }
         }
