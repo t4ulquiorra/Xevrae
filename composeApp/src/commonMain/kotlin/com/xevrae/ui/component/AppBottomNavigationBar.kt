@@ -91,6 +91,8 @@ fun AppBottomNavigationBar(
                     selected = selectedIndex == screen.ordinal,
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+                        selectedIconColor = androidx.compose.ui.graphics.Color.White,
+                        unselectedIconColor = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.5f),
                     ),
                     onClick = {
                         if (selectedIndex == screen.ordinal) {
