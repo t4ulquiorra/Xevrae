@@ -91,6 +91,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.painterResource
+import xevrae.composeapp.generated.resources.home_filled
+import xevrae.composeapp.generated.resources.home_lined
+import xevrae.composeapp.generated.resources.search_filled
+import xevrae.composeapp.generated.resources.search_lined
+import xevrae.composeapp.generated.resources.library_filled
+import xevrae.composeapp.generated.resources.library_lined
 import java.nio.IntBuffer
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.seconds
@@ -353,12 +360,18 @@ actual fun LiquidGlassAppBottomNavigationBar(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Icon(
-                                        when (screen) {
-                                            BottomNavScreen.Home -> Icons.Rounded.Home
-                                            BottomNavScreen.Search -> Icons.Rounded.Search
-                                            BottomNavScreen.Library -> Icons.Rounded.LibraryMusic
-                                        },
-                                        "",
+                                        painter = painterResource(
+                                            if (selectedIndex == screen.ordinal) when (screen) {
+                                                BottomNavScreen.Home -> Res.drawable.home_filled
+                                                BottomNavScreen.Search -> Res.drawable.search_filled
+                                                BottomNavScreen.Library -> Res.drawable.library_filled
+                                            } else when (screen) {
+                                                BottomNavScreen.Home -> Res.drawable.home_lined
+                                                BottomNavScreen.Search -> Res.drawable.search_lined
+                                                BottomNavScreen.Library -> Res.drawable.library_lined
+                                            }
+                                        ),
+                                        contentDescription = "",
                                     )
                                     Text(
                                         stringResource(screen.title),
@@ -420,19 +433,20 @@ actual fun LiquidGlassAppBottomNavigationBar(
                             ),
                     ) {
                         Icon(
-                            when (selectedIndex) {
-                                BottomNavScreen.Home.ordinal -> Icons.Rounded.Home
-                                BottomNavScreen.Search.ordinal ->
-                                    when (previousScreen) {
-                                        BottomNavScreen.Home -> Icons.Rounded.Home
-                                        BottomNavScreen.Library -> Icons.Rounded.LibraryMusic
-                                        else -> Icons.Filled.Search
-                                    }
-
-                                BottomNavScreen.Library.ordinal -> Icons.Rounded.LibraryMusic
-                                else -> Icons.Outlined.Home
-                            },
-                            "",
+                            painter = painterResource(
+                                when (selectedIndex) {
+                                    BottomNavScreen.Home.ordinal -> Res.drawable.home_filled
+                                    BottomNavScreen.Search.ordinal ->
+                                        when (previousScreen) {
+                                            BottomNavScreen.Home -> Res.drawable.home_filled
+                                            BottomNavScreen.Library -> Res.drawable.library_filled
+                                            else -> Res.drawable.search_filled
+                                        }
+                                    BottomNavScreen.Library.ordinal -> Res.drawable.library_filled
+                                    else -> Res.drawable.home_filled
+                                }
+                            ),
+                            contentDescription = "",
                         )
                     }
                 }
