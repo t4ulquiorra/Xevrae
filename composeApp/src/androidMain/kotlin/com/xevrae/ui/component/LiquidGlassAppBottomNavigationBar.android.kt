@@ -93,12 +93,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import xevrae.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.painterResource
-import xevrae.composeapp.generated.resources.home_filled
-import xevrae.composeapp.generated.resources.home_lined
-import xevrae.composeapp.generated.resources.search_filled
-import xevrae.composeapp.generated.resources.search_lined
-import xevrae.composeapp.generated.resources.library_filled
-import xevrae.composeapp.generated.resources.library_lined
+import xevrae.composeapp.generated.resources.*
 import java.nio.IntBuffer
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.seconds
