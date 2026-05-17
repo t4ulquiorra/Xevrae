@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideInHorizontally
@@ -68,6 +69,7 @@ import com.xevrae.expect.Orientation
 import com.xevrae.expect.currentOrientation
 import com.xevrae.expect.openUrl
 import com.xevrae.expect.ui.layerBackdrop
+import com.xevrae.expect.ui.drawBackdropCustomShape
 import com.xevrae.expect.ui.rememberBackdrop
 import com.xevrae.extension.copy
 import com.xevrae.ui.component.AppBottomNavigationBar
@@ -329,6 +331,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.1f)
 
     val backdrop = rememberBackdrop()
+    val navBarLayer = rememberGraphicsLayer()
+    val navBarLuminance = remember { androidx.compose.animation.core.Animatable(0f) }
 
     AppTheme {
         Scaffold(
@@ -499,7 +503,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .align(Alignment.BottomStart)
                                     .then(
                                         if (isLiquidGlassEnabled == TRUE) {
-                                            Modifier.layerBackdrop(backdrop)
+                                            Modifier.drawBackdropCustomShape(backdrop, navBarLayer, navBarLuminance.value, androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                                         } else {
                                             Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                                         }
