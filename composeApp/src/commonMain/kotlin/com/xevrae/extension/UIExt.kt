@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.ui.draw.DrawModifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
@@ -532,6 +533,32 @@ fun ImageBitmap.toResizedBitmap(
     )
     return resized
 }
+
+
+fun Modifier.pressClickable(
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+): Modifier =
+    composed {
+        val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+        val isPressed by interactionSource.collectIsPressedAsState()
+        val scale by animateFloatAsState(
+            targetValue = if (isPressed) 0.94f else 1f,
+            animationSpec = tween(150),
+            label = "pressScale",
+        )
+        this
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                enabled = enabled,
+                onClick = onClick,
+            )
+    }
 
 fun getStringBlocking(res: StringResource): String =
     runBlocking {
