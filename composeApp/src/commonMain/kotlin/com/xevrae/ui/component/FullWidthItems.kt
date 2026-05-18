@@ -12,6 +12,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.extension.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -161,7 +162,7 @@ fun SongFullWidthItems(
             modifier =
                 modifier
                     .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                    .clickable {
+                    .pressClickable {
                         onClickListener?.invoke(track?.videoId ?: songEntity?.videoId ?: "")
                     }.animateContentSize()
                     .pointerInput(Unit) {
@@ -359,7 +360,7 @@ fun SuggestItems(
     Box(
         modifier =
             Modifier
-                .clickable {
+                .pressClickable {
                     if (onClickListener != null) {
                         onClickListener()
                     }
@@ -465,7 +466,7 @@ fun PlaylistFullWidthItems(
     Box(
         modifier =
             modifier
-                .clickable {
+                .pressClickable {
                     onClickListener?.invoke()
                 }.animateContentSize(),
     ) {
@@ -643,7 +644,7 @@ fun ArtistFullWidthItems(
         }
     Box(
         modifier
-            .clickable {
+            .pressClickable {
                 onClickListener?.invoke()
             },
     ) {
