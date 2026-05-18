@@ -541,11 +541,10 @@ fun Modifier.pressClickable(
     onClick: () -> Unit,
 ): Modifier =
     composed {
-        val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-        val isPressed by interactionSource.collectIsPressedAsState()
+        val isPressed = remember { mutableStateOf(false) }
         val scale by animateFloatAsState(
-            targetValue = if (isPressed) 0.94f else 1f,
-            animationSpec = tween(150),
+            targetValue = if (isPressed.value) 0.94f else 1f,
+            animationSpec = tween(100),
             label = "pressScale",
         )
         this
@@ -553,12 +552,17 @@ fun Modifier.pressClickable(
                 scaleX = scale
                 scaleY = scale
             }
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                enabled = enabled,
-                onClick = onClick,
-            )
+            .pointerInput(enabled) {
+                androidx.compose.foundation.gestures.detectTapGestures(
+                    onPress = {
+                        if (!enabled) return@detectTapGestures
+                        isPressed.value = true
+                        tryAwaitRelease()
+                        isPressed.value = false
+                        onClick()
+                    }
+                )
+            }
     }
 
 fun getStringBlocking(res: StringResource): String =
