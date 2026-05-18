@@ -7,6 +7,7 @@ import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.extension.pressClickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -137,7 +138,7 @@ fun HomeItem(
                 if (channelId != null) {
                     Modifier
                         .focusable(true)
-                        .clickable {
+                        .pressClickable {
                             navController.navigate(
                                 ArtistDestination(
                                     channelId = channelId,
@@ -312,7 +313,7 @@ fun HomeItemContentPlaylist(
         Modifier
             .wrapContentSize()
             .focusable(true)
-            .clickable {
+            .pressClickable {
                 onClick()
             },
     ) {
@@ -563,7 +564,7 @@ fun QuickPicksItem(
                 .wrapContentHeight()
                 .width(widthDp - 30.dp)
                 .focusable(true)
-                .clickable {
+                .pressClickable {
                     onClick()
                 },
     ) {
@@ -662,7 +663,7 @@ fun HomeItemSong(
             Modifier
                 .fillMaxSize()
                 .focusable(true)
-                .clickable {
+                .pressClickable {
                     onClick()
                 }.combinedClickable(
                     onClick = onClick,
@@ -772,7 +773,7 @@ fun HomeItemVideo(
         Modifier
             .fillMaxSize()
             .focusable(true)
-            .clickable {
+            .pressClickable {
                 onClick()
             }.combinedClickable(
                 onClick = onClick,
@@ -864,7 +865,7 @@ fun HomeItemArtist(
         Modifier
             .fillMaxSize()
             .focusable(true)
-            .clickable {
+            .pressClickable {
                 onClick()
             },
     ) {
@@ -993,7 +994,7 @@ fun ItemVideoChart(
         Modifier
             .wrapContentSize()
             .focusable(true)
-            .clickable {
+            .pressClickable {
                 onClick()
             },
     ) {
@@ -1100,7 +1101,7 @@ fun ItemArtistChart(
         Modifier
             .wrapContentSize()
             .focusable(true)
-            .clickable {
+            .pressClickable {
                 onClick()
             },
     ) {
@@ -1201,7 +1202,7 @@ fun ItemTrackChart(
             Modifier
                 .wrapContentSize()
                 .focusable(true)
-                .clickable {
+                .pressClickable {
                     onClick()
                 },
     ) {
