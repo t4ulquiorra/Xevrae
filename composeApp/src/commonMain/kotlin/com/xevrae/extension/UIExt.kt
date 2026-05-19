@@ -538,30 +538,6 @@ fun ImageBitmap.toResizedBitmap(
 }
 
 
-fun Modifier.pressClickable(
-    enabled: Boolean = true,
-    onClick: () -> Unit,
-): Modifier =
-    composed {
-        val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
-        val isPressed by interactionSource.collectIsPressedAsState()
-        val scale by animateFloatAsState(
-            targetValue = if (isPressed) 0.94f else 1f,
-            animationSpec = tween(80),
-            label = "pressScale",
-        )
-        this
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                enabled = enabled,
-                onClick = onClick,
-            )
-    }
 
 fun getStringBlocking(res: StringResource): String =
     runBlocking {

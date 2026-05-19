@@ -7,7 +7,7 @@ import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
-import com.xevrae.extension.pressClickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
