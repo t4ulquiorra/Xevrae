@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 
@@ -14,6 +15,7 @@ actual fun Modifier.pressClickable(
     onClick: () -> Unit,
 ): Modifier = composed {
     val scale = remember { Animatable(1f) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
     this
         .graphicsLayer {
             scaleX = scale.value
@@ -23,10 +25,10 @@ actual fun Modifier.pressClickable(
             detectTapGestures(
                 onPress = {
                     if (!enabled) return@detectTapGestures
-                    scale.animateTo(0.94f, tween(80))
-                    tryAwaitRelease()
-                    scale.animateTo(1f, tween(80))
-                    onClick()
+                    scope.launch { scale.animateTo(0.94f, tween(80)) }
+                    val released = tryAwaitRelease()
+                    scope.launch { scale.animateTo(1f, tween(80)) }
+                    if (released) onClick()
                 }
             )
         }
