@@ -11,6 +11,7 @@ import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -300,7 +301,7 @@ fun AlbumScreen(
                                                     style = typo().titleSmall,
                                                     color = Color.White,
                                                     modifier =
-                                                        Modifier.clickable {
+                                                        Modifier.pressClickable {
                                                             uiState.artist.id?.let { channelId ->
                                                                 navController.navigate(
                                                                     ArtistDestination(
@@ -361,7 +362,7 @@ fun AlbumScreen(
                                                                         .size(36.dp)
                                                                         .clip(
                                                                             CircleShape,
-                                                                        ).clickable {
+                                                                        ).pressClickable {
                                                                             viewModel.makeToast(
                                                                                 runBlocking {
                                                                                     getString(Res.string.downloaded)
@@ -388,7 +389,7 @@ fun AlbumScreen(
                                                                         .size(36.dp)
                                                                         .clip(
                                                                             CircleShape,
-                                                                        ).clickable {
+                                                                        ).pressClickable {
                                                                             viewModel.makeToast(
                                                                                 runBlocking {
                                                                                     getString(Res.string.downloading)

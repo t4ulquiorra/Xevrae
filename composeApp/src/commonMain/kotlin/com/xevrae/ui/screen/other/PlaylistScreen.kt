@@ -11,6 +11,7 @@ import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -514,7 +515,7 @@ fun PlaylistScreen(
                                                                                 .size(36.dp)
                                                                                 .clip(
                                                                                     CircleShape,
-                                                                                ).clickable {
+                                                                                ).pressClickable {
                                                                                     viewModel.makeToast(getStringBlocking(Res.string.downloaded))
                                                                                 },
                                                                     ) {
@@ -537,7 +538,7 @@ fun PlaylistScreen(
                                                                                 .size(36.dp)
                                                                                 .clip(
                                                                                     CircleShape,
-                                                                                ).clickable {
+                                                                                ).pressClickable {
                                                                                     viewModel.makeToast(getStringBlocking(Res.string.downloading))
                                                                                 },
                                                                     ) {

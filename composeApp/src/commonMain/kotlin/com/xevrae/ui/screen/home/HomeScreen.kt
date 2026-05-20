@@ -13,6 +13,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -410,7 +411,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier =
                             Modifier
-                                .clickable {
+                                .pressClickable {
                                     doNotShowAgain = !doNotShowAgain
                                 }.fillMaxWidth(),
                     ) {

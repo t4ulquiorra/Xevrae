@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -205,7 +206,7 @@ fun ArtistScreen(
                                                                 ),
                                                             shape = RoundedCornerShape(4.dp),
                                                         ).clip(RoundedCornerShape(4.dp))
-                                                        .clickable {
+                                                        .pressClickable {
                                                             val firstQueue: Track = canvas.second.toTrack()
                                                             viewModel.setQueueData(
                                                                 QueueData.Data(

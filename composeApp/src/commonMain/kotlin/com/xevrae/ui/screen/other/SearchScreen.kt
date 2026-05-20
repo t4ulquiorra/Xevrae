@@ -10,6 +10,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -481,7 +482,7 @@ fun SearchScreen(
                                     modifier =
                                         Modifier
                                             .fillMaxWidth()
-                                            .clickable {
+                                            .pressClickable {
                                                 searchText = historyItem
                                                 focusManager.clearFocus()
                                                 isSearchSubmitted = true
@@ -860,7 +861,7 @@ fun SuggestItemRow(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clickable { onItemClick(searchResult) }
+                .pressClickable { onItemClick(searchResult) }
                 .padding(vertical = 8.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
