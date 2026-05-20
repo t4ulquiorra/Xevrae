@@ -9,6 +9,8 @@ import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
