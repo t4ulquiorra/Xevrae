@@ -299,6 +299,8 @@ fun MiniPlayer(
                             .clipToBounds()
                             .offset { IntOffset(0, offsetY.value.roundToInt()) }
                             .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
                                 onClick = onClick,
                             ).pointerInput(Unit) {
                                 detectVerticalDragGestures(
@@ -560,9 +562,11 @@ fun MiniPlayer(
         }
         Box(
             modifier.then(
-                Modifier.clickable {
-                    onClick()
-                },
+                Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onClick,
+                ),
             ),
             contentAlignment = Alignment.Center,
         ) {

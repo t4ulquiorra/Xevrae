@@ -135,6 +135,7 @@ fun LyricsView(
     onLineClick: (Float) -> Unit,
     modifier: Modifier = Modifier,
     showScrollShadows: Boolean = false,
+    userScrollEnabled: Boolean = true,
     backgroundColor: Color = Color(0xFF242424),
     hasBlurBackground: Boolean = false,
 ) {
@@ -216,6 +217,7 @@ fun LyricsView(
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
+            userScrollEnabled = userScrollEnabled,
         ) {
             items(lyricsData.lyrics.lines?.size ?: 0) { index ->
                 val line = lyricsData.lyrics.lines?.getOrNull(index)
@@ -776,7 +778,7 @@ fun FullscreenLyricsSheet(
             label = "sliderCrossfadeColor",
         )
         Box(modifier = Modifier.fillMaxSize()) {
-            // ── Haze state (used only when shouldHaze = true) ─────────────────
+            
             val hazeState = rememberHazeState(blurEnabled = true)
 
             if (shouldHaze) {
@@ -832,7 +834,7 @@ fun FullscreenLyricsSheet(
                 )
             }
 
-            // ── Foreground content column ─────────────────────────────────────
+            
             Column(
                 modifier =
                     Modifier
