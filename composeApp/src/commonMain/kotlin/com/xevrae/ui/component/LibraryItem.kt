@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -240,7 +241,7 @@ fun LibraryItem(
                                         .padding(horizontal = 10.dp)
                                         .height(300.dp)
                                         .width(170.dp)
-                                        .clickable {
+                                        .pressClickable {
                                             val firstQueue: Track = song.toTrack()
                                             viewModel.setQueueData(
                                                 QueueData.Data(

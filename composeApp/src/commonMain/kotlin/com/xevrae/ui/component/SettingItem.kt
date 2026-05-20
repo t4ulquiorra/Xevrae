@@ -1,6 +1,7 @@
 package com.xevrae.ui.component
 
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +42,7 @@ fun SettingItem(
         Modifier
             .then(
                 if (onClick != null && isEnable) {
-                    Modifier.clickable { onClick.invoke() }
+                    Modifier.pressClickable { onClick.invoke() }
                 } else {
                     Modifier
                 },

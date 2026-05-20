@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,7 @@ fun PodcastEpisodeFullWidthItem(
     Box(
         modifier =
             modifier
-                .clickable { onClick(episode.videoId) }
+                .pressClickable { onClick(episode.videoId) }
                 .animateContentSize(),
     ) {
         Row(
