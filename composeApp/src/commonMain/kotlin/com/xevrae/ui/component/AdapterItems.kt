@@ -773,9 +773,9 @@ fun HomeItemVideo(
         Modifier
             .fillMaxSize()
             .focusable(true)
-            .pressClickable {
-                onClick()
-            }.combinedClickable(
+            .combinedClickable(
+                indication = null,
+                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
                 onClick = onClick,
                 onLongClick = onLongClick,
             ),
