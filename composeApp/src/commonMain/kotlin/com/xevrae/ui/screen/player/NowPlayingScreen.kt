@@ -956,7 +956,7 @@ fun NowPlayingScreenContent(
                                             .background(Color.Transparent)
                                             .shadow(
                                                 elevation = 3.dp,
-                                                shape = RoundedCornerShape(10.dp),
+                                                shape = RoundedCornerShape(15.dp),
                                                 spotColor =
                                                     spotShadowColor.copy(
                                                         alpha = 0.6f,
@@ -992,7 +992,7 @@ fun NowPlayingScreenContent(
                                                 .aspectRatio(
                                                     if (!screenDataState.isVideo) 1f else 16f / 9,
                                                 ).clip(
-                                                    RoundedCornerShape(10.dp),
+                                                    RoundedCornerShape(15.dp),
                                                 ).alpha(
                                                     if (!screenDataState.isVideo || !shouldShowVideo) 1f else 0f,
                                                 ),
@@ -1013,7 +1013,7 @@ fun NowPlayingScreenContent(
                                                 .fillMaxWidth()
                                                 .aspectRatio(16f / 9)
                                                 .clip(
-                                                    RoundedCornerShape(10.dp),
+                                                    RoundedCornerShape(15.dp),
                                                 ).background(
                                                     md_theme_dark_background,
                                                 ),
@@ -1358,7 +1358,7 @@ fun NowPlayingScreenContent(
                                                                         .padding(
                                                                             horizontal = 3.dp,
                                                                         ).clip(
-                                                                            RoundedCornerShape(10.dp),
+                                                                            RoundedCornerShape(15.dp),
                                                                         ),
                                                                 color = Color.Gray,
                                                                 trackColor = Color.DarkGray,
@@ -1376,7 +1376,7 @@ fun NowPlayingScreenContent(
                                                                         .padding(
                                                                             horizontal = 3.dp,
                                                                         ).clip(
-                                                                            RoundedCornerShape(10.dp),
+                                                                            RoundedCornerShape(15.dp),
                                                                         ),
                                                                 color = Color.Gray,
                                                                 trackColor =
@@ -1688,7 +1688,7 @@ fun NowPlayingScreenContent(
                             modifier = Modifier.padding(top = 10.dp),
                         ) {
                             ElevatedCard(
-                                shape = RoundedCornerShape(10.dp),
+                                shape = RoundedCornerShape(15.dp),
                                 colors =
                                     CardDefaults.elevatedCardColors().copy(
                                         containerColor = startColor.value,
@@ -1827,10 +1827,10 @@ fun NowPlayingScreenContent(
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
                         AnimatedVisibility(visible = screenDataState.songInfoData != null) {
                             ElevatedCard(
-                                shape = RoundedCornerShape(10.dp),
+                                shape = RoundedCornerShape(15.dp),
                                 colors =
                                     CardDefaults.elevatedCardColors().copy(
                                         containerColor = startColor.value,
@@ -1874,7 +1874,7 @@ fun NowPlayingScreenContent(
                                                 .fillMaxSize()
                                                 .alpha(0.8f)
                                                 .clip(
-                                                    RoundedCornerShape(10.dp),
+                                                    RoundedCornerShape(15.dp),
                                                 ),
                                     )
                                     Box(
@@ -1909,10 +1909,10 @@ fun NowPlayingScreenContent(
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
                         AnimatedVisibility(visible = screenDataState.songInfoData != null) {
                             ElevatedCard(
-                                shape = RoundedCornerShape(10.dp),
+                                shape = RoundedCornerShape(15.dp),
                                 colors =
                                     CardDefaults.elevatedCardColors().copy(
                                         containerColor = startColor.value,
