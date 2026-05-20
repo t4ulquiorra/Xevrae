@@ -1260,7 +1260,10 @@ fun NowPlayingScreenContent(
                                                                     iterations = Int.MAX_VALUE,
                                                                     animationMode = MarqueeAnimationMode.Immediately,
                                                                 ).focusable()
-                                                                .clickable {
+                                                                .clickable(
+                                                                    indication = null,
+                                                                    interactionSource = remember { MutableInteractionSource() },
+                                                                ) {
                                                                     val song = sharedViewModel.nowPlayingState.value?.songEntity
                                                                     (
                                                                         song?.artistId?.firstOrNull()?.takeIf { it.isNotEmpty() }
