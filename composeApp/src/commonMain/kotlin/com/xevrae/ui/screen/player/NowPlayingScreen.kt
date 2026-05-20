@@ -28,6 +28,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -1687,7 +1688,6 @@ fun NowPlayingScreenContent(
                             modifier = Modifier.padding(top = 10.dp),
                         ) {
                             ElevatedCard(
-                                onClick = {},
                                 shape = RoundedCornerShape(8.dp),
                                 colors =
                                     CardDefaults.elevatedCardColors().copy(
@@ -1829,25 +1829,21 @@ fun NowPlayingScreenContent(
                         Spacer(modifier = Modifier.height(10.dp))
                         AnimatedVisibility(visible = screenDataState.songInfoData != null) {
                             ElevatedCard(
-                                onClick = {
+                                shape = RoundedCornerShape(8.dp),
+                                colors =
+                                    CardDefaults.elevatedCardColors().copy(
+                                        containerColor = startColor.value,
+                                    ),
+                                modifier = Modifier.pressClickable {
                                     val song = sharedViewModel.nowPlayingState.value?.songEntity
                                     (
                                         song?.artistId?.firstOrNull()?.takeIf { it.isNotEmpty() }
                                             ?: screenDataState.songInfoData?.authorId
                                     )?.let { channelId ->
                                         onDismiss()
-                                        navController.navigate(
-                                            ArtistDestination(
-                                                channelId = channelId,
-                                            ),
-                                        )
+                                        navController.navigate(ArtistDestination(channelId = channelId))
                                     }
                                 },
-                                shape = RoundedCornerShape(8.dp),
-                                colors =
-                                    CardDefaults.elevatedCardColors().copy(
-                                        containerColor = startColor.value,
-                                    ),
                             ) {
                                 Box(
                                     modifier =
@@ -1912,7 +1908,6 @@ fun NowPlayingScreenContent(
                         Spacer(modifier = Modifier.height(10.dp))
                         AnimatedVisibility(visible = screenDataState.songInfoData != null) {
                             ElevatedCard(
-                                onClick = {},
                                 shape = RoundedCornerShape(8.dp),
                                 colors =
                                     CardDefaults.elevatedCardColors().copy(

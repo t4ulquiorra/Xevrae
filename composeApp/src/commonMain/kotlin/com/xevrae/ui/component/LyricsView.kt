@@ -249,7 +249,10 @@ fun LyricsView(
                                     isCurrent = index == currentLineIndex,
                                     modifier =
                                         Modifier
-                                            .clickable {
+                                            .clickable(
+                                                indication = null,
+                                                interactionSource = remember { MutableInteractionSource() },
+                                            ) {
                                                 onLineClick(line.startTimeMs.toFloat() * 100 / timeLine.value.total)
                                             }.onGloballyPositioned { c ->
                                                 currentLineHeight = c.size.height
@@ -264,7 +267,10 @@ fun LyricsView(
                                     isCurrent = index == currentLineIndex,
                                     modifier =
                                         Modifier
-                                            .clickable {
+                                            .clickable(
+                                                indication = null,
+                                                interactionSource = remember { MutableInteractionSource() },
+                                            ) {
                                                 onLineClick(line.startTimeMs.toFloat() * 100 / timeLine.value.total)
                                             }.onGloballyPositioned { c ->
                                                 currentLineHeight = c.size.height
@@ -282,7 +288,11 @@ fun LyricsView(
                                 isCurrent = index == currentLineIndex || lyricsData.lyrics.syncType != "LINE_SYNCED",
                                 modifier =
                                     Modifier
-                                        .clickable(enabled = lyricsData.lyrics.syncType == "LINE_SYNCED") {
+                                        .clickable(
+                                            enabled = lyricsData.lyrics.syncType == "LINE_SYNCED",
+                                            indication = null,
+                                            interactionSource = remember { MutableInteractionSource() },
+                                        ) {
                                             onLineClick(line.startTimeMs.toFloat() * 100 / timeLine.value.total)
                                         }.onGloballyPositioned { c ->
                                             currentLineHeight = c.size.height
@@ -902,7 +912,10 @@ fun FullscreenLyricsSheet(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier =
-                                Modifier.clickable {
+                                Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                ) {
                                     coroutineScope.launch {
                                         val song = sharedViewModel.nowPlayingState.value?.songEntity
                                         (
