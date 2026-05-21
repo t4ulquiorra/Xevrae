@@ -238,16 +238,7 @@ internal inline fun <reified T> GridLibraryPlaylist(
                         )
                     }
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        val uriHandler = LocalUriHandler.current
-.padding(
-                                    vertical = 16.dp,
-                                ),
-                            onClick = {
-                                uriHandler.openUri("https://chart.xevrae.org")
-                            },
-                        )
-                    }
+
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         EndOfPage()

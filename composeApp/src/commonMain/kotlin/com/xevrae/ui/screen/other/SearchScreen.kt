@@ -559,10 +559,6 @@ fun SearchScreen(
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth(),
                             )
-,
-                            ) {
-                                uriHandler.openUri("https://chart.xevrae.org")
-                            }
                         }
                     }
                 }
