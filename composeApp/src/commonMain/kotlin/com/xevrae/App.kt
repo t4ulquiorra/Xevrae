@@ -351,7 +351,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             ) {
                                 MiniPlayer(
                                     Modifier
-                                        .height(56.dp)
+                                        .height(67.dp)
                                         .fillMaxWidth()
                                         .padding(
                                             horizontal = 12.dp,
@@ -498,7 +498,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(start = (16 + navBarExtraPadding).dp, end = (16 + navBarExtraPadding).dp, bottom = 8.dp)
-                                    .height(56.dp)
+                                    .height(67.dp)
                                     .fillMaxWidth(navBarFraction)
                                     .align(Alignment.BottomStart)
                                     .then(
@@ -525,7 +525,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(end = 16.dp, bottom = 8.dp)
-                                    .height(56.dp)
+                                    .height(67.dp)
                                     .fillMaxWidth(0.36f)
                                     .align(Alignment.BottomEnd),
                             ) {

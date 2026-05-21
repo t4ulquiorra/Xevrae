@@ -240,9 +240,7 @@ internal inline fun <reified T> GridLibraryPlaylist(
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         val uriHandler = LocalUriHandler.current
-                        XevraeChartButton(
-                            modifier =
-                                Modifier.wrapContentWidth().padding(
+.padding(
                                     vertical = 16.dp,
                                 ),
                             onClick = {

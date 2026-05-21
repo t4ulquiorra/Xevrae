@@ -1354,7 +1354,7 @@ fun NowPlayingScreenContent(
                                                                 modifier =
                                                                     Modifier
                                                                         .fillMaxWidth()
-                                                                        .height(4.dp)
+                                                                        .height(2.dp)
                                                                         .padding(
                                                                             horizontal = 3.dp,
                                                                         ).clip(
@@ -1372,7 +1372,7 @@ fun NowPlayingScreenContent(
                                                                 modifier =
                                                                     Modifier
                                                                         .fillMaxWidth()
-                                                                        .height(4.dp)
+                                                                        .height(2.dp)
                                                                         .padding(
                                                                             horizontal = 3.dp,
                                                                         ).clip(
