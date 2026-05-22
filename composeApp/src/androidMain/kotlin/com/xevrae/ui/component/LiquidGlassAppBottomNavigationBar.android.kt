@@ -510,7 +510,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .height(67.dp)
+                .height(60.dp)
                 .layoutId("miniPlayer"),
             backdrop = backdrop,
             onClick = {

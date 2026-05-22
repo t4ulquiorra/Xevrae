@@ -1415,7 +1415,7 @@ fun NowPlayingScreenContent(
                                                         SliderDefaults.Track(
                                                             modifier =
                                                                 Modifier
-                                                                    .height(5.dp),
+                                                                    .height(3.dp),
                                                             enabled = true,
                                                             sliderState = sliderState,
                                                             colors =
