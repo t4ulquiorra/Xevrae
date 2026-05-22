@@ -356,7 +356,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         .padding(
                                             horizontal = 12.dp,
                                         ).padding(
-                                            bottom = 8.dp,
+                                            bottom = 0.dp,
                                         ),
                                     backdrop = backdrop,
                                     onClick = {
