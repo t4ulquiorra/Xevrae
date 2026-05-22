@@ -516,7 +516,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         androidx.compose.ui.graphics.Color.Transparent
                                     else
                                         androidx.compose.ui.graphics.Color(0xFF28282B),
-                                    showLabels = false,
                                 ) { klass ->
                                     viewModel.reloadDestination(klass)
                                 }
