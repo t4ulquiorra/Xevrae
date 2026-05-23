@@ -124,6 +124,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.holder
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -393,8 +394,8 @@ fun MiniPlayer(
                                         .data(songEntity?.thumbnails)
                                         .crossfade(550)
                                         .build(),
-                                placeholder = painterResource(Res.drawable.holder),
-                                error = painterResource(Res.drawable.holder),
+                                placeholder = painterResource(Res.drawable.app_icon),
+                                error = painterResource(Res.drawable.app_icon),
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 onSuccess = {
@@ -590,8 +591,8 @@ fun MiniPlayer(
                                     .data(songEntity?.thumbnails)
                                     .crossfade(550)
                                     .build(),
-                            placeholder = painterResource(Res.drawable.holder),
-                            error = painterResource(Res.drawable.holder),
+                            placeholder = painterResource(Res.drawable.app_icon),
+                            error = painterResource(Res.drawable.app_icon),
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             onSuccess = {

@@ -77,6 +77,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.painterResource
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.holder_video
 
 private val paddingMedium = 0.dp
@@ -246,8 +247,8 @@ private fun Header(
                         .asImageBitmap(),
                 )
             },
-            placeholder = painterResource(Res.drawable.holder_video),
-            error = painterResource(Res.drawable.holder_video),
+            placeholder = painterResource(Res.drawable.app_icon),
+            error = painterResource(Res.drawable.app_icon),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier =

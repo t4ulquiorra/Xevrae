@@ -97,6 +97,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.album
 import xevrae.composeapp.generated.resources.app_name
 import xevrae.composeapp.generated.resources.artists
@@ -167,8 +168,8 @@ fun HomeItem(
                             .crossfade(550)
                             .build(),
                     contentDescription = "",
-                    placeholder = painterResource(Res.drawable.holder),
-                    error = painterResource(Res.drawable.holder),
+                    placeholder = painterResource(Res.drawable.app_icon),
+                    error = painterResource(Res.drawable.app_icon),
                     modifier =
                         Modifier
                             .size(36.dp)
@@ -370,7 +371,7 @@ fun HomeItemContentPlaylist(
                         }
 
                         else -> {
-                            painterResource(Res.drawable.holder)
+                            painterResource(Res.drawable.app_icon)
                         }
                     },
                 error =
@@ -392,7 +393,7 @@ fun HomeItemContentPlaylist(
                         }
 
                         else -> {
-                            painterResource(Res.drawable.holder)
+                            painterResource(Res.drawable.app_icon)
                         }
                     },
                 contentDescription = null,
@@ -586,7 +587,7 @@ fun QuickPicksItem(
                         .diskCacheKey(data.thumbnails.lastOrNull()?.url)
                         .diskCachePolicy(CachePolicy.ENABLED)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
                 contentDescription = stringResource(Res.string.description),
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -709,8 +710,8 @@ fun HomeItemSong(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -825,8 +826,8 @@ fun HomeItemVideo(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder_video),
-                error = painterResource(Res.drawable.holder_video),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -914,8 +915,8 @@ fun HomeItemArtist(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1043,8 +1044,8 @@ fun ItemVideoChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder_video),
-                error = painterResource(Res.drawable.holder_video),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1163,8 +1164,8 @@ fun ItemArtistChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1274,8 +1275,8 @@ fun ItemTrackChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

@@ -32,6 +32,7 @@ import com.xevrae.domain.data.model.podcast.PodcastBrowse
 import com.xevrae.ui.theme.typo
 import org.jetbrains.compose.resources.painterResource
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.baseline_more_vert_24
 import xevrae.composeapp.generated.resources.holder
 
@@ -64,8 +65,8 @@ fun PodcastEpisodeFullWidthItem(
                             .diskCacheKey(episode.thumbnail.lastOrNull()?.url)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.holder),
-                    error = painterResource(Res.drawable.holder),
+                    placeholder = painterResource(Res.drawable.app_icon),
+                    error = painterResource(Res.drawable.app_icon),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxSize(),

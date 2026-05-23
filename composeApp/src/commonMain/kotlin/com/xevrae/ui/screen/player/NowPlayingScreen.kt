@@ -192,6 +192,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.artists
 import xevrae.composeapp.generated.resources.baseline_fullscreen_24
 import xevrae.composeapp.generated.resources.baseline_more_vert_24
@@ -982,7 +983,7 @@ fun NowPlayingScreenContent(
                                             )
                                         },
                                         contentScale = ContentScale.Crop,
-                                        placeholder = painterResource(Res.drawable.holder),
+                                        placeholder = painterResource(Res.drawable.app_icon),
                                         modifier =
                                             Modifier
                                                 .align(Alignment.Center)
@@ -1202,8 +1203,8 @@ fun NowPlayingScreenContent(
                                                         .diskCacheKey(screenDataState.thumbnailURL + "BIGGER")
                                                         .crossfade(true)
                                                         .build(),
-                                                placeholder = painterResource(Res.drawable.holder),
-                                                error = painterResource(Res.drawable.holder),
+                                                placeholder = painterResource(Res.drawable.app_icon),
+                                                error = painterResource(Res.drawable.app_icon),
                                                 contentDescription = null,
                                                 contentScale = ContentScale.FillWidth,
                                                 modifier =
@@ -1632,8 +1633,8 @@ fun NowPlayingScreenContent(
                                                             .diskCacheKey(thumb)
                                                             .crossfade(550)
                                                             .build(),
-                                                    placeholder = painterResource(Res.drawable.holder),
-                                                    error = painterResource(Res.drawable.holder),
+                                                    placeholder = painterResource(Res.drawable.app_icon),
+                                                    error = painterResource(Res.drawable.app_icon),
                                                     contentDescription = null,
                                                     contentScale = ContentScale.Crop,
                                                     modifier =
@@ -1865,8 +1866,8 @@ fun NowPlayingScreenContent(
                                                 .diskCacheKey(thumb)
                                                 .crossfade(550)
                                                 .build(),
-                                        placeholder = painterResource(Res.drawable.holder_video),
-                                        error = painterResource(Res.drawable.holder_video),
+                                        placeholder = painterResource(Res.drawable.app_icon),
+                                        error = painterResource(Res.drawable.app_icon),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier =

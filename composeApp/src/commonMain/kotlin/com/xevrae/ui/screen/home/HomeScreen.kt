@@ -149,6 +149,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.all
 import xevrae.composeapp.generated.resources.app_name
 import xevrae.composeapp.generated.resources.baseline_history_24
@@ -880,8 +881,8 @@ fun AccountLayout(
                         .diskCacheKey(url)
                         .crossfade(true)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

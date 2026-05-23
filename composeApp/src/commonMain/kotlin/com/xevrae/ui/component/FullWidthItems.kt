@@ -88,6 +88,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.add_to_queue
 import xevrae.composeapp.generated.resources.album
 import xevrae.composeapp.generated.resources.artists
@@ -228,8 +229,8 @@ fun SongFullWidthItems(
                                         .diskCacheKey(thumb)
                                         .crossfade(true)
                                         .build(),
-                                placeholder = painterResource(Res.drawable.holder),
-                                error = painterResource(Res.drawable.holder),
+                                placeholder = painterResource(Res.drawable.app_icon),
+                                error = painterResource(Res.drawable.app_icon),
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 modifier =
@@ -394,8 +395,8 @@ fun SuggestItems(
                                     .diskCacheKey(thumb)
                                     .crossfade(true)
                                     .build(),
-                            placeholder = painterResource(Res.drawable.holder),
-                            error = painterResource(Res.drawable.holder),
+                            placeholder = painterResource(Res.drawable.app_icon),
+                            error = painterResource(Res.drawable.app_icon),
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             modifier =
@@ -546,8 +547,8 @@ fun PlaylistFullWidthItems(
                             .diskCacheKey(thumb)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.holder),
-                    error = painterResource(Res.drawable.holder),
+                    placeholder = painterResource(Res.drawable.app_icon),
+                    error = painterResource(Res.drawable.app_icon),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier =
@@ -665,8 +666,8 @@ fun ArtistFullWidthItems(
                             .diskCacheKey(thumbnails)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.holder),
-                    error = painterResource(Res.drawable.holder),
+                    placeholder = painterResource(Res.drawable.app_icon),
+                    error = painterResource(Res.drawable.app_icon),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                     modifier =

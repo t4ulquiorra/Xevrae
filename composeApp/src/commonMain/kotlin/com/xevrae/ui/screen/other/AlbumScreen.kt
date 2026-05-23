@@ -101,6 +101,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.album
 import xevrae.composeapp.generated.resources.album_length
 import xevrae.composeapp.generated.resources.baseline_arrow_back_ios_new_24
@@ -259,8 +260,8 @@ fun AlbumScreen(
                                                 .diskCacheKey(uiState.thumbnail)
                                                 .crossfade(true)
                                                 .build(),
-                                        placeholder = painterResource(Res.drawable.holder),
-                                        error = painterResource(Res.drawable.holder),
+                                        placeholder = painterResource(Res.drawable.app_icon),
+                                        error = painterResource(Res.drawable.app_icon),
                                         contentDescription = null,
                                         contentScale = ContentScale.FillHeight,
                                         onSuccess = {

@@ -110,6 +110,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.albums
 import xevrae.composeapp.generated.resources.artists
 import xevrae.composeapp.generated.resources.baseline_arrow_outward_24
@@ -900,8 +901,8 @@ fun SuggestItemRow(
                         .diskCacheKey(url)
                         .crossfade(true)
                         .build(),
-                placeholder = painterResource(Res.drawable.holder),
-                error = painterResource(Res.drawable.holder),
+                placeholder = painterResource(Res.drawable.app_icon),
+                error = painterResource(Res.drawable.app_icon),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
