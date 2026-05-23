@@ -163,7 +163,7 @@ fun SongFullWidthItems(
             modifier =
                 modifier
                     .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                    .clickable(indication = androidx.compose.material.ripple.rememberRipple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                    .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
                         onClickListener?.invoke(track?.videoId ?: songEntity?.videoId ?: "")
                     }.animateContentSize()
                     .pointerInput(Unit) {
@@ -361,7 +361,7 @@ fun SuggestItems(
     Box(
         modifier =
             Modifier
-                .clickable(indication = androidx.compose.material.ripple.rememberRipple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
                     if (onClickListener != null) {
                         onClickListener()
                     }
@@ -467,7 +467,7 @@ fun PlaylistFullWidthItems(
     Box(
         modifier =
             modifier
-                .clickable(indication = androidx.compose.material.ripple.rememberRipple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
                     onClickListener?.invoke()
                 }.animateContentSize(),
     ) {
@@ -645,7 +645,7 @@ fun ArtistFullWidthItems(
         }
     Box(
         modifier
-            .clickable(indication = androidx.compose.material.ripple.rememberRipple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+            .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
                 onClickListener?.invoke()
             },
     ) {
