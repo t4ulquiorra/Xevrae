@@ -405,7 +405,7 @@ fun MiniPlayer(
                                     Modifier
                                         .fillMaxHeight()
                                         .aspectRatio(1f)
-                                        .padding(6.dp)
+                                        .padding(vertical = 6.dp, horizontal = 4.dp)
                                         .clip(
                                             RoundedCornerShape(8.dp),
                                         ),
@@ -532,7 +532,7 @@ fun MiniPlayer(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(1.dp)
+                                .height(2.dp)
                                 .background(
                                     color = Color.Transparent,
                                     shape = RoundedCornerShape(4.dp),
