@@ -136,6 +136,7 @@ private const val TAG = "MiniPlayer"
 fun MiniPlayer(
     modifier: Modifier,
     backdrop: PlatformBackdrop,
+    cornerRadius: androidx.compose.ui.unit.Dp = 10.dp,
     sharedViewModel: SharedViewModel = koinInject(),
     onClose: () -> Unit,
     onClick: () -> Unit,
@@ -280,7 +281,7 @@ fun MiniPlayer(
 
     if (getPlatform() == Platform.Android) {
         Card(
-            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(10.dp),
+            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(cornerRadius),
             colors =
                 CardDefaults.cardColors(
                     containerColor = if (isLiquidGlassEnabled == DataStoreManager.TRUE) transparent else background.value,
@@ -290,7 +291,7 @@ fun MiniPlayer(
                 modifier
                     .then(
                         if (isLiquidGlassEnabled == DataStoreManager.TRUE) {
-                            Modifier.drawBackdropCustomShape(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(10.dp))
+                            Modifier.drawBackdropCustomShape(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(cornerRadius))
                         } else {
                             Modifier
                         },

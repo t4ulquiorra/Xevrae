@@ -534,6 +534,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     MiniPlayer(
                                         Modifier.fillMaxSize(),
                                         backdrop = backdrop,
+                                        cornerRadius = 16.dp,
                                         onClick = {
                                             isShowNowPlaylistScreen = true
                                         },
