@@ -30,7 +30,7 @@ fun typo(): Typography {
             titleSmall =
                 TextStyle(
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     fontFamily = fontFamily,
                     color = Color.White,
                 ),
