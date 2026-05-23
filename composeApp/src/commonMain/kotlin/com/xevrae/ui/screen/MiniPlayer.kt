@@ -405,7 +405,7 @@ fun MiniPlayer(
                                     Modifier
                                         .fillMaxHeight()
                                         .aspectRatio(1f)
-                                        .padding(vertical = 6.dp, horizontal = 4.dp)
+                                        .padding(vertical = 6.dp, horizontal = 1.dp)
                                         .clip(
                                             RoundedCornerShape(8.dp),
                                         ),
