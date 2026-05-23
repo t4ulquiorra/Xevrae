@@ -513,7 +513,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     containerColor = if (isLiquidGlassEnabled == TRUE)
                                         androidx.compose.ui.graphics.Color.Transparent
                                     else
-                                        androidx.compose.ui.graphics.Color(0xFF28282B),
+                                        androidx.compose.ui.graphics.Color(0xFF141416),
                                 ) { klass ->
                                     viewModel.reloadDestination(klass)
                                 }
