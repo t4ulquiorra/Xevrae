@@ -460,7 +460,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                                         bottom = 0.dp,
                                                     ),
                                                 ).clip(
-                                                    RoundedCornerShape(18.dp),
+                                                    RoundedCornerShape(16.dp),
                                                 ),
                                         ) {
                                             NowPlayingScreenContent(
@@ -501,9 +501,9 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .align(Alignment.BottomStart)
                                     .then(
                                         if (isLiquidGlassEnabled == TRUE) {
-                                            Modifier.drawBackdropCustomShape(backdrop, navBarLayer, navBarLuminance.value, androidx.compose.foundation.shape.RoundedCornerShape(18.dp))
+                                            Modifier.drawBackdropCustomShape(backdrop, navBarLayer, navBarLuminance.value, androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
                                         } else {
-                                            Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(18.dp))
+                                            Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
                                         }
                                     )
                             ) {
