@@ -651,7 +651,7 @@ fun FullscreenLyricsSheet(
     val startColor = remember { Animatable(color) }
     val midColor1 = remember { Animatable(color.copy(alpha = 0.95f)) }
     val midColor2 = remember { Animatable(color.copy(alpha = 0.85f)) }
-    val endColor = remember { Animatable(Color.Black) }
+    val endColor = remember { Animatable(Color(0xFF121212)) }
 
     // Dynamic gradient animation - MULTIPLE DIRECTIONS
     var gradientAngle by remember { mutableFloatStateOf(0f) }
@@ -701,7 +701,7 @@ fun FullscreenLyricsSheet(
             }
             launch {
                 endColor.animateTo(
-                    targetValue = Color.Black,
+                    targetValue = Color(0xFF121212),
                     animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
                 )
             }
@@ -741,10 +741,10 @@ fun FullscreenLyricsSheet(
         onDismissRequest = {
             onDismiss()
         },
-        containerColor = Color.Black,
+        containerColor = Color(0xFF121212),
         contentColor = Color.Transparent,
         dragHandle = {},
-        scrimColor = Color.Black.copy(alpha = .5f),
+        scrimColor = Color(0xFF121212).copy(alpha = .5f),
         sheetState = sheetState,
         modifier =
             Modifier

@@ -51,7 +51,7 @@ fun AIBadge() {
     ) {
         BasicText(
             text = stringResource(Res.string.ai),
-            color = { Color.Black },
+            color = { Color(0xFF121212) },
             maxLines = 1,
             autoSize = TextAutoSize.StepBased(minFontSize = 6.sp),
             style = typo().labelSmall,

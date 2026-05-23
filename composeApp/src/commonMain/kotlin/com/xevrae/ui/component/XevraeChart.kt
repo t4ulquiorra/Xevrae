@@ -60,7 +60,7 @@ fun PreviewXevraeChartButton() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(Color(0xFF121212)),
         contentAlignment = Alignment.Center
     ) {
         XevraeChartButton(onClick = {})

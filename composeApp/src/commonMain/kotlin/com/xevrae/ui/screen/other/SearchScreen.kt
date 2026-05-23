@@ -464,7 +464,7 @@ fun SearchScreen(
                                             modifier =
                                                 Modifier
                                                     .fillMaxWidth()
-                                                    .background(Color.Black),
+                                                    .background(Color(0xFF121212)),
                                         ) {
                                             TextButton(
                                                 onClick = { searchViewModel.deleteSearchHistory() },

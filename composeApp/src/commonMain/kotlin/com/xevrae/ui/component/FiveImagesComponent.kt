@@ -72,10 +72,10 @@ fun FiveImagesComponent(
                                     listOf(
                                         Color.Transparent,
                                         Color.Transparent,
-                                        Color.Black.copy(
+                                        Color(0xFF121212).copy(
                                             alpha = 0.4f,
                                         ),
-                                        Color.Black,
+                                        Color(0xFF121212),
                                     ),
                             ),
                     ),
@@ -172,10 +172,10 @@ fun FiveImagesComponent(
                                             listOf(
                                                 Color.Transparent,
                                                 Color.Transparent,
-                                                Color.Black.copy(
+                                                Color(0xFF121212).copy(
                                                     alpha = 0.4f,
                                                 ),
-                                                Color.Black,
+                                                Color(0xFF121212),
                                             ),
                                     ),
                             ),
@@ -274,10 +274,10 @@ fun FiveImagesComponent(
                                             listOf(
                                                 Color.Transparent,
                                                 Color.Transparent,
-                                                Color.Black.copy(
+                                                Color(0xFF121212).copy(
                                                     alpha = 0.4f,
                                                 ),
-                                                Color.Black,
+                                                Color(0xFF121212),
                                             ),
                                     ),
                             ),

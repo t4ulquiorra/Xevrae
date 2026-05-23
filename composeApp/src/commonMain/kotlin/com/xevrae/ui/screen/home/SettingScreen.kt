@@ -2567,9 +2567,9 @@ fun SettingScreen(
             onDismissRequest = {
                 showThirdPartyLibraries = false
             },
-            containerColor = Color.Black,
+            containerColor = Color(0xFF121212),
             dragHandle = {},
-            scrimColor = Color.Black,
+            scrimColor = Color(0xFF121212),
             sheetState = sheetState,
             contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
             shape = RectangleShape,

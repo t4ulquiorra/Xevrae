@@ -282,7 +282,7 @@ data class AlbumUIState(
     val browseId: String = "",
     val title: String = "",
     val thumbnail: String? = null,
-    val colors: List<Color> = listOf(Color.Black, md_theme_dark_background),
+    val colors: List<Color> = listOf(Color(0xFF121212), md_theme_dark_background),
     val artist: Artist =
         Artist(
             id = null,

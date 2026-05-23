@@ -1027,7 +1027,7 @@ data class LocalPlaylistState(
     val thumbnail: String? = null,
     val colors: List<Color> =
         listOf(
-            Color.Black,
+            Color(0xFF121212),
             md_theme_dark_background,
         ),
     val inLibrary: LocalDateTime? = null,

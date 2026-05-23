@@ -66,9 +66,9 @@ fun AppBottomNavigationBar(
                             Brush.verticalGradient(
                                 listOf(
                                     Color.Transparent,
-                                    Color.Black.copy(alpha = 0.5f),
-                                    Color.Black.copy(alpha = 0.8f),
-                                    Color.Black,
+                                    Color(0xFF121212).copy(alpha = 0.5f),
+                                    Color(0xFF121212).copy(alpha = 0.8f),
+                                    Color(0xFF121212),
                                 ),
                             ),
                         )
@@ -83,7 +83,7 @@ fun AppBottomNavigationBar(
                 containerColor ?: if (isTranslucentBackground) {
                     Color.Transparent
                 } else {
-                    Color.Black
+                    Color(0xFF121212)
                 },
         ) {
             bottomNavScreens.forEach { screen ->

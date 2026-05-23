@@ -372,7 +372,7 @@ fun LocalPlaylistScreen(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .background(Color.Black)
+                .background(Color(0xFF121212))
                 .pointerInput(Unit) {
                     detectDragGesturesAfterLongPress(
                         onDrag = { change, offset ->
@@ -454,7 +454,7 @@ fun LocalPlaylistScreen(
                                             listOf(
                                                 Color.Transparent,
                                                 Color(0x75000000),
-                                                Color.Black,
+                                                Color(0xFF121212),
                                             ),
                                         ),
                                 ),

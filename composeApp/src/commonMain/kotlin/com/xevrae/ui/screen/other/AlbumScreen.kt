@@ -188,7 +188,7 @@ fun AlbumScreen(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .background(Color.Black),
+                            .background(Color(0xFF121212)),
                     state = lazyState,
                 ) {
                     item(contentType = "header") {
@@ -225,7 +225,7 @@ fun AlbumScreen(
                                                         listOf(
                                                             Color.Transparent,
                                                             Color(0x75000000),
-                                                            Color.Black,
+                                                            Color(0xFF121212),
                                                         ),
                                                     ),
                                             ),

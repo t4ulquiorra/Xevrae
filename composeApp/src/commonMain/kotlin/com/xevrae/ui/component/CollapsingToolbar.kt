@@ -266,9 +266,9 @@ private fun Header(
                                 listOf(
                                     Color.Transparent,
                                     Color.Transparent,
-                                    Color.Black.copy(alpha = 0.3f),
-                                    Color.Black.copy(alpha = 0.6f),
-                                    Color.Black.copy(alpha = 0.85f),
+                                    Color(0xFF121212).copy(alpha = 0.3f),
+                                    Color(0xFF121212).copy(alpha = 0.6f),
+                                    Color(0xFF121212).copy(alpha = 0.85f),
                                     md_theme_dark_background,
                                 ),
                             startY = headerHeightPx / 2,  // Start fade at middle of header

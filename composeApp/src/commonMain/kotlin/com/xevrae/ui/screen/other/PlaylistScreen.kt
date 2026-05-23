@@ -317,7 +317,7 @@ fun PlaylistScreen(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .background(Color.Black),
+                            .background(Color(0xFF121212)),
                     state = lazyState,
                 ) {
                     if (!showSearchBar) {
@@ -356,7 +356,7 @@ fun PlaylistScreen(
                                                             listOf(
                                                                 Color.Transparent,
                                                                 Color(0x75000000),
-                                                                Color.Black,
+                                                                Color(0xFF121212),
                                                             ),
                                                         ),
                                                 ),
@@ -642,7 +642,7 @@ fun PlaylistScreen(
                         }
                     } else {
                         stickyHeader {
-                            Box(Modifier.background(Color.Black)) {
+                            Box(Modifier.background(Color(0xFF121212))) {
                                 Row(
                                     modifier =
                                         Modifier

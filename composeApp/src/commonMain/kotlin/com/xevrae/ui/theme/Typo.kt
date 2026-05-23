@@ -30,77 +30,77 @@ fun typo(): Typography {
             titleSmall =
                 TextStyle(
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
                     color = Color.White,
                 ),
             titleMedium =
                 TextStyle(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color.White,
                 ),
             titleLarge =
                 TextStyle(
                     fontSize = 25.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color.White,
                 ),
             bodySmall =
                 TextStyle(
                     fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             bodyMedium =
                 TextStyle(
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             bodyLarge =
                 TextStyle(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             displayLarge =
                 TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             headlineMedium =
                 TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             headlineLarge =
                 TextStyle(
                     fontSize = 23.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             labelMedium =
                 TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),
             labelSmall =
                 TextStyle(
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Black,
                     fontFamily = fontFamily,
                     color = Color(0xFFB8B8B8),
                 ),

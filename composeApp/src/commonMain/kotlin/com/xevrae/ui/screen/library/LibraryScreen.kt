@@ -365,7 +365,7 @@ fun LibraryScreen(
             containerColor = Color.Transparent,
             contentColor = Color.Transparent,
             dragHandle = null,
-            scrimColor = Color.Black.copy(alpha = .5f),
+            scrimColor = Color(0xFF121212).copy(alpha = .5f),
         ) {
             Card(
                 modifier =

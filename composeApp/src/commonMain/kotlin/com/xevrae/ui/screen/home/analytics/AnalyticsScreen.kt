@@ -216,10 +216,10 @@ fun AnalyticsScreen(
                                                 colors =
                                                     listOf(
                                                         Color.Transparent,
-                                                        Color.Black.copy(
+                                                        Color(0xFF121212).copy(
                                                             alpha = 0.8f,
                                                         ),
-                                                        Color.Black,
+                                                        Color(0xFF121212),
                                                     ),
                                                 startY = (screenSizeInfo.hPX / 2.5f) * 3 / 4, // Gradient applied to wrap the title only
                                             ),

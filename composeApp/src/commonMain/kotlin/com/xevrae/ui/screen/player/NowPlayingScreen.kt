@@ -258,9 +258,9 @@ fun NowPlayingScreen(
         onDismissRequest = {
             onDismiss()
         },
-        containerColor = Color.Black,
+        containerColor = Color(0xFF121212),
         dragHandle = {},
-        scrimColor = Color.Black,
+        scrimColor = Color(0xFF121212),
         sheetState = sheetState,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
         shape = RectangleShape,
@@ -817,7 +817,7 @@ fun NowPlayingScreenContent(
                                                 colorStops =
                                                     arrayOf(
                                                         0.2f to overlay,
-                                                        1f to Color.Black,
+                                                        1f to Color(0xFF121212),
                                                     ),
                                             ),
                                         ),

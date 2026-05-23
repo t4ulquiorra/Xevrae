@@ -131,7 +131,7 @@ fun LibraryTilingItem(
             Text(
                 title,
                 style = typo().titleSmall,
-                color = Color.Black,
+                color = Color(0xFF121212),
             )
         }
     }
@@ -156,21 +156,21 @@ data class LibraryTilingState(
                 title = Res.string.followed,
                 containerColor = Color(0xffFFEB3B),
                 icon = Icons.Default.Insights,
-                iconColor = Color.Black,
+                iconColor = Color(0xFF121212),
             )
         val MostPlayed =
             LibraryTilingState(
                 title = Res.string.most_played,
                 containerColor = Color(0xff00BCD4),
                 icon = Icons.AutoMirrored.Filled.TrendingUp,
-                iconColor = Color.Black,
+                iconColor = Color(0xFF121212),
             )
         val Downloaded =
             LibraryTilingState(
                 title = Res.string.downloaded,
                 containerColor = Color(0xff4CAF50),
                 icon = Icons.Default.Downloading,
-                iconColor = Color.Black,
+                iconColor = Color(0xFF121212),
             )
     }
 }

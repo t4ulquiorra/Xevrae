@@ -21,7 +21,7 @@ actual typealias PlatformBackdrop = LayerBackdrop
 
 @Composable
 actual fun rememberBackdrop(): PlatformBackdrop = rememberLayerBackdrop {
-    drawRect(Color.Black)
+    drawRect(Color(0xFF121212))
     drawContent()
 }
 
@@ -67,6 +67,6 @@ actual fun Modifier.drawBackdropCustomShape(
             layer.record { drawBackdrop() }
         },
         shape = { shape },
-        onDrawSurface = { drawRect(Color.Black.copy(alpha = 0.1f)) }
+        onDrawSurface = { drawRect(Color(0xFF121212).copy(alpha = 0.1f)) }
     )
 }

@@ -150,7 +150,7 @@ fun MiniPlayer(
     val luminanceAnimation = remember { Animatable(0f) }
 
     val textColor by animateColorAsState(
-        targetValue = if (luminanceAnimation.value > 0.6f) Color.Black else Color.White,
+        targetValue = if (luminanceAnimation.value > 0.6f) Color(0xFF121212) else Color.White,
         label = "MiniPlayerTextColor",
         animationSpec = tween(500),
     )

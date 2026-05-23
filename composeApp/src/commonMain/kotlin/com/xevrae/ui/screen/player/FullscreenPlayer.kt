@@ -318,7 +318,7 @@ fun FullscreenPlayer(
                                 .align(Alignment.BottomCenter)
                                 .background(
                                     Brush.verticalGradient(
-                                        listOf(Color.Transparent, Color.Black),
+                                        listOf(Color.Transparent, Color(0xFF121212)),
                                     ),
                                 ),
                         )
@@ -328,7 +328,7 @@ fun FullscreenPlayer(
                                     .align(Alignment.TopCenter)
                                     .background(
                                         Brush.verticalGradient(
-                                            listOf(Color.Black, Color.Transparent),
+                                            listOf(Color(0xFF121212), Color.Transparent),
                                         ),
                                     ).padding(horizontal = 12.dp)
                                     .fillMaxWidth(),
