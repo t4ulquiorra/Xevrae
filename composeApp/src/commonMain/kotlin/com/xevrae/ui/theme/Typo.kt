@@ -10,12 +10,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 import xevrae.composeapp.generated.resources.Res
-import xevrae.composeapp.generated.resources.poppins_medium
+import xevrae.composeapp.generated.resources.nunito
 
 @Composable
 fun fontFamily(): FontFamily =
     FontFamily(
-        Font(Res.font.poppins_medium, FontWeight.Normal, FontStyle.Normal),
+        Font(Res.font.nunito, FontWeight.Normal, FontStyle.Normal),
     )
 
 @Composable
