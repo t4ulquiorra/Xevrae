@@ -1698,7 +1698,7 @@ fun NowPlayingScreenContent(
                                     Spacer(modifier = Modifier.height(5.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
-                                            text = stringResource(Res.string.lyrics),
+                                            text = "Lyrics Preview",
                                             style = typo().labelMedium,
                                             color = Color.White,
                                         )

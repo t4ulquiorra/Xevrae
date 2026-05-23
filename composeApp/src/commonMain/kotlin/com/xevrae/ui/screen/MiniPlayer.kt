@@ -280,7 +280,7 @@ fun MiniPlayer(
 
     if (getPlatform() == Platform.Android) {
         Card(
-            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(12.dp),
+            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(24.dp),
             colors =
                 CardDefaults.cardColors(
                     containerColor = if (isLiquidGlassEnabled == DataStoreManager.TRUE) transparent else background.value,
@@ -402,10 +402,11 @@ fun MiniPlayer(
                                 },
                                 modifier =
                                     Modifier
-                                        .size(40.dp)
-                                        .align(Alignment.CenterVertically)
+                                        .fillMaxHeight()
+                                        .aspectRatio(1f)
+                                        .padding(6.dp)
                                         .clip(
-                                            RoundedCornerShape(4.dp),
+                                            RoundedCornerShape(8.dp),
                                         ),
                             )
                             Spacer(modifier = Modifier.width(10.dp))
