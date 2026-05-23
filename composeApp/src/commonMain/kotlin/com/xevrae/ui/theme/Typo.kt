@@ -15,7 +15,7 @@ import xevrae.composeapp.generated.resources.nunito
 @Composable
 fun fontFamily(): FontFamily =
     FontFamily(
-        Font(Res.font.nunito, FontWeight.Normal, FontStyle.Normal),
+        Font(Res.font.nunito, FontWeight.Medium, FontStyle.Normal),
     )
 
 @Composable
