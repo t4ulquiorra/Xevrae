@@ -664,16 +664,21 @@ fun HomeItemSong(
     val interactionSource1 = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     val isPressed1 by interactionSource1.collectIsPressedAsState()
     val scale1 by androidx.compose.animation.core.animateFloatAsState(
-        targetValue = if (isPressed1) 0.94f else 1f,
+        targetValue = if (isPressed1) 0.96f else 1f,
         animationSpec = androidx.compose.animation.core.tween(80),
         label = "scale1",
+    )
+    val alpha1 by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isPressed1) 0.75f else 1f,
+        animationSpec = androidx.compose.animation.core.tween(80),
+        label = "alpha1",
     )
     Box(
         modifier =
             Modifier
                 .fillMaxSize()
                 .focusable(true)
-                .graphicsLayer { scaleX = scale1; scaleY = scale1 }
+                .graphicsLayer { scaleX = scale1; scaleY = scale1; alpha = alpha1 }
                 .combinedClickable(
                     indication = null,
                     interactionSource = interactionSource1,
@@ -783,15 +788,20 @@ fun HomeItemVideo(
     val interactionSource2 = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     val isPressed2 by interactionSource2.collectIsPressedAsState()
     val scale2 by androidx.compose.animation.core.animateFloatAsState(
-        targetValue = if (isPressed2) 0.94f else 1f,
+        targetValue = if (isPressed2) 0.96f else 1f,
         animationSpec = androidx.compose.animation.core.tween(80),
         label = "scale2",
+    )
+    val alpha2 by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (isPressed2) 0.75f else 1f,
+        animationSpec = androidx.compose.animation.core.tween(80),
+        label = "alpha2",
     )
     Box(
         Modifier
             .fillMaxSize()
             .focusable(true)
-            .graphicsLayer { scaleX = scale2; scaleY = scale2 }
+            .graphicsLayer { scaleX = scale2; scaleY = scale2; alpha = alpha2 }
             .combinedClickable(
                 indication = null,
                 interactionSource = interactionSource2,
