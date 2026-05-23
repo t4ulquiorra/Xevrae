@@ -15,19 +15,51 @@ actual fun Modifier.pressClickable(
     onClick: () -> Unit,
 ): Modifier = composed {
     val scale = remember { Animatable(1f) }
+    val alpha = remember { Animatable(1f) }
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     this
         .graphicsLayer {
             scaleX = scale.value
             scaleY = scale.value
+            this.alpha = alpha.value
         }
         .pointerInput(enabled) {
             detectTapGestures(
                 onPress = {
                     if (!enabled) return@detectTapGestures
-                    scope.launch { scale.animateTo(0.94f, tween(80)) }
+                    scope.launch { scale.animateTo(0.96f, tween(80)) }
+                    scope.launch { alpha.animateTo(0.75f, tween(80)) }
                     val released = tryAwaitRelease()
                     scope.launch { scale.animateTo(1f, tween(80)) }
+                    scope.launch { alpha.animateTo(1f, tween(80)) }
+                    if (released) onClick()
+                }
+            )
+        }
+}
+
+actual fun Modifier.lightPressClickable(
+    enabled: Boolean,
+    onClick: () -> Unit,
+): Modifier = composed {
+    val scale = remember { Animatable(1f) }
+    val alpha = remember { Animatable(1f) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    this
+        .graphicsLayer {
+            scaleX = scale.value
+            scaleY = scale.value
+            this.alpha = alpha.value
+        }
+        .pointerInput(enabled) {
+            detectTapGestures(
+                onPress = {
+                    if (!enabled) return@detectTapGestures
+                    scope.launch { scale.animateTo(0.98f, tween(80)) }
+                    scope.launch { alpha.animateTo(0.75f, tween(80)) }
+                    val released = tryAwaitRelease()
+                    scope.launch { scale.animateTo(1f, tween(80)) }
+                    scope.launch { alpha.animateTo(1f, tween(80)) }
                     if (released) onClick()
                 }
             )

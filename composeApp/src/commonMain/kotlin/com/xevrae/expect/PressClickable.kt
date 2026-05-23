@@ -6,3 +6,8 @@ expect fun Modifier.pressClickable(
     enabled: Boolean = true,
     onClick: () -> Unit,
 ): Modifier
+
+expect fun Modifier.lightPressClickable(
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+): Modifier

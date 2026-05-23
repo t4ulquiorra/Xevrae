@@ -7,3 +7,8 @@ actual fun Modifier.pressClickable(
     enabled: Boolean,
     onClick: () -> Unit,
 ): Modifier = this.clickable(enabled = enabled, onClick = onClick)
+
+actual fun Modifier.lightPressClickable(
+    enabled: Boolean,
+    onClick: () -> Unit,
+): Modifier = this.clickable(enabled = enabled, onClick = onClick)
