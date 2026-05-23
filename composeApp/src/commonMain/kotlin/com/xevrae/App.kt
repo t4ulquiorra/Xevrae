@@ -351,12 +351,10 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             ) {
                                 MiniPlayer(
                                     Modifier
-                                        .height(56.dp)
+                                        .height(60.dp)
                                         .fillMaxWidth()
                                         .padding(
                                             horizontal = 12.dp,
-                                        ).padding(
-                                            top = 10.dp,
                                         ),
                                     backdrop = backdrop,
                                     onClick = {
