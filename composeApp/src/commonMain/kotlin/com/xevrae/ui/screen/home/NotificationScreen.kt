@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -149,8 +150,8 @@ fun NotificationItem(
                             .diskCacheKey(thumb)
                             .crossfade(true)
                             .build(),
-                    placeholder = null,
-                    error = null,
+                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
@@ -234,8 +235,8 @@ fun ItemAlbumNotification(
                         .diskCacheKey(thumbnail)
                         .crossfade(true)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

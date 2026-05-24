@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -168,8 +169,8 @@ fun HomeItem(
                             .crossfade(550)
                             .build(),
                     contentDescription = "",
-                    placeholder = null,
-                    error = null,
+                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                     modifier =
                         Modifier
                             .size(36.dp)
@@ -587,7 +588,7 @@ fun QuickPicksItem(
                         .diskCacheKey(data.thumbnails.lastOrNull()?.url)
                         .diskCachePolicy(CachePolicy.ENABLED)
                         .build(),
-                placeholder = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = stringResource(Res.string.description),
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -710,8 +711,8 @@ fun HomeItemSong(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -826,8 +827,8 @@ fun HomeItemVideo(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -915,8 +916,8 @@ fun HomeItemArtist(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1044,8 +1045,8 @@ fun ItemVideoChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1164,8 +1165,8 @@ fun ItemArtistChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
@@ -1275,8 +1276,8 @@ fun ItemTrackChart(
                         .diskCacheKey(thumb)
                         .crossfade(550)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

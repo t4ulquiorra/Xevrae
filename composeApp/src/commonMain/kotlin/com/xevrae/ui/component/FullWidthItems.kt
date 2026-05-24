@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -163,7 +164,7 @@ fun SongFullWidthItems(
             modifier =
                 modifier
                     .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                    .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                    .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF000000)), interactionSource = remember { MutableInteractionSource() }) {
                         onClickListener?.invoke(track?.videoId ?: songEntity?.videoId ?: "")
                     }.animateContentSize()
                     .pointerInput(Unit) {
@@ -229,8 +230,8 @@ fun SongFullWidthItems(
                                         .diskCacheKey(thumb)
                                         .crossfade(true)
                                         .build(),
-                                placeholder = null,
-                                error = null,
+                                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 modifier =
@@ -361,7 +362,7 @@ fun SuggestItems(
     Box(
         modifier =
             Modifier
-                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF000000)), interactionSource = remember { MutableInteractionSource() }) {
                     if (onClickListener != null) {
                         onClickListener()
                     }
@@ -395,8 +396,8 @@ fun SuggestItems(
                                     .diskCacheKey(thumb)
                                     .crossfade(true)
                                     .build(),
-                            placeholder = null,
-                            error = null,
+                            placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                            error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             modifier =
@@ -467,7 +468,7 @@ fun PlaylistFullWidthItems(
     Box(
         modifier =
             modifier
-                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+                .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF000000)), interactionSource = remember { MutableInteractionSource() }) {
                     onClickListener?.invoke()
                 }.animateContentSize(),
     ) {
@@ -547,8 +548,8 @@ fun PlaylistFullWidthItems(
                             .diskCacheKey(thumb)
                             .crossfade(true)
                             .build(),
-                    placeholder = null,
-                    error = null,
+                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier =
@@ -645,7 +646,7 @@ fun ArtistFullWidthItems(
         }
     Box(
         modifier
-            .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF141416)), interactionSource = remember { MutableInteractionSource() }) {
+            .clickable(indication = androidx.compose.material3.ripple(color = androidx.compose.ui.graphics.Color(0xFF000000)), interactionSource = remember { MutableInteractionSource() }) {
                 onClickListener?.invoke()
             },
     ) {
@@ -666,8 +667,8 @@ fun ArtistFullWidthItems(
                             .diskCacheKey(thumbnails)
                             .crossfade(true)
                             .build(),
-                    placeholder = null,
-                    error = null,
+                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                     modifier =

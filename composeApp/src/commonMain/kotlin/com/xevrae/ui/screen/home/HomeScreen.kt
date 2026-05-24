@@ -71,6 +71,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -818,8 +819,7 @@ fun HomeTopAppBar(navController: NavController) {
             }
         },
         actions = {
-            RippleIconButton(resId = Res.drawable.baseline_history_24) {
-                navController.navigate(RecentlySongsDestination)
+
             }
             RippleIconButton(resId = Res.drawable.baseline_settings_24) {
                 navController.navigate(SettingsDestination)
@@ -857,8 +857,8 @@ fun AccountLayout(
                         .diskCacheKey(url)
                         .crossfade(true)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

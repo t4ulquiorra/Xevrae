@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -65,8 +66,8 @@ fun PodcastEpisodeFullWidthItem(
                             .diskCacheKey(episode.thumbnail.lastOrNull()?.url)
                             .crossfade(true)
                             .build(),
-                    placeholder = null,
-                    error = null,
+                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxSize(),

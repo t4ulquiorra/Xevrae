@@ -58,6 +58,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -901,8 +902,8 @@ fun SuggestItemRow(
                         .diskCacheKey(url)
                         .crossfade(true)
                         .build(),
-                placeholder = null,
-                error = null,
+                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

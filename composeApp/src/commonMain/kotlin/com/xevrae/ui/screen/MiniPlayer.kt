@@ -75,6 +75,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -394,8 +395,8 @@ fun MiniPlayer(
                                         .data(songEntity?.thumbnails)
                                         .crossfade(550)
                                         .build(),
-                                placeholder = null,
-                                error = null,
+                                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 onSuccess = {
@@ -591,8 +592,8 @@ fun MiniPlayer(
                                     .data(songEntity?.thumbnails)
                                     .crossfade(550)
                                     .build(),
-                            placeholder = null,
-                            error = null,
+                            placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                            error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             onSuccess = {

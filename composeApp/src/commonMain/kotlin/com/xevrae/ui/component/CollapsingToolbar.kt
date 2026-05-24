@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -247,8 +248,8 @@ private fun Header(
                         .asImageBitmap(),
                 )
             },
-            placeholder = null,
-            error = null,
+            placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+            error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier =

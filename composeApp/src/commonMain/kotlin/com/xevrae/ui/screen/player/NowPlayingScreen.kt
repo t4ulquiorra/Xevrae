@@ -113,6 +113,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -983,7 +984,7 @@ fun NowPlayingScreenContent(
                                             )
                                         },
                                         contentScale = ContentScale.Crop,
-                                        placeholder = null,
+                                        placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                         modifier =
                                             Modifier
                                                 .align(Alignment.Center)
@@ -1203,8 +1204,8 @@ fun NowPlayingScreenContent(
                                                         .diskCacheKey(screenDataState.thumbnailURL + "BIGGER")
                                                         .crossfade(true)
                                                         .build(),
-                                                placeholder = null,
-                                                error = null,
+                                                placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                                error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                                 contentDescription = null,
                                                 contentScale = ContentScale.FillWidth,
                                                 modifier =
@@ -1633,8 +1634,8 @@ fun NowPlayingScreenContent(
                                                             .diskCacheKey(thumb)
                                                             .crossfade(550)
                                                             .build(),
-                                                    placeholder = null,
-                                                    error = null,
+                                                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                                     contentDescription = null,
                                                     contentScale = ContentScale.Crop,
                                                     modifier =
@@ -1866,8 +1867,8 @@ fun NowPlayingScreenContent(
                                                 .diskCacheKey(thumb)
                                                 .crossfade(550)
                                                 .build(),
-                                        placeholder = null,
-                                        error = null,
+                                        placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                        error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier =

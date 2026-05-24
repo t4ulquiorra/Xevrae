@@ -96,6 +96,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
@@ -1673,8 +1674,8 @@ fun NowPlayingBottomSheet(
                                     .diskCacheKey(thumb)
                                     .crossfade(550)
                                     .build(),
-                            placeholder = null,
-                            error = null,
+                            placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                            error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
                             contentDescription = null,
                             contentScale = ContentScale.Inside,
                             modifier =
