@@ -292,7 +292,7 @@ fun HomeScreen(
 
     val onRefresh: () -> Unit = {
         isRefreshing = true
-        viewModel.getHomeItemList(params)
+        viewModel.getHomeItemList(params, forceRefresh = true)
         Logger.w("HomeScreen", "onRefresh")
     }
     LaunchedEffect(key1 = reloadDestination) {
@@ -454,25 +454,9 @@ fun HomeScreen(
                 Modifier
                     .hazeSource(hazeState),
             state = pullToRefreshState,
-            onRefresh = onRefresh,
-            isRefreshing = isRefreshing,
+            onRefresh = {},
+            isRefreshing = false,
             indicator = {
-                PullToRefreshDefaults.Indicator(
-                    state = pullToRefreshState,
-                    isRefreshing = isRefreshing,
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(
-                                top =
-                                    with(LocalDensity.current) {
-                                        topAppBarHeightPx.toDp()
-                                    },
-                            ),
-                    containerColor = PullToRefreshDefaults.indicatorContainerColor,
-                    color = PullToRefreshDefaults.indicatorColor,
-                    maxDistance = PullToRefreshDefaults.PositionalThreshold,
-                )
             },
         ) {
             Crossfade(targetState = loading, label = "Home Shimmer") { loading ->
