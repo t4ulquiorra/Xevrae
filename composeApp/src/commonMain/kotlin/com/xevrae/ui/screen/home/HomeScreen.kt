@@ -753,7 +753,7 @@ fun HomeScreen(
                             text = stringResource(id),
                         ) {
                             when (id) {
-                                Res.string.all -> viewModel.setParams(null)
+                                Res.string.all -> { viewModel.setParams(null); viewModel.getHomeItemList(null, forceRefresh = true) }
                                 Res.string.relax -> viewModel.setParams(HOME_PARAMS_RELAX)
                                 Res.string.sleep -> viewModel.setParams(HOME_PARAMS_SLEEP)
                                 Res.string.energize -> viewModel.setParams(HOME_PARAMS_ENERGIZE)
