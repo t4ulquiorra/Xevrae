@@ -819,8 +819,6 @@ fun HomeTopAppBar(navController: NavController) {
             }
         },
         actions = {
-
-            }
             RippleIconButton(resId = Res.drawable.baseline_settings_24) {
                 navController.navigate(SettingsDestination)
             }
