@@ -1673,8 +1673,8 @@ fun NowPlayingBottomSheet(
                                     .diskCacheKey(thumb)
                                     .crossfade(550)
                                     .build(),
-                            placeholder = painterResource(Res.drawable.app_icon),
-                            error = painterResource(Res.drawable.app_icon),
+                            placeholder = null,
+                            error = null,
                             contentDescription = null,
                             contentScale = ContentScale.Inside,
                             modifier =

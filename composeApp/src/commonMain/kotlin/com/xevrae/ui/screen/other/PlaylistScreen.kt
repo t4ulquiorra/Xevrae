@@ -399,8 +399,8 @@ fun PlaylistScreen(
                                                     .diskCacheKey(data.thumbnail)
                                                     .crossfade(true)
                                                     .build(),
-                                            placeholder = painterResource(Res.drawable.app_icon),
-                                            error = painterResource(Res.drawable.app_icon),
+                                            placeholder = null,
+                                            error = null,
                                             contentDescription = null,
                                             contentScale = ContentScale.FillHeight,
                                             onSuccess = {

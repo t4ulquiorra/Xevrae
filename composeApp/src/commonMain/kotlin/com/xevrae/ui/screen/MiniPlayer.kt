@@ -394,8 +394,8 @@ fun MiniPlayer(
                                         .data(songEntity?.thumbnails)
                                         .crossfade(550)
                                         .build(),
-                                placeholder = painterResource(Res.drawable.app_icon),
-                                error = painterResource(Res.drawable.app_icon),
+                                placeholder = null,
+                                error = null,
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 onSuccess = {
@@ -591,8 +591,8 @@ fun MiniPlayer(
                                     .data(songEntity?.thumbnails)
                                     .crossfade(550)
                                     .build(),
-                            placeholder = painterResource(Res.drawable.app_icon),
-                            error = painterResource(Res.drawable.app_icon),
+                            placeholder = null,
+                            error = null,
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             onSuccess = {

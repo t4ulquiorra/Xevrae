@@ -865,8 +865,8 @@ fun AccountLayout(
                         .diskCacheKey(url)
                         .crossfade(true)
                         .build(),
-                placeholder = painterResource(Res.drawable.app_icon),
-                error = painterResource(Res.drawable.app_icon),
+                placeholder = null,
+                error = null,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =

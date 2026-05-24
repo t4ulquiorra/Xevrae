@@ -229,8 +229,8 @@ fun SongFullWidthItems(
                                         .diskCacheKey(thumb)
                                         .crossfade(true)
                                         .build(),
-                                placeholder = painterResource(Res.drawable.app_icon),
-                                error = painterResource(Res.drawable.app_icon),
+                                placeholder = null,
+                                error = null,
                                 contentDescription = null,
                                 contentScale = ContentScale.FillWidth,
                                 modifier =
@@ -395,8 +395,8 @@ fun SuggestItems(
                                     .diskCacheKey(thumb)
                                     .crossfade(true)
                                     .build(),
-                            placeholder = painterResource(Res.drawable.app_icon),
-                            error = painterResource(Res.drawable.app_icon),
+                            placeholder = null,
+                            error = null,
                             contentDescription = null,
                             contentScale = ContentScale.FillWidth,
                             modifier =
@@ -547,8 +547,8 @@ fun PlaylistFullWidthItems(
                             .diskCacheKey(thumb)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.app_icon),
-                    error = painterResource(Res.drawable.app_icon),
+                    placeholder = null,
+                    error = null,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier =
@@ -666,8 +666,8 @@ fun ArtistFullWidthItems(
                             .diskCacheKey(thumbnails)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.app_icon),
-                    error = painterResource(Res.drawable.app_icon),
+                    placeholder = null,
+                    error = null,
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
                     modifier =

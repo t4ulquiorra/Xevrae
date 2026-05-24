@@ -983,7 +983,7 @@ fun NowPlayingScreenContent(
                                             )
                                         },
                                         contentScale = ContentScale.Crop,
-                                        placeholder = painterResource(Res.drawable.app_icon),
+                                        placeholder = null,
                                         modifier =
                                             Modifier
                                                 .align(Alignment.Center)
@@ -1203,8 +1203,8 @@ fun NowPlayingScreenContent(
                                                         .diskCacheKey(screenDataState.thumbnailURL + "BIGGER")
                                                         .crossfade(true)
                                                         .build(),
-                                                placeholder = painterResource(Res.drawable.app_icon),
-                                                error = painterResource(Res.drawable.app_icon),
+                                                placeholder = null,
+                                                error = null,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.FillWidth,
                                                 modifier =
@@ -1633,8 +1633,8 @@ fun NowPlayingScreenContent(
                                                             .diskCacheKey(thumb)
                                                             .crossfade(550)
                                                             .build(),
-                                                    placeholder = painterResource(Res.drawable.app_icon),
-                                                    error = painterResource(Res.drawable.app_icon),
+                                                    placeholder = null,
+                                                    error = null,
                                                     contentDescription = null,
                                                     contentScale = ContentScale.Crop,
                                                     modifier =
@@ -1866,8 +1866,8 @@ fun NowPlayingScreenContent(
                                                 .diskCacheKey(thumb)
                                                 .crossfade(550)
                                                 .build(),
-                                        placeholder = painterResource(Res.drawable.app_icon),
-                                        error = painterResource(Res.drawable.app_icon),
+                                        placeholder = null,
+                                        error = null,
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier =

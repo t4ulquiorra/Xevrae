@@ -65,8 +65,8 @@ fun PodcastEpisodeFullWidthItem(
                             .diskCacheKey(episode.thumbnail.lastOrNull()?.url)
                             .crossfade(true)
                             .build(),
-                    placeholder = painterResource(Res.drawable.app_icon),
-                    error = painterResource(Res.drawable.app_icon),
+                    placeholder = null,
+                    error = null,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxSize(),
