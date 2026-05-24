@@ -66,8 +66,8 @@ fun AppBottomNavigationBar(
                             Brush.verticalGradient(
                                 listOf(
                                     Color.Transparent,
-                                    Color(0xFF121212).copy(alpha = 0.5f),
-                                    Color(0xFF121212).copy(alpha = 0.8f),
+                                    Color(0xFF121212).copy(alpha = 0.6f),
+                                    Color(0xFF121212).copy(alpha = 0.9f),
                                     Color(0xFF121212),
                                 ),
                             ),

@@ -818,9 +818,6 @@ fun HomeTopAppBar(navController: NavController) {
             }
         },
         actions = {
-            RippleIconButton(resId = Res.drawable.outline_notifications_24) {
-                navController.navigate(NotificationDestination)
-            }
             RippleIconButton(resId = Res.drawable.baseline_history_24) {
                 navController.navigate(RecentlySongsDestination)
             }

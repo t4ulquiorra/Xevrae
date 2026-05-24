@@ -408,7 +408,7 @@ fun MiniPlayer(
                                         .fillMaxHeight()
                                         .aspectRatio(1f)
                                         .clip(
-                                            RoundedCornerShape(8.dp),
+                                            RoundedCornerShape(6.dp),
                                         ),
                             )
                             Spacer(modifier = Modifier.width(10.dp))
