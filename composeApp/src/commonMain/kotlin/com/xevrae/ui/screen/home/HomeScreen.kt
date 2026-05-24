@@ -449,15 +449,10 @@ fun HomeScreen(
     }
 
     Box {
-        PullToRefreshBox(
+        Box(
             modifier =
                 Modifier
                     .hazeSource(hazeState),
-            state = pullToRefreshState,
-            onRefresh = {},
-            isRefreshing = false,
-            indicator = {
-            },
         ) {
             Crossfade(targetState = loading, label = "Home Shimmer") { loading ->
                 if (!loading) {
