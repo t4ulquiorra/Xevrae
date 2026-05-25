@@ -503,20 +503,8 @@ fun MiniPlayer(
                         sharedViewModel.onUIEvent(UIEvent.ToggleLike)
                     }
                     Spacer(modifier = Modifier.width(15.dp))
-                    Crossfade(targetState = loading, label = "") {
-                        if (it) {
-                            Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(18.dp),
-                                    color = Color.LightGray,
-                                    strokeWidth = 3.dp,
-                                )
-                            }
-                        } else {
-                            PlayPauseButton(isPlaying = isPlaying, modifier = Modifier.size(48.dp)) {
-                                sharedViewModel.onUIEvent(UIEvent.PlayPause)
-                            }
-                        }
+                    PlayPauseButton(isPlaying = isPlaying, modifier = Modifier.size(48.dp)) {
+                        sharedViewModel.onUIEvent(UIEvent.PlayPause)
                     }
 
                     Spacer(modifier = Modifier.width(15.dp))
