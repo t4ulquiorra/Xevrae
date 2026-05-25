@@ -79,9 +79,9 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.toBitmap
 import com.kmpalette.rememberPaletteState
-import com.maxrave.domain.data.entities.DownloadState
-import com.maxrave.domain.data.model.browse.album.Track
-import com.maxrave.domain.utils.toSongEntity
+import com.xevrae.domain.data.entities.DownloadState
+import com.xevrae.domain.data.model.browse.album.Track
+import com.xevrae.domain.utils.toSongEntity
 import com.xevrae.Platform
 import com.xevrae.expect.ui.drawBackdropCustomShape
 import com.xevrae.expect.ui.layerBackdrop
@@ -125,22 +125,22 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import simpmusic.composeapp.generated.resources.Res
-import simpmusic.composeapp.generated.resources.album
-import simpmusic.composeapp.generated.resources.album_length
-import simpmusic.composeapp.generated.resources.baseline_arrow_back_ios_new_24
-import simpmusic.composeapp.generated.resources.baseline_downloaded
-import simpmusic.composeapp.generated.resources.baseline_more_vert_24
-import simpmusic.composeapp.generated.resources.baseline_pause_circle_24
-import simpmusic.composeapp.generated.resources.baseline_play_circle_24
-import simpmusic.composeapp.generated.resources.baseline_shuffle_24
-import simpmusic.composeapp.generated.resources.download_button
-import simpmusic.composeapp.generated.resources.downloaded
-import simpmusic.composeapp.generated.resources.downloading
-import simpmusic.composeapp.generated.resources.holder
-import simpmusic.composeapp.generated.resources.no_description
-import simpmusic.composeapp.generated.resources.other_version
-import simpmusic.composeapp.generated.resources.year_and_category
+import xevrae.composeapp.generated.resources.Res
+import xevrae.composeapp.generated.resources.album
+import xevrae.composeapp.generated.resources.album_length
+import xevrae.composeapp.generated.resources.baseline_arrow_back_ios_new_24
+import xevrae.composeapp.generated.resources.baseline_downloaded
+import xevrae.composeapp.generated.resources.baseline_more_vert_24
+import xevrae.composeapp.generated.resources.baseline_pause_circle_24
+import xevrae.composeapp.generated.resources.baseline_play_circle_24
+import xevrae.composeapp.generated.resources.baseline_shuffle_24
+import xevrae.composeapp.generated.resources.download_button
+import xevrae.composeapp.generated.resources.downloaded
+import xevrae.composeapp.generated.resources.downloading
+import xevrae.composeapp.generated.resources.holder
+import xevrae.composeapp.generated.resources.no_description
+import xevrae.composeapp.generated.resources.other_version
+import xevrae.composeapp.generated.resources.year_and_category
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
