@@ -47,9 +47,9 @@ fun PlayerControlLayout(
     onUIEvent: (UIEvent) -> Unit,
 ) {
     val height = if (isSmallSize) 48.dp else 96.dp
-    val smallIcon = if (isSmallSize) 15.dp to 28.dp else 24.dp to 42.dp
-    val mediumIcon = if (isSmallSize) 28.dp to 38.dp else 42.dp to 52.dp
-    val bigIcon = if (isSmallSize) 38.dp to 48.dp else 72.dp to 96.dp
+    val smallIcon = if (isSmallSize) 16.dp to 31.dp else 26.dp to 46.dp
+    val mediumIcon = if (isSmallSize) 31.dp to 42.dp else 46.dp to 57.dp
+    val bigIcon = if (isSmallSize) 42.dp to 53.dp else 79.dp to 106.dp
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
