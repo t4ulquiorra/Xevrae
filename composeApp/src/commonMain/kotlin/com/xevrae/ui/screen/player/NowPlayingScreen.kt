@@ -84,8 +84,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import com.xevrae.ui.component.DimIconButton
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.ModalBottomSheet
@@ -1293,14 +1291,11 @@ fun NowPlayingScreenContent(
                                                 targetState = likeStatus,
                                             ) {
                                                 if (it) {
-                                                    IconButton(
+                                                    DimIconButton(
                                                         modifier =
                                                             Modifier
                                                                 .size(24.dp)
-                                                                .aspectRatio(1f)
-                                                                .clip(
-                                                                    CircleShape,
-                                                                ),
+                                                                .aspectRatio(1f),
                                                         onClick = {
                                                             sharedViewModel.addToYouTubeLiked()
                                                         },
@@ -1308,14 +1303,11 @@ fun NowPlayingScreenContent(
                                                         Icon(imageVector = Icons.Rounded.CheckCircle, tint = Color.White, contentDescription = "")
                                                     }
                                                 } else {
-                                                    IconButton(
+                                                    DimIconButton(
                                                         modifier =
                                                             Modifier
                                                                 .size(24.dp)
-                                                                .aspectRatio(1f)
-                                                                .clip(
-                                                                    CircleShape,
-                                                                ),
+                                                                .aspectRatio(1f),
                                                         onClick = {
                                                             sharedViewModel.addToYouTubeLiked()
                                                         },
@@ -1518,12 +1510,11 @@ fun NowPlayingScreenContent(
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         // Info Button (Left)
-                                        IconButton(
+                                        DimIconButton(
                                             modifier =
                                                 Modifier
                                                     .size(24.dp)
-                                                    .aspectRatio(1f)
-                                                    .clip(CircleShape),
+                                                    .aspectRatio(1f),
                                             onClick = {
                                                 showInfoBottomSheet = true
                                             },
@@ -1536,7 +1527,7 @@ fun NowPlayingScreenContent(
                                             verticalAlignment = Alignment.CenterVertically,
                                         ) {
                                             // NEW: Add to Playlist Button (Center-Right)
-                                            IconButton(
+                                            DimIconButton(
                                                 modifier = Modifier.size(36.dp),
                                                 onClick = {
                                                     showAddToPlaylistDirectly = true
@@ -1551,7 +1542,7 @@ fun NowPlayingScreenContent(
                                             }
 
                                             // Queue Button (Right)
-                                            IconButton(
+                                            DimIconButton(
                                                 modifier = Modifier.size(36.dp),
                                                 onClick = {
                                                     showQueueBottomSheet = true
@@ -1726,7 +1717,7 @@ fun NowPlayingScreenContent(
                                                     ?.simpMusicLyrics != null
                                         if (canVoteLyrics || canVoteTranslatedLyrics) {
                                             CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-                                                IconButton(
+                                                DimIconButton(
                                                     onClick = {
                                                         showVoteDialog = true
                                                     },
