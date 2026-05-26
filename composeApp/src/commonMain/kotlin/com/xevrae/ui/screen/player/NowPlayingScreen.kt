@@ -879,9 +879,10 @@ fun NowPlayingScreenContent(
                         }
                     },
                     navigationIcon = {
-                        DimIconButton(onClick = {
-                            onDismiss()
-                        }) {
+                        DimIconButton(
+                            modifier = Modifier.padding(start = 20.dp),
+                            onClick = { onDismiss() }
+                        ) {
                             Icon(
                                 imageVector = dismissIcon,
                                 contentDescription = "",
@@ -900,9 +901,10 @@ fun NowPlayingScreenContent(
                                 )
                             }
                         }
-                        DimIconButton(onClick = {
-                            showSheet = true
-                        }) {
+                        DimIconButton(
+                            modifier = Modifier.padding(end = 20.dp),
+                            onClick = { showSheet = true }
+                        ) {
                             Icon(
                                 painter = painterResource(Res.drawable.baseline_more_vert_24),
                                 contentDescription = "",
@@ -937,7 +939,7 @@ fun NowPlayingScreenContent(
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 40.dp)
+                                        .padding(horizontal = 20.dp)
                                         .onGloballyPositioned {
                                             middleLayoutHeightDp =
                                                 with(localDensity) {
