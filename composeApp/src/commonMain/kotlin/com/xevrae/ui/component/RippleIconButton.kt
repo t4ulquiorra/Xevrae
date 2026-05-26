@@ -71,3 +71,36 @@ fun PlayPauseButton(
         onClick = onClick,
     )
 }
+
+@Composable
+fun DimIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val alpha by animateFloatAsState(if (isPressed) 0.4f else 1f, label = "dim_alpha")
+
+    Box(
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+            )
+            .graphicsLayer { this.alpha = alpha },
+        contentAlignment = Alignment.Center,
+    ) {
+        content()
+    }
+}
+
+fun Modifier.dimClickable(
+    interactionSource: MutableInteractionSource,
+    onClick: () -> Unit,
+): Modifier = this.clickable(
+    interactionSource = interactionSource,
+    indication = null,
+    onClick = onClick,
+)
