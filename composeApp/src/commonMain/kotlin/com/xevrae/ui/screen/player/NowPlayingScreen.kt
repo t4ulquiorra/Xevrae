@@ -937,7 +937,7 @@ fun NowPlayingScreenContent(
                                 modifier =
                                     Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 20.dp)
+                                        .padding(horizontal = 40.dp)
                                         .onGloballyPositioned {
                                             middleLayoutHeightDp =
                                                 with(localDensity) {
@@ -1192,7 +1192,7 @@ fun NowPlayingScreenContent(
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 20.dp),
+                                                .padding(horizontal = 40.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         AnimatedVisibility(screenDataState.canvasData != null) {
@@ -1332,7 +1332,7 @@ fun NowPlayingScreenContent(
                                             Modifier
                                                 .padding(
                                                     top = 15.dp,
-                                                ).padding(horizontal = 20.dp)
+                                                ).padding(horizontal = 40.dp)
                                                 .isElementVisible {
                                                     shouldShowToolbar = !it && isExpanded && mainScrollState.value > 0
                                                 },
@@ -1456,7 +1456,7 @@ fun NowPlayingScreenContent(
                                         Row(
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 20.dp),
+                                                .padding(horizontal = 40.dp),
                                         ) {
                                             Text(
                                                 text = formatDuration((timelineState.total * (sliderValue / 100f)).roundToLong()),
@@ -1505,7 +1505,7 @@ fun NowPlayingScreenContent(
                                             Modifier
                                                 .height(32.dp)
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 20.dp),
+                                                .padding(horizontal = 40.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
