@@ -1,5 +1,6 @@
 package com.xevrae.ui.screen
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
@@ -481,7 +482,7 @@ fun MiniPlayer(
                                                 text = (songEntity?.artistName?.connectArtists() ?: ""),
                                                 style = typo().bodySmall,
                                                 maxLines = 1,
-                                                color = textColor,
+                                                color = textColor.copy(alpha = 0.6f),
                                                 modifier =
                                                     Modifier
                                                         .weight(1f)
@@ -628,6 +629,7 @@ fun MiniPlayer(
                                     text = (songEntity?.artistName?.connectArtists() ?: ""),
                                     style = typo().bodySmall,
                                     maxLines = 1,
+                                    color = LocalContentColor.current.copy(alpha = 0.6f),
                                     modifier =
                                         Modifier
                                             .weight(1f)

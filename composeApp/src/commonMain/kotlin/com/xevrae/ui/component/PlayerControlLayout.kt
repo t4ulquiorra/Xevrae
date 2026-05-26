@@ -57,7 +57,7 @@ fun PlayerControlLayout(
             Modifier
                 .fillMaxWidth()
                 .height(height)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 6.dp),
     ) {
         Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
             Box(

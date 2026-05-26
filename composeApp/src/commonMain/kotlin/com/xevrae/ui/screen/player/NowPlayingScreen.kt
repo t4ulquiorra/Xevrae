@@ -1194,7 +1194,7 @@ fun NowPlayingScreenContent(
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 32.dp),
+                                                .padding(horizontal = 28.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         AnimatedVisibility(screenDataState.canvasData != null) {
@@ -1507,7 +1507,7 @@ fun NowPlayingScreenContent(
                                             Modifier
                                                 .height(32.dp)
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 30.dp),
+                                                .padding(horizontal = 25.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
