@@ -1194,7 +1194,7 @@ fun NowPlayingScreenContent(
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 40.dp),
+                                                .padding(horizontal = 32.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         AnimatedVisibility(screenDataState.canvasData != null) {
@@ -1334,7 +1334,7 @@ fun NowPlayingScreenContent(
                                             Modifier
                                                 .padding(
                                                     top = 15.dp,
-                                                ).padding(horizontal = 40.dp)
+                                                ).padding(horizontal = 32.dp)
                                                 .isElementVisible {
                                                     shouldShowToolbar = !it && isExpanded && mainScrollState.value > 0
                                                 },
@@ -1458,7 +1458,7 @@ fun NowPlayingScreenContent(
                                         Row(
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 40.dp),
+                                                .padding(horizontal = 32.dp),
                                         ) {
                                             Text(
                                                 text = formatDuration((timelineState.total * (sliderValue / 100f)).roundToLong()),
@@ -1507,7 +1507,7 @@ fun NowPlayingScreenContent(
                                             Modifier
                                                 .height(32.dp)
                                                 .fillMaxWidth()
-                                                .padding(horizontal = 40.dp),
+                                                .padding(horizontal = 30.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
