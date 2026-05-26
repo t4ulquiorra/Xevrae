@@ -1,5 +1,9 @@
 package com.xevrae.ui.component
 
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -1996,12 +2000,19 @@ fun HeartCheckBox(
     checked: Boolean,
     onStateChange: (() -> Unit)? = null,
 ) {
+    val interactionSource = androidx.compose.runtime.remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val alpha by androidx.compose.animation.core.animateFloatAsState(if (isPressed) 0.4f else 1f, label = "heart_alpha")
+
     Box(
         modifier =
             Modifier
                 .size(size.dp)
-                .clip(CircleShape)
-                .clickable {
+                .graphicsLayer { this.alpha = alpha }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ) {
                     onStateChange?.invoke()
                 },
     ) {
