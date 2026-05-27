@@ -993,9 +993,10 @@ fun NowPlayingScreenContent(
                                                     Brush.verticalGradient(
                                                         colorStops =
                                                             arrayOf(
-                                                                0f to Color.Transparent,
-                                                                0.92f to Color.Transparent,
-                                                                0.97f to Color(0xFF121212),
+                                                                0f to Color.Black.copy(alpha = 0.5f),
+                                                                0.1f to Color.Transparent,
+                                                                0.75f to Color.Transparent,
+                                                                0.95f to Color(0xFF121212).copy(alpha = 0.7f),
                                                                 1f to Color(0xFF121212),
                                                             ),
                                                     ),
