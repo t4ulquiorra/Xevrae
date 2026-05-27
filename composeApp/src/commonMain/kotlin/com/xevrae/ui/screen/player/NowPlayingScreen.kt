@@ -372,7 +372,7 @@ fun NowPlayingScreenContent(
                             sharedViewModel.onUIEvent(UIEvent.Next)
                         }
                         ArtworkSeekAction.Previous -> {
-                            sharedViewModel.onUIEvent(UIEvent.Previous)
+                            sharedViewModel.onUIEvent(UIEvent.SkipToPrevious)
                         }
                         is ArtworkSeekAction.Skip -> {
                             mediaPlayerHandler.playMediaItemInMediaSource(action.index)

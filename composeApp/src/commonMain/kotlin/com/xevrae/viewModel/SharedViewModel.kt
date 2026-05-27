@@ -791,6 +791,12 @@ class SharedViewModel(
                     )
                 }
 
+                UIEvent.SkipToPrevious -> {
+                    mediaPlayerHandler.onPlayerEvent(
+                        PlayerEvent.SkipToPrevious,
+                    )
+                }
+
                 UIEvent.Stop -> {
                     mediaPlayerHandler.onPlayerEvent(PlayerEvent.Stop)
                 }
@@ -1849,6 +1855,8 @@ sealed class UIEvent {
     data object Next : UIEvent()
 
     data object Previous : UIEvent()
+
+    data object SkipToPrevious : UIEvent()
 
     data object Stop : UIEvent()
 
