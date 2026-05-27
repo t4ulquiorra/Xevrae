@@ -1847,4 +1847,517 @@ fun NowPlayingScreenContent(
                                                         ?.words
                                                         ?.replace(RICH_SYNC_TIMESTAMP_REGEX, "")
                                                         ?.trim()
-                                                if (!lineText.isNullOrBlank()) 
+                                                if (!lineText.isNullOrBlank()) {
+                                                    Text(
+                                                        modifier =
+                                                            Modifier
+                                                                .padding(bottom = 8.dp)
+                                                                .basicMarquee(
+                                                                    iterations = Int.MAX_VALUE,
+                                                                    animationMode = MarqueeAnimationMode.Immediately,
+                                                                ).focusable(),
+                                                        text = lineText,
+                                                        style = typo().bodyMedium,
+                                                        color = Color.White,
+                                                        maxLines = 1,
+                                                    )
+                                                }
+                                            }
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                            ) {
+                                                val thumb = screenDataState.songInfoData?.authorThumbnail
+                                                AsyncImage(
+                                                    model =
+                                                        ImageRequest
+                                                            .Builder(LocalPlatformContext.current)
+                                                            .data(thumb)
+                                                            .diskCachePolicy(CachePolicy.ENABLED)
+                                                            .diskCacheKey(thumb)
+                                                            .crossfade(550)
+                                                            .build(),
+                                                    placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                                    error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                                    contentDescription = null,
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier =
+                                                        Modifier
+                                                            .size(42.dp)
+                                                            .clip(
+                                                                CircleShape,
+                                                            ),
+                                                )
+                                                Spacer(modifier = Modifier.size(12.dp))
+                                                Text(
+                                                    text = screenDataState.songInfoData?.author ?: "",
+                                                    style = typo().labelMedium,
+                                                    color = Color.White,
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // Touch Area (canvas mode tap to toggle controls)
+                        this@Column.AnimatedVisibility(
+                            visible = screenDataState.canvasData != null,
+                        ) {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .height(
+                                            (middleLayoutPaddingDp * 2 + middleLayoutHeightDp).dp,
+                                        ).clickable(
+                                            onClick = {
+                                                if (mainScrollState.value == 0) {
+                                                    showHideJob = true
+                                                    showHideControlLayout = !showHideControlLayout
+                                                }
+                                            },
+                                            indication = null,
+                                            interactionSource =
+                                                remember {
+                                                    MutableInteractionSource()
+                                                },
+                                        ),
+                            )
+                        }
+                    }
+                    Column(Modifier.padding(horizontal = 20.dp)) {
+                        // Lyrics Layout
+                        AnimatedVisibility(
+                            visible = screenDataState.lyricsData != null,
+                            modifier = Modifier.padding(top = 10.dp),
+                        ) {
+                            ElevatedCard(
+                                shape = RoundedCornerShape(15.dp),
+                                colors =
+                                    CardDefaults.elevatedCardColors().copy(
+                                        containerColor = startColor.value,
+                                    ),
+                            ) {
+                                Column(modifier = Modifier.padding(15.dp)) {
+                                    Spacer(modifier = Modifier.height(5.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = "Lyrics Preview",
+                                            style = typo().labelMedium,
+                                            color = Color.White,
+                                        )
+                                        if (screenDataState.lyricsData?.translatedLyrics?.second == LyricsProvider.AI) {
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            AIBadge()
+                                        }
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        val canVoteLyrics =
+                                            screenDataState.lyricsData?.lyricsProvider == LyricsProvider.XEVRAE &&
+                                                screenDataState.lyricsData
+                                                    ?.lyrics
+                                                    ?.simpMusicLyrics != null
+                                        val canVoteTranslatedLyrics =
+                                            screenDataState.lyricsData?.translatedLyrics?.second == LyricsProvider.XEVRAE &&
+                                                screenDataState.lyricsData
+                                                    ?.translatedLyrics
+                                                    ?.first
+                                                    ?.simpMusicLyrics != null
+                                        if (canVoteLyrics || canVoteTranslatedLyrics) {
+                                            CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+                                                DimIconButton(
+                                                    onClick = {
+                                                        showVoteDialog = true
+                                                    },
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Rounded.ThumbsUpDown,
+                                                        contentDescription = stringResource(Res.string.rate_lyrics),
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(16.dp),
+                                                    )
+                                                }
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+                                        CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+                                            TextButton(
+                                                onClick = {
+                                                    showFullscreenLyrics = true
+                                                },
+                                                contentPadding = PaddingValues(0.dp),
+                                                modifier =
+                                                    Modifier
+                                                        .height(20.dp)
+                                                        .wrapContentWidth(),
+                                            ) {
+                                                Text(text = stringResource(Res.string.show))
+                                            }
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(18.dp))
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .height(300.dp),
+                                    ) {
+                                        screenDataState.lyricsData?.let {
+                                            LyricsView(
+                                                lyricsData = it,
+                                                timeLine = sharedViewModel.timeline,
+                                                userScrollEnabled = false,
+                                                onLineClick = { f ->
+                                                    sharedViewModel.onUIEvent(UIEvent.UpdateProgress(f))
+                                                },
+                                            )
+                                        }
+                                    }
+                                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+                                        Text(
+                                            text =
+                                                when (screenDataState.lyricsData?.lyrics?.syncType) {
+                                                    "LINE_SYNCED" -> stringResource(Res.string.line_synced)
+                                                    "RICH_SYNCED" -> stringResource(Res.string.rich_synced)
+                                                    else -> stringResource(Res.string.unsynced)
+                                                },
+                                            style = typo().bodySmall,
+                                            textAlign = TextAlign.End,
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(top = 10.dp),
+                                        )
+                                        Text(
+                                            text =
+                                                when (screenDataState.lyricsData?.lyricsProvider) {
+                                                    LyricsProvider.XEVRAE -> {
+                                                        stringResource(Res.string.lyrics_provider_xevrae)
+                                                    }
+                                                    LyricsProvider.LRCLIB -> {
+                                                        stringResource(Res.string.lyrics_provider_lrc)
+                                                    }
+                                                    LyricsProvider.YOUTUBE -> {
+                                                        stringResource(Res.string.lyrics_provider_youtube)
+                                                    }
+                                                    LyricsProvider.SPOTIFY -> {
+                                                        stringResource(Res.string.spotify_lyrics_provider)
+                                                    }
+                                                    LyricsProvider.OFFLINE -> {
+                                                        stringResource(Res.string.offline_mode)
+                                                    }
+                                                    LyricsProvider.BETTER_LYRICS -> {
+                                                        stringResource(Res.string.lyrics_provider_betterlyrics)
+                                                    }
+                                                    else -> {
+                                                        ""
+                                                    }
+                                                },
+                                            style = typo().bodySmall,
+                                            textAlign = TextAlign.End,
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth(),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+                        AnimatedVisibility(visible = screenDataState.songInfoData != null) {
+                            ElevatedCard(
+                                shape = RoundedCornerShape(15.dp),
+                                colors =
+                                    CardDefaults.elevatedCardColors().copy(
+                                        containerColor = startColor.value,
+                                    ),
+                                modifier = Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                ) {
+                                    val song = sharedViewModel.nowPlayingState.value?.songEntity
+                                    (
+                                        song?.artistId?.firstOrNull()?.takeIf { it.isNotEmpty() }
+                                            ?: screenDataState.songInfoData?.authorId
+                                    )?.let { channelId ->
+                                        onDismiss()
+                                        navController.navigate(ArtistDestination(channelId = channelId))
+                                    }
+                                },
+                            ) {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(250.dp),
+                                ) {
+                                    val thumb = screenDataState.songInfoData?.authorThumbnail
+                                    AsyncImage(
+                                        model =
+                                            ImageRequest
+                                                .Builder(LocalPlatformContext.current)
+                                                .data(thumb)
+                                                .diskCachePolicy(CachePolicy.ENABLED)
+                                                .diskCacheKey(thumb)
+                                                .crossfade(550)
+                                                .build(),
+                                        placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                        error = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier =
+                                            Modifier
+                                                .fillMaxSize()
+                                                .alpha(0.8f)
+                                                .clip(
+                                                    RoundedCornerShape(15.dp),
+                                                ),
+                                    )
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .padding(15.dp)
+                                                .fillMaxSize(),
+                                    ) {
+                                        Column(Modifier.align(Alignment.TopStart)) {
+                                            Spacer(modifier = Modifier.height(5.dp))
+                                            Text(
+                                                text = stringResource(Res.string.artists),
+                                                style = typo().labelMedium,
+                                                color = Color.White,
+                                            )
+                                        }
+                                        Column(Modifier.align(Alignment.BottomStart)) {
+                                            Text(
+                                                text = screenDataState.songInfoData?.author ?: "",
+                                                style = typo().labelMedium,
+                                                color = Color.White,
+                                            )
+                                            Spacer(modifier = Modifier.height(5.dp))
+                                            Text(
+                                                text = screenDataState.songInfoData?.subscribers ?: "",
+                                                style = typo().bodySmall,
+                                                textAlign = TextAlign.End,
+                                            )
+                                            Spacer(modifier = Modifier.height(5.dp))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+                        AnimatedVisibility(visible = screenDataState.songInfoData != null) {
+                            ElevatedCard(
+                                shape = RoundedCornerShape(15.dp),
+                                colors =
+                                    CardDefaults.elevatedCardColors().copy(
+                                        containerColor = startColor.value,
+                                    ),
+                            ) {
+                                Column(
+                                    Modifier
+                                        .padding(15.dp)
+                                        .fillMaxWidth(),
+                                ) {
+                                    Spacer(modifier = Modifier.height(5.dp))
+                                    Text(
+                                        text = stringResource(Res.string.published_at, screenDataState.songInfoData?.uploadDate ?: ""),
+                                        style = typo().labelSmall,
+                                        color = Color.White,
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text =
+                                            stringResource(
+                                                Res.string.view_count,
+                                                "%,d".format(screenDataState.songInfoData?.viewCount),
+                                            ),
+                                        style = typo().labelMedium,
+                                        color = Color.White,
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text =
+                                            stringResource(
+                                                Res.string.like_and_dislike,
+                                                screenDataState.songInfoData?.like ?: 0,
+                                                screenDataState.songInfoData?.dislike ?: 0,
+                                            ),
+                                        style = typo().bodyMedium,
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    Text(
+                                        text = stringResource(Res.string.description),
+                                        style = typo().labelSmall,
+                                        color = Color.White,
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    DescriptionView(
+                                        text = screenDataState.songInfoData?.description ?: "",
+                                        onTimeClicked = { raw ->
+                                            val timestamp = parseTimestampToMilliseconds(raw)
+                                            if (timestamp != 0.0 && timestamp < timelineState.total) {
+                                                sharedViewModel.onUIEvent(
+                                                    UIEvent.UpdateProgress(
+                                                        ((timestamp * 100) / timelineState.total).toFloat(),
+                                                    ),
+                                                )
+                                            }
+                                        },
+                                        onURLClicked = { url ->
+                                            uriHandler.openUri(url)
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(
+                        modifier =
+                            Modifier.height(
+                                with(localDensity) { WindowInsets.systemBars.getBottom(localDensity).toDp() },
+                            ),
+                    )
+                }
+            }
+        }
+        AnimatedVisibility(
+            visible = shouldShowToolbar && isExpanded,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+        ) {
+            ElevatedCard(
+                elevation = CardDefaults.elevatedCardElevation(10.dp),
+                shape = RectangleShape,
+                colors =
+                    CardDefaults.elevatedCardColors(
+                        containerColor =
+                            startColor.value
+                                .copy(
+                                    red = startColor.value.red - 0.05f,
+                                    green = startColor.value.green - 0.05f,
+                                    blue = startColor.value.blue - 0.05f,
+                                ),
+                    ),
+                modifier =
+                    Modifier
+                        .clipToBounds()
+                        .wrapContentHeight()
+                        .fillMaxWidth(),
+            ) {
+                Box(
+                    modifier =
+                        Modifier.padding(
+                            top = with(localDensity) { WindowInsets.statusBars.getTop(localDensity).toDp() },
+                        ),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier =
+                            Modifier
+                                .padding(
+                                    vertical = 8.dp,
+                                    horizontal = 15.dp,
+                                ).fillMaxWidth(),
+                    ) {
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Box(modifier = Modifier.weight(1F)) {
+                            Column(
+                                Modifier
+                                    .wrapContentHeight(),
+                            ) {
+                                Text(
+                                    text = screenDataState.nowPlayingTitle,
+                                    style = typo().bodyMedium,
+                                    color = Color.White,
+                                    maxLines = 1,
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .wrapContentHeight(
+                                                align = Alignment.CenterVertically,
+                                            ).basicMarquee(
+                                                iterations = Int.MAX_VALUE,
+                                                animationMode = MarqueeAnimationMode.Immediately,
+                                            ).focusable(),
+                                )
+                                LazyRow(verticalAlignment = Alignment.CenterVertically) {
+                                    item {
+                                        AnimatedVisibility(visible = screenDataState.isExplicit) {
+                                            ExplicitBadge(
+                                                modifier =
+                                                    Modifier
+                                                        .size(20.dp)
+                                                        .padding(end = 4.dp)
+                                                        .weight(1f),
+                                            )
+                                        }
+                                    }
+                                    item(key = screenDataState.artistName) {
+                                        Text(
+                                            text = screenDataState.artistName,
+                                            style = typo().bodySmall,
+                                            maxLines = 1,
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentHeight(
+                                                        align = Alignment.CenterVertically,
+                                                    ).basicMarquee(
+                                                        iterations = Int.MAX_VALUE,
+                                                        animationMode = MarqueeAnimationMode.Immediately,
+                                                    ).focusable(),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(15.dp))
+                        HeartCheckBox(checked = controllerState.isLiked, size = 30) {
+                            sharedViewModel.onUIEvent(UIEvent.ToggleLike)
+                        }
+                        Spacer(modifier = Modifier.width(15.dp))
+                        Crossfade(targetState = timelineState.loading, label = "") {
+                            if (it) {
+                                Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(18.dp),
+                                        color = Color.LightGray,
+                                        strokeWidth = 3.dp,
+                                    )
+                                }
+                            } else {
+                                PlayPauseButton(isPlaying = controllerState.isPlaying, modifier = Modifier.size(48.dp)) {
+                                    sharedViewModel.onUIEvent(UIEvent.PlayPause)
+                                }
+                            }
+                        }
+                    }
+                    Box(
+                        modifier =
+                            Modifier
+                                .wrapContentSize(Alignment.Center)
+                                .align(Alignment.BottomCenter),
+                    ) {
+                        LinearProgressIndicator(
+                            progress = { timelineState.current.toFloat() / timelineState.total },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(
+                                        color = Color.Transparent,
+                                        shape = RoundedCornerShape(4.dp),
+                                    ),
+                            color = Color.White,
+                            trackColor = Color.Gray.copy(alpha = 0.4f),
+                            strokeCap = StrokeCap.Round,
+                            drawStopIndicator = {},
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
