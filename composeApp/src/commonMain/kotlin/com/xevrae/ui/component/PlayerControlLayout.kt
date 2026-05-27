@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PauseCircle
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.Icon
@@ -141,14 +143,14 @@ fun PlayerControlLayout(
                 Crossfade(targetState = controllerState.isPlaying) { isPlaying ->
                     if (!isPlaying) {
                         Icon(
-                            painter = painterResource(Res.drawable.baseline_play_arrow_24),
+                            imageVector = Icons.Rounded.PlayCircle,
                             tint = Color.White,
                             contentDescription = "",
                             modifier = Modifier.size(bigIcon.first),
                         )
                     } else {
                         Icon(
-                            painter = painterResource(Res.drawable.baseline_pause_24),
+                            imageVector = Icons.Rounded.PauseCircle,
                             tint = Color.White,
                             contentDescription = "",
                             modifier = Modifier.size(bigIcon.first),
