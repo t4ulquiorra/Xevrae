@@ -180,11 +180,6 @@ class HomeViewModel(
     }
 
     fun getHomeItemList(params: String? = null, forceRefresh: Boolean = false) {
-        // Skip fetch if data already loaded, not forced, and no params filter active
-        if (!forceRefresh && params == null && _homeItemList.value.isNotEmpty()) {
-            loading.value = false
-            return
-        }
         loading.value = true
         _homeListState.value = ListState.LOADING
         language =
