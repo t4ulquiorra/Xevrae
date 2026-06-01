@@ -269,7 +269,7 @@ fun NowPlayingScreen(
         scrimColor = Color(0xFF121212),
         sheetState = sheetState,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
-        shape = RectangleShape,
+        shape = RoundedCornerShape(16.dp),
     ) {
         NowPlayingScreenContent(
             sharedViewModel = sharedViewModel,
@@ -2228,7 +2228,7 @@ fun NowPlayingScreenContent(
         ) {
             ElevatedCard(
                 elevation = CardDefaults.elevatedCardElevation(10.dp),
-                shape = RectangleShape,
+                shape = RoundedCornerShape(16.dp),
                 colors =
                     CardDefaults.elevatedCardColors(
                         containerColor =

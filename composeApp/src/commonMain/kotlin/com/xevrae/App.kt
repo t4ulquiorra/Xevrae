@@ -335,6 +335,17 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val navBarLuminance = remember { androidx.compose.animation.core.Animatable(0f) }
 
     AppTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .padding(top = 26.dp, bottom = 26.dp, start = 16.dp, end = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
         Scaffold(
             bottomBar = {
                 if (!isTablet || (isTablet && !isTabletLandscape)) {
@@ -768,5 +779,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                 }
             },
         )
+        }
+            }
     }
 }
