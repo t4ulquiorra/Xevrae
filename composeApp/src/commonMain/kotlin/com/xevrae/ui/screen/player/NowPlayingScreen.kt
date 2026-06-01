@@ -2228,7 +2228,7 @@ fun NowPlayingScreenContent(
         ) {
             ElevatedCard(
                 elevation = CardDefaults.elevatedCardElevation(10.dp),
-                shape = RoundedCornerShape(16.dp),
+                shape = RectangleShape,
                 colors =
                     CardDefaults.elevatedCardColors(
                         containerColor =
