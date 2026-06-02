@@ -339,7 +339,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .padding(top = 25.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
+                .padding(top = 26.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
         ) {
             Box(
                 modifier = Modifier
