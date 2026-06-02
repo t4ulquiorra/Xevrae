@@ -495,7 +495,7 @@ fun HomeScreen(
                                 Column(
                                     modifier =
                                         Modifier
-                                            .padding(horizontal = 15.dp),
+                                            .padding(start = 15.dp),
                                 ) {
                                     if (index == 0) {
                                         Spacer(
@@ -582,7 +582,7 @@ fun HomeScreen(
                                     Box(
                                         modifier =
                                             Modifier
-                                                .padding(horizontal = 15.dp),
+                                                .padding(start = 15.dp),
                                     ) {
                                         HomeItem(
                                             navController = navController,
@@ -598,7 +598,7 @@ fun HomeScreen(
                                     Box(
                                         modifier =
                                             Modifier
-                                                .padding(horizontal = 15.dp),
+                                                .padding(start = 15.dp),
                                     ) {
                                         moodMomentAndGenre?.let {
                                             MoodMomentAndGenre(
@@ -613,7 +613,7 @@ fun HomeScreen(
                                 Column(
                                     Modifier
                                         .padding(vertical = 10.dp)
-                                        .padding(horizontal = 15.dp),
+                                        .padding(start = 15.dp),
                                     verticalArrangement = Arrangement.SpaceBetween,
                                 ) {
                                     ChartTitle()
@@ -729,7 +729,7 @@ fun HomeScreen(
                     modifier =
                         Modifier
                             .horizontalScroll(chipRowState)
-                            .padding(vertical = 8.dp, horizontal = 15.dp)
+                            .padding(vertical = 8.dp, start = 15.dp)
                             .background(Color.Transparent),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
