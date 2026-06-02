@@ -461,7 +461,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                             .fillMaxHeight()
                                             .fillMaxWidth(0.35f),
                                     ) {
-                                        Spacer(Modifier.width(15.dp))
+                                        Spacer(Modifier.width(8.dp))
                                         Box(
                                             Modifier
                                                 .padding(
