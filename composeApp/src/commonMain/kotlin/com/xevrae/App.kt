@@ -16,6 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -342,8 +343,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(bottom = 12.dp, start = 8.dp, end = 8.dp)
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(start = 8.dp, end = 8.dp)
         ) {
             Box(
                 modifier = Modifier
