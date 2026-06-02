@@ -420,7 +420,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         Modifier.fillMaxSize(),
                     ) {
                         // Content area + now playing panel side by side
-                        Row(Modifier.fillMaxSize()) {
+                        Row(Modifier.fillMaxSize().background(Color.Black)) {
                             Box(
                                 Modifier
                                     .fillMaxSize()
