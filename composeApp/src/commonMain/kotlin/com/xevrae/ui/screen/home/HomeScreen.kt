@@ -729,7 +729,7 @@ fun HomeScreen(
                     modifier =
                         Modifier
                             .horizontalScroll(chipRowState)
-                            .padding(vertical = 8.dp, start = 15.dp)
+                            .padding(top = 8.dp, bottom = 8.dp, start = 15.dp)
                             .background(Color.Transparent),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
