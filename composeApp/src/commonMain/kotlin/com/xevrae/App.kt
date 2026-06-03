@@ -351,6 +351,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
         targetValue = if (isShowLeftPanel && isTabletLandscape) screenWidthDp * 0.25f else 0.dp,
         label = "navBarPad",
     )
+    val nowPlayingPanelWidth = maxOf(screenWidthDp * 0.30f, 450.dp)
+    val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.36f, 450.dp)
 
     val backdrop = rememberBackdrop()
     val navBarLayer = rememberGraphicsLayer()
@@ -518,7 +520,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Row(
                                         Modifier
                                             .fillMaxHeight()
-                                            .width(screenWidthDp * 0.30f),
+                                            .width(nowPlayingPanelWidth),
                                     ) {
                                         Spacer(Modifier.width(8.dp))
                                         Box(
@@ -548,26 +550,21 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         }
                         // Nav bar and mini player: overlaid on full screen, never affected by content layout
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
-                            val navBarFraction by animateFloatAsState(
+                            val navBarRightReserve by animateDpAsState(
                                 targetValue = when {
-                                    isShowNowPlaylistScreen -> 0.60f
-                                    isShowMiniPlayer -> 0.62f
-                                    else -> 1f
+                                    isShowNowPlaylistScreen -> nowPlayingPanelWidth + 8.dp
+                                    isShowMiniPlayer -> miniPlayerPanelWidth + 24.dp
+                                    else -> 16.dp
                                 },
                                 animationSpec = tween(300),
-                                label = "navBarFraction",
-                            )
-                            val navBarExtraPadding by animateFloatAsState(
-                                targetValue = if (isShowNowPlaylistScreen) 24f else 0f,
-                                animationSpec = tween(300),
-                                label = "navBarExtraPadding",
+                                label = "navBarRightReserve",
                             )
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(start = (16 + navBarExtraPadding).dp, end = (16 + navBarExtraPadding).dp, bottom = 8.dp)
+                                    .padding(start = navBarStartPad + 16.dp, end = navBarRightReserve, bottom = 8.dp)
                                     .height(67.dp)
-                                    .fillMaxWidth(navBarFraction)
+                                    .fillMaxWidth()
                                     .align(Alignment.BottomStart)
                                     .then(
                                         if (isLiquidGlassEnabled == TRUE) {
@@ -593,7 +590,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .padding(innerPadding)
                                     .padding(end = 16.dp, bottom = 8.dp)
                                     .height(67.dp)
-                                    .fillMaxWidth(0.36f)
+                                    .width(miniPlayerPanelWidth)
                                     .align(Alignment.BottomEnd),
                             ) {
                                 androidx.compose.animation.AnimatedVisibility(
