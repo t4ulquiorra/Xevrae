@@ -1,10 +1,10 @@
 package com.xevrae
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.animation.shrinkHorizontally
@@ -160,6 +160,10 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     var leftPanelAccountName by remember {
         mutableStateOf("")
     }
+    val nowPlayingWidthFraction by animateFloatAsState(
+        targetValue = if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f,
+        label = "nowPlayingWidth",
+    )
 
     // Fullscreen
     var isInFullscreen by rememberSaveable {
@@ -509,7 +513,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Row(
                                         Modifier
                                             .fillMaxHeight()
-                                            .fillMaxWidth(if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f),
+                                            .fillMaxWidth(nowPlayingWidthFraction),
                                     ) {
                                         Spacer(Modifier.width(8.dp))
                                         Box(
