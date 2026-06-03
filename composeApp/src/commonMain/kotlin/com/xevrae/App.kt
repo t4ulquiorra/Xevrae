@@ -160,10 +160,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     var leftPanelAccountName by remember {
         mutableStateOf("")
     }
-    val nowPlayingWidthFraction by animateFloatAsState(
-        targetValue = if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f,
-        label = "nowPlayingWidth",
-    )
 
     // Fullscreen
     var isInFullscreen by rememberSaveable {
@@ -349,6 +345,10 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     }
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
     val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.1f)
+    val nowPlayingWidthFraction by animateFloatAsState(
+        targetValue = if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f,
+        label = "nowPlayingWidth",
+    )
 
     val backdrop = rememberBackdrop()
     val navBarLayer = rememberGraphicsLayer()
