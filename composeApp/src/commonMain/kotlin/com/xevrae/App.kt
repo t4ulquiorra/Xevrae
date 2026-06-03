@@ -470,8 +470,13 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .fillMaxSize()
                                     .weight(1f)
                                     .then(
-                                        if (isTabletLandscape && isShowNowPlaylistScreen) {
-                                            Modifier.clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+                                        if (isTabletLandscape) {
+                                            Modifier.clip(RoundedCornerShape(
+                                                topStart = if (isShowLeftPanel) 16.dp else 0.dp,
+                                                bottomStart = if (isShowLeftPanel) 16.dp else 0.dp,
+                                                topEnd = if (isShowNowPlaylistScreen) 16.dp else 0.dp,
+                                                bottomEnd = if (isShowNowPlaylistScreen) 16.dp else 0.dp,
+                                            ))
                                         } else {
                                             Modifier
                                         }
