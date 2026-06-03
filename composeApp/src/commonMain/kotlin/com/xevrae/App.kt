@@ -442,7 +442,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Box(
                                         Modifier
                                             .fillMaxHeight()
-                                            .fillMaxWidth(0.30f)
+                                            .fillMaxWidth(0.25f)
                                             .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)),
                                     ) {
                                         LeftPanelContent(
@@ -509,7 +509,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Row(
                                         Modifier
                                             .fillMaxHeight()
-                                            .fillMaxWidth(if (isShowLeftPanel && isTabletLandscape) 0.30f else 0.35f),
+                                            .fillMaxWidth(if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f),
                                     ) {
                                         Spacer(Modifier.width(8.dp))
                                         Box(
