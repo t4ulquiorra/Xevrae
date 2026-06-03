@@ -1,6 +1,7 @@
 package com.xevrae
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -375,7 +377,12 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         enter = fadeIn() + slideInHorizontally(),
                         exit = fadeOut(),
                     ) {
-                        Column {
+                        BoxWithConstraints(Modifier.fillMaxWidth()) {
+                        val leftPadding by animateDpAsState(
+                            targetValue = if (isShowLeftPanel && isTabletLandscape) maxWidth * 0.25f else 0.dp,
+                            label = "navBarPad",
+                        )
+                        Column(Modifier.padding(start = leftPadding)) {
                             AnimatedVisibility(
                                 isShowMiniPlayer && isLiquidGlassEnabled == DataStoreManager.FALSE,
                                 enter = fadeIn() + slideInHorizontally(),
@@ -416,6 +423,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     viewModel.reloadDestination(klass)
                                 }
                             }
+                        }
                         }
                     }
                 }
