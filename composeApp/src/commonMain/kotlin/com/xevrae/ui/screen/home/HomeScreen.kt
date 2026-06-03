@@ -206,6 +206,7 @@ private val listOfHomeChip =
 @Composable
 fun HomeScreen(
     onScrolling: (onTop: Boolean) -> Unit = {},
+    onOpenLeftPanel: (String, String) -> Unit = { _, _ -> },
     viewModel: HomeViewModel =
         koinViewModel(),
     sharedViewModel: SharedViewModel =
@@ -709,7 +710,7 @@ fun HomeScreen(
                     enter = fadeIn() + expandVertically(),
                     exit = fadeOut() + shrinkVertically(),
                 ) {
-                    HomeTopAppBar(navController)
+                    HomeTopAppBar(navController, accountInfo?.second ?: "", accountInfo?.first ?: "", onOpenLeftPanel)
                 }
                 AnimatedVisibility(
                     visible = !isScrollingUp,
@@ -776,7 +777,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(navController: NavController) {
+fun HomeTopAppBar(navController: NavController, accountUrl: String = "", accountName: String = "", onOpenLeftPanel: (String, String) -> Unit = { _, _ -> }) {
     val hour =
         remember {
             val date = now().time
@@ -819,11 +820,26 @@ fun HomeTopAppBar(navController: NavController) {
             }
         },
         actions = {
-            RippleIconButton(
-                resId = Res.drawable.baseline_settings_24,
-                modifier = Modifier.padding(end = 12.dp)
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF2A2A2A))
+                    .clickable { onOpenLeftPanel(accountUrl, accountName) },
+                contentAlignment = Alignment.Center,
             ) {
-                navController.navigate(SettingsDestination)
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(accountUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                )
             }
         },
         colors =

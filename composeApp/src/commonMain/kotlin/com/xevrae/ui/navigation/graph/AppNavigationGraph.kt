@@ -30,6 +30,7 @@ fun AppNavigationGraph(
     hideNavBar: () -> Unit = { },
     showNavBar: (shouldShowNowPlayingSheet: Boolean) -> Unit = { },
     showNowPlayingSheet: () -> Unit = {},
+    showLeftPanel: (String, String) -> Unit = { _, _ -> },
     onScrolling: (onTop: Boolean) -> Unit = {},
 ) {
     NavHost(
@@ -52,6 +53,7 @@ fun AppNavigationGraph(
         composable<HomeDestination> {
             HomeScreen(
                 onScrolling = onScrolling,
+                onOpenLeftPanel = showLeftPanel,
                 navController = navController,
             )
         }

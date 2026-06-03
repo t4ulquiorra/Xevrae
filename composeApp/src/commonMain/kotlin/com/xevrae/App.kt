@@ -85,6 +85,7 @@ import com.xevrae.ui.navigation.destination.list.ArtistDestination
 import com.xevrae.ui.navigation.destination.list.PlaylistDestination
 import com.xevrae.ui.navigation.destination.player.FullscreenDestination
 import com.xevrae.ui.navigation.graph.AppNavigationGraph
+import com.xevrae.ui.screen.LeftPanelContent
 import com.xevrae.ui.screen.MiniPlayer
 import com.xevrae.ui.screen.player.NowPlayingScreen
 import com.xevrae.ui.screen.player.NowPlayingScreenContent
@@ -147,6 +148,17 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     // Now playing screen
     var isShowNowPlaylistScreen by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    // Left panel
+    var isShowLeftPanel by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var leftPanelAccountUrl by remember {
+        mutableStateOf("")
+    }
+    var leftPanelAccountName by remember {
+        mutableStateOf("")
     }
 
     // Fullscreen
@@ -421,6 +433,27 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     ) {
                         // Content area + now playing panel side by side
                         Row(Modifier.fillMaxSize().background(Color.Black)) {
+                            if (isTabletLandscape && !isInFullscreen) {
+                                AnimatedVisibility(
+                                    isShowLeftPanel,
+                                    enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
+                                    exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start),
+                                ) {
+                                    Box(
+                                        Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth(0.30f)
+                                            .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)),
+                                    ) {
+                                        LeftPanelContent(
+                                            accountUrl = leftPanelAccountUrl,
+                                            accountName = leftPanelAccountName,
+                                            navController = navController,
+                                            onDismiss = { isShowLeftPanel = false },
+                                        )
+                                    }
+                                }
+                            }
                             Box(
                                 Modifier
                                     .fillMaxSize()
@@ -456,6 +489,11 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         showNowPlayingSheet = {
                                             isShowNowPlaylistScreen = true
                                         },
+                                        showLeftPanel = { url, name ->
+                                            leftPanelAccountUrl = url
+                                            leftPanelAccountName = name
+                                            isShowLeftPanel = true
+                                        },
                                         onScrolling = {
                                             isScrolledToTop = it
                                         },
@@ -471,7 +509,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Row(
                                         Modifier
                                             .fillMaxHeight()
-                                            .fillMaxWidth(0.35f),
+                                            .fillMaxWidth(if (isShowLeftPanel && isTabletLandscape) 0.30f else 0.35f),
                                     ) {
                                         Spacer(Modifier.width(8.dp))
                                         Box(
@@ -577,6 +615,31 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         navController = navController,
                     ) {
                         isShowNowPlaylistScreen = false
+                    }
+                }
+
+                if (isShowLeftPanel && !isTabletLandscape) {
+                    Box(Modifier.fillMaxSize()) {
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.5f))
+                                .clickable { isShowLeftPanel = false },
+                        )
+                        Box(
+                            Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(0.85f)
+                                .align(Alignment.CenterStart)
+                                .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)),
+                        ) {
+                            LeftPanelContent(
+                                accountUrl = leftPanelAccountUrl,
+                                accountName = leftPanelAccountName,
+                                navController = navController,
+                                onDismiss = { isShowLeftPanel = false },
+                            )
+                        }
                     }
                 }
 
