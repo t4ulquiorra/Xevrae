@@ -58,6 +58,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.launch
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -347,16 +352,22 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
     val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.1f)
     val screenWidthDp = androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp.dp
-    val navBarStartPad by animateDpAsState(
-        targetValue = if (isShowLeftPanel && isTabletLandscape) screenWidthDp * 0.25f else 0.dp,
-        label = "navBarPad",
-    )
+    val navBarStartPad = if (isTabletLandscape) screenWidthDp * 0.25f * leftPanelProgress.value else 0.dp
     val nowPlayingPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
     val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
 
     val backdrop = rememberBackdrop()
     val navBarLayer = rememberGraphicsLayer()
     val navBarLuminance = remember { androidx.compose.animation.core.Animatable(0f) }
+    val coroutineScope = rememberCoroutineScope()
+    val leftPanelProgress = remember { androidx.compose.animation.core.Animatable(if (isShowLeftPanel) 1f else 0f) }
+    val density = LocalDensity.current
+    LaunchedEffect(isShowLeftPanel) {
+        leftPanelProgress.animateTo(
+            targetValue = if (isShowLeftPanel) 1f else 0f,
+            animationSpec = tween(300),
+        )
+    }
 
     AppTheme {
         Box(
@@ -444,25 +455,50 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     ) {
                         // Content area + now playing panel side by side
                         Row(Modifier.fillMaxSize().background(Color.Black)) {
-                            if (isTabletLandscape && !isInFullscreen) {
-                                AnimatedVisibility(
-                                    isShowLeftPanel,
-                                    enter = expandHorizontally(expandFrom = Alignment.Start) + fadeIn(),
-                                    exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start),
+                            if (isTabletLandscape && !isInFullscreen && (isShowLeftPanel || leftPanelProgress.value > 0f)) {
+                                Box(
+                                    Modifier
+                                        .fillMaxHeight()
+                                        .width(screenWidthDp * 0.25f * leftPanelProgress.value)
+                                        .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+                                        .pointerInput(screenWidthDp) {
+                                            detectHorizontalDragGestures(
+                                                onDragEnd = {
+                                                    coroutineScope.launch {
+                                                        if (leftPanelProgress.value < 0.5f) {
+                                                            leftPanelProgress.animateTo(0f, animationSpec = tween(200))
+                                                            isShowLeftPanel = false
+                                                        } else {
+                                                            leftPanelProgress.animateTo(1f, animationSpec = tween(200))
+                                                        }
+                                                    }
+                                                },
+                                                onDragCancel = {
+                                                    coroutineScope.launch {
+                                                        if (leftPanelProgress.value < 0.5f) {
+                                                            leftPanelProgress.animateTo(0f, animationSpec = tween(200))
+                                                            isShowLeftPanel = false
+                                                        } else {
+                                                            leftPanelProgress.animateTo(1f, animationSpec = tween(200))
+                                                        }
+                                                    }
+                                                },
+                                            ) { change, dragAmount ->
+                                                change.consume()
+                                                val panelWidthPx = with(density) { (screenWidthDp * 0.25f).toPx() }
+                                                coroutineScope.launch {
+                                                    val newProgress = (leftPanelProgress.value + dragAmount / panelWidthPx).coerceIn(0f, 1f)
+                                                    leftPanelProgress.snapTo(newProgress)
+                                                }
+                                            }
+                                        },
                                 ) {
-                                    Box(
-                                        Modifier
-                                            .fillMaxHeight()
-                                            .fillMaxWidth(0.25f)
-                                            .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)),
-                                    ) {
-                                        LeftPanelContent(
-                                            accountUrl = leftPanelAccountUrl,
-                                            accountName = leftPanelAccountName,
-                                            navController = navController,
-                                            onDismiss = { isShowLeftPanel = false },
-                                        )
-                                    }
+                                    LeftPanelContent(
+                                        accountUrl = leftPanelAccountUrl,
+                                        accountName = leftPanelAccountName,
+                                        navController = navController,
+                                        onDismiss = { isShowLeftPanel = false },
+                                    )
                                 }
                             }
                             Box(
@@ -472,8 +508,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .then(
                                         if (isTabletLandscape) {
                                             Modifier.clip(RoundedCornerShape(
-                                                topStart = if (isShowLeftPanel) 16.dp else 0.dp,
-                                                bottomStart = if (isShowLeftPanel) 16.dp else 0.dp,
+                                                topStart = if (leftPanelProgress.value > 0f) 16.dp else 0.dp,
+                                                bottomStart = if (leftPanelProgress.value > 0f) 16.dp else 0.dp,
                                                 topEnd = if (isShowNowPlaylistScreen) 16.dp else 0.dp,
                                                 bottomEnd = if (isShowNowPlaylistScreen) 16.dp else 0.dp,
                                             ))
