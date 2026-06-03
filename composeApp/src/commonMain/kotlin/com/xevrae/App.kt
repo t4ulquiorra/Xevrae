@@ -351,8 +351,8 @@ fun App(viewModel: SharedViewModel = koinInject()) {
         targetValue = if (isShowLeftPanel && isTabletLandscape) screenWidthDp * 0.25f else 0.dp,
         label = "navBarPad",
     )
-    val nowPlayingPanelWidth = maxOf(screenWidthDp * 0.30f, 450.dp)
-    val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.36f, 450.dp)
+    val nowPlayingPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
+    val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
 
     val backdrop = rememberBackdrop()
     val navBarLayer = rememberGraphicsLayer()
