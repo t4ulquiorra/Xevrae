@@ -1,6 +1,7 @@
 package com.xevrae
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -345,13 +346,10 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     }
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
     val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.1f)
-    val nowPlayingWidthFraction by animateFloatAsState(
-        targetValue = if (isShowLeftPanel && isTabletLandscape) (0.30f / 0.75f) else 0.30f,
-        label = "nowPlayingWidth",
-    )
-    val navBarLeftFraction by animateFloatAsState(
-        targetValue = if (isShowLeftPanel && isTabletLandscape) 0.25f else 0f,
-        label = "navBarLeft",
+    val screenWidthDp = androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp.dp
+    val navBarStartPad by animateDpAsState(
+        targetValue = if (isShowLeftPanel && isTabletLandscape) screenWidthDp * 0.25f else 0.dp,
+        label = "navBarPad",
     )
 
     val backdrop = rememberBackdrop()
@@ -380,7 +378,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         exit = fadeOut(),
                     ) {
                         Row(Modifier.fillMaxWidth()) {
-                        Spacer(Modifier.fillMaxWidth(navBarLeftFraction))
+                        Spacer(Modifier.width(navBarStartPad))
                         Column(Modifier.weight(1f)) {
                             AnimatedVisibility(
                                 isShowMiniPlayer && isLiquidGlassEnabled == DataStoreManager.FALSE,
@@ -520,7 +518,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     Row(
                                         Modifier
                                             .fillMaxHeight()
-                                            .fillMaxWidth(nowPlayingWidthFraction),
+                                            .width(screenWidthDp * 0.30f),
                                     ) {
                                         Spacer(Modifier.width(8.dp))
                                         Box(
