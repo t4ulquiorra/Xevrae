@@ -493,7 +493,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                             }
                                         },
                                 ) {
-                                    Box(Modifier.fillMaxHeight().width(screenWidthDp * 0.25f)) {
+                                    Box(Modifier.fillMaxHeight().requiredWidth(screenWidthDp * 0.25f)) {
                                         LeftPanelContent(
                                             accountUrl = leftPanelAccountUrl,
                                             accountName = leftPanelAccountName,
