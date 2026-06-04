@@ -493,12 +493,14 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                             }
                                         },
                                 ) {
-                                    LeftPanelContent(
-                                        accountUrl = leftPanelAccountUrl,
-                                        accountName = leftPanelAccountName,
-                                        navController = navController,
-                                        onDismiss = { isShowLeftPanel = false },
-                                    )
+                                    Box(Modifier.fillMaxHeight().width(screenWidthDp * 0.25f)) {
+                                        LeftPanelContent(
+                                            accountUrl = leftPanelAccountUrl,
+                                            accountName = leftPanelAccountName,
+                                            navController = navController,
+                                            onDismiss = { isShowLeftPanel = false },
+                                        )
+                                    }
                                 }
                             }
                             Box(
