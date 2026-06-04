@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.launch
 import androidx.compose.ui.window.DialogProperties
@@ -671,27 +672,71 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     }
                 }
 
-                if (isShowLeftPanel && !isTabletLandscape) {
+                if (!isTabletLandscape && (isShowLeftPanel || leftPanelProgress.value > 0f)) {
                     Box(Modifier.fillMaxSize()) {
                         Box(
                             Modifier
                                 .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.5f))
-                                .clickable { isShowLeftPanel = false },
+                                .hazeEffect(
+                                    state = hazeState,
+                                    style = HazeMaterials.thick(),
+                                )
+                                .background(Color.Black.copy(alpha = 0.5f * leftPanelProgress.value))
+                                .pointerInput(Unit) {
+                                    detectTapGestures {
+                                        coroutineScope.launch {
+                                            leftPanelProgress.animateTo(0f, animationSpec = tween(300))
+                                            isShowLeftPanel = false
+                                        }
+                                    }
+                                },
                         )
                         Box(
                             Modifier
                                 .fillMaxHeight()
-                                .fillMaxWidth(0.85f)
+                                .width(screenWidthDp * 0.85f * leftPanelProgress.value)
                                 .align(Alignment.CenterStart)
-                                .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp))
+                                .pointerInput(screenWidthDp) {
+                                    detectHorizontalDragGestures(
+                                        onDragEnd = {
+                                            coroutineScope.launch {
+                                                if (leftPanelProgress.value < 0.5f) {
+                                                    leftPanelProgress.animateTo(0f, animationSpec = tween(200))
+                                                    isShowLeftPanel = false
+                                                } else {
+                                                    leftPanelProgress.animateTo(1f, animationSpec = tween(200))
+                                                }
+                                            }
+                                        },
+                                        onDragCancel = {
+                                            coroutineScope.launch {
+                                                if (leftPanelProgress.value < 0.5f) {
+                                                    leftPanelProgress.animateTo(0f, animationSpec = tween(200))
+                                                    isShowLeftPanel = false
+                                                } else {
+                                                    leftPanelProgress.animateTo(1f, animationSpec = tween(200))
+                                                }
+                                            }
+                                        },
+                                    ) { change, dragAmount ->
+                                        change.consume()
+                                        val panelWidthPx = with(density) { (screenWidthDp * 0.85f).toPx() }
+                                        coroutineScope.launch {
+                                            val newProgress = (leftPanelProgress.value + dragAmount / panelWidthPx).coerceIn(0f, 1f)
+                                            leftPanelProgress.snapTo(newProgress)
+                                        }
+                                    }
+                                },
                         ) {
-                            LeftPanelContent(
-                                accountUrl = leftPanelAccountUrl,
-                                accountName = leftPanelAccountName,
-                                navController = navController,
-                                onDismiss = { isShowLeftPanel = false },
-                            )
+                            Box(Modifier.fillMaxHeight().requiredWidth(screenWidthDp * 0.85f)) {
+                                LeftPanelContent(
+                                    accountUrl = leftPanelAccountUrl,
+                                    accountName = leftPanelAccountName,
+                                    navController = navController,
+                                    onDismiss = { isShowLeftPanel = false },
+                                )
+                            }
                         }
                     }
                 }
