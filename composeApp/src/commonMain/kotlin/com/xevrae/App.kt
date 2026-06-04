@@ -503,6 +503,9 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     }
                                 }
                             }
+                            if (isTabletLandscape && !isInFullscreen && leftPanelProgress.value > 0f) {
+                                Spacer(Modifier.width(8.dp * leftPanelProgress.value))
+                            }
                             Box(
                                 Modifier
                                     .fillMaxSize()
