@@ -107,6 +107,7 @@ import com.mikepenz.markdown.m3.markdownTypography
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.HazeMaterials
+import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
@@ -679,7 +680,9 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 .fillMaxSize()
                                 .hazeEffect(
                                     state = hazeState,
-                                    style = HazeMaterials.thick(),
+                                    style = HazeStyle(
+                                        blurRadius = 20.dp * leftPanelProgress.value,
+                                    ),
                                 )
                                 .background(Color.Black.copy(alpha = 0.5f * leftPanelProgress.value))
                                 .pointerInput(Unit) {
