@@ -352,6 +352,15 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val isTablet = windowSize.isWidthAtLeastBreakpoint(WIDTH_DP_MEDIUM_LOWER_BOUND)
     val isTabletLandscape = isTablet && currentOrientation() == Orientation.LANDSCAPE && (androidx.compose.ui.platform.LocalConfiguration.current.let { it.screenWidthDp.toFloat() / it.screenHeightDp.toFloat() } >= 1.1f)
     val screenWidthDp = androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp.dp
+    val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
+    val leftPanelProgress = remember { androidx.compose.animation.core.Animatable(if (isShowLeftPanel) 1f else 0f) }
+    LaunchedEffect(isShowLeftPanel) {
+        leftPanelProgress.animateTo(
+            targetValue = if (isShowLeftPanel) 1f else 0f,
+            animationSpec = tween(300),
+        )
+    }
     val navBarStartPad = if (isTabletLandscape) screenWidthDp * 0.25f * leftPanelProgress.value else 0.dp
     val nowPlayingPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
     val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
@@ -359,15 +368,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val backdrop = rememberBackdrop()
     val navBarLayer = rememberGraphicsLayer()
     val navBarLuminance = remember { androidx.compose.animation.core.Animatable(0f) }
-    val coroutineScope = rememberCoroutineScope()
-    val leftPanelProgress = remember { androidx.compose.animation.core.Animatable(if (isShowLeftPanel) 1f else 0f) }
-    val density = LocalDensity.current
-    LaunchedEffect(isShowLeftPanel) {
-        leftPanelProgress.animateTo(
-            targetValue = if (isShowLeftPanel) 1f else 0f,
-            animationSpec = tween(300),
-        )
-    }
 
     AppTheme {
         Box(
