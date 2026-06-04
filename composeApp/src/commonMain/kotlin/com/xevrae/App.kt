@@ -682,6 +682,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     state = hazeState,
                                     style = HazeStyle(
                                         blurRadius = 20.dp * leftPanelProgress.value,
+                                        tint = null,
                                     ),
                                 )
                                 .background(Color.Black.copy(alpha = 0.5f * leftPanelProgress.value))
