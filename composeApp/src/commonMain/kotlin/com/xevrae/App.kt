@@ -457,7 +457,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         Modifier.fillMaxSize(),
                     ) {
                         // Content area + now playing panel side by side
-                        Row(Modifier.fillMaxSize().background(Color.Black)) {
+                        Row(Modifier.fillMaxSize().background(Color(0xFF121212))) {
                             if (isTabletLandscape && !isInFullscreen && (isShowLeftPanel || leftPanelProgress.value > 0f)) {
                                 Box(
                                     Modifier
