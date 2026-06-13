@@ -1,3 +1,6 @@
 [submodule "core"]
 	path = xevrae-core
 	url = https://github.com/t4ulquiorra/xevrae-core
+[submodule "xevrae-core"]
+	path = xevrae-core
+	url = https://github.com/t4ulquiorra/xevrae-core
