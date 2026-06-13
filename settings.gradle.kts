@@ -31,22 +31,22 @@ plugins {
 
 // prepare for git submodules
 val coreDir =
-    if (File(rootDir, "../core").exists()) {
-        File(rootDir, "../core")
+    if (File(rootDir, "../xevrae-core").exists()) {
+        File(rootDir, "../xevrae-core")
     } else {
         File(rootDir, "./core")
     }
 
 val serviceDir =
-    if (File(rootDir, "../core/service").exists()) {
-        File(rootDir, "../core/service")
+    if (File(rootDir, "../xevrae-core/service").exists()) {
+        File(rootDir, "../xevrae-core/service")
     } else {
         File(rootDir, "./core/service")
     }
 
 val mediaDir =
-    if (File(rootDir, "../core/media").exists()) {
-        File(rootDir, "../core/media")
+    if (File(rootDir, "../xevrae-core/media").exists()) {
+        File(rootDir, "../xevrae-core/media")
     } else {
         File(rootDir, "./core/media")
     }
