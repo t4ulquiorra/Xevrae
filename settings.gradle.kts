@@ -34,21 +34,21 @@ val coreDir =
     if (File(rootDir, "../xevrae-core").exists()) {
         File(rootDir, "../xevrae-core")
     } else {
-        File(rootDir, "./core")
+        File(rootDir, "./xevrae-core")
     }
 
 val serviceDir =
     if (File(rootDir, "../xevrae-core/service").exists()) {
         File(rootDir, "../xevrae-core/service")
     } else {
-        File(rootDir, "./core/service")
+        File(rootDir, "./xevrae-core/service")
     }
 
 val mediaDir =
     if (File(rootDir, "../xevrae-core/media").exists()) {
         File(rootDir, "../xevrae-core/media")
     } else {
-        File(rootDir, "./core/media")
+        File(rootDir, "./xevrae-core/media")
     }
 
 rootProject.name = "Xevrae"
