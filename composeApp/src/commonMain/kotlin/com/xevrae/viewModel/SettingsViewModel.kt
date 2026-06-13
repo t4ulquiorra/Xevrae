@@ -316,11 +316,8 @@ class SettingsViewModel(
     private fun getDownloadQuality() {
         viewModelScope.launch {
             dataStoreManager.downloadQuality.collect { quality ->
-                when (quality) {
-                    QUALITY.items[0].toString() -> _downloadQuality.emit(QUALITY.items[0].toString())
-                    QUALITY.items[1].toString() -> _downloadQuality.emit(QUALITY.items[1].toString())
-                    else -> _downloadQuality.emit(QUALITY.items[0].toString())
-                }
+                val match = QUALITY.items.map { it.toString() }.firstOrNull { it == quality }
+                _downloadQuality.emit(match ?: QUALITY.items[0].toString())
             }
         }
     }
@@ -1058,11 +1055,8 @@ class SettingsViewModel(
     fun getQuality() {
         viewModelScope.launch {
             dataStoreManager.quality.collect { quality ->
-                when (quality) {
-                    QUALITY.items[0].toString() -> _quality.emit(QUALITY.items[0].toString())
-                    QUALITY.items[1].toString() -> _quality.emit(QUALITY.items[1].toString())
-                    else -> _quality.emit(QUALITY.items[0].toString())
-                }
+                val match = QUALITY.items.map { it.toString() }.firstOrNull { it == quality }
+                _quality.emit(match ?: QUALITY.items[0].toString())
             }
         }
     }
