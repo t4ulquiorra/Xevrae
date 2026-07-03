@@ -169,7 +169,7 @@ haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 haze-material = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 kotlin-onetimepassword = { module = "dev.turingcomplete:kotlin-onetimepassword", version.ref = "onetimepassword" }
 common = { module = "commons-codec:commons-codec", version.ref = "common" }
-gemini-kotlin = { module = "org.simpmusic.gemini-kotlin:openai-client", version.ref = "gemini-kotlin" }
+gemini-kotlin = { module = "org.xevrae.gemini-kotlin:openai-client", version.ref = "gemini-kotlin" }
 logging = { module = "org.slf4j:slf4j-android", version.ref = "slf4j" }
 newpipe-extractor = { module = "com.github.teamnewpipe:NewPipeExtractor", version.ref = "newpipe" }
 brave-extractor = { module = "com.github.bravepipeproject:extractor", version.ref = "brave-newpipe" }
@@ -207,8 +207,7 @@ native-tray = { module = "io.github.kdroidfilter:composenativetray", version.ref
 vlcj = { module = "uk.co.caprica:vlcj", version.ref = "vlcj" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jnaPlatform" }
-nowplaying = { module = "org.simpmusic:nowplayingcenter", version = "0.0.1" }
-jmtc = { module = "org.maxrave-dev:jmtc", version = "0.0.1" }
+jmtc = { module = "org.maxrave-dev:jmtc", version = "v1.0.0" }
 
 #Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }

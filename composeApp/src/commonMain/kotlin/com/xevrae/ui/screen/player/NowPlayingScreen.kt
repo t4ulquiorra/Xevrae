@@ -734,13 +734,13 @@ fun NowPlayingScreenContent(
             screenDataState.lyricsData?.lyricsProvider == LyricsProvider.XEVRAE &&
                 screenDataState.lyricsData
                     ?.lyrics
-                    ?.simpMusicLyrics != null
+                    ?.xevraeLyrics != null
         val canVoteTranslatedLyrics =
             screenDataState.lyricsData?.translatedLyrics?.second == LyricsProvider.XEVRAE &&
                 screenDataState.lyricsData
                     ?.translatedLyrics
                     ?.first
-                    ?.simpMusicLyrics != null
+                    ?.xevraeLyrics != null
 
         VoteLyricsDialog(
             canVoteLyrics = canVoteLyrics,
@@ -1954,13 +1954,13 @@ fun NowPlayingScreenContent(
                                             screenDataState.lyricsData?.lyricsProvider == LyricsProvider.XEVRAE &&
                                                 screenDataState.lyricsData
                                                     ?.lyrics
-                                                    ?.simpMusicLyrics != null
+                                                    ?.xevraeLyrics != null
                                         val canVoteTranslatedLyrics =
                                             screenDataState.lyricsData?.translatedLyrics?.second == LyricsProvider.XEVRAE &&
                                                 screenDataState.lyricsData
                                                     ?.translatedLyrics
                                                     ?.first
-                                                    ?.simpMusicLyrics != null
+                                                    ?.xevraeLyrics != null
                                         if (canVoteLyrics || canVoteTranslatedLyrics) {
                                             CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                                                 DimIconButton(

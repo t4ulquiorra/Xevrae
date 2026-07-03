@@ -1056,12 +1056,12 @@ class SharedViewModel(
                             dataStoreManager.translationLanguage.first(),
                         )
                         log("Removed out-of-sync translated lyrics for $videoId")
-                        val simpMusicLyricsId = lyrics.simpMusicLyrics?.id
-                        if (lyricsProvider == LyricsProvider.XEVRAE && !simpMusicLyricsId.isNullOrEmpty()) {
+                        val xevraeLyricsId = lyrics.xevraeLyrics?.id
+                        if (lyricsProvider == LyricsProvider.XEVRAE && !xevraeLyricsId.isNullOrEmpty()) {
                             viewModelScope.launch {
                                 lyricsCanvasRepository
                                     .voteXevraeTranslatedLyrics(
-                                        translatedLyricsId = simpMusicLyricsId,
+                                        translatedLyricsId = xevraeLyricsId,
                                         false,
                                     ).collectLatest {
                                         when (it) {
@@ -1104,8 +1104,8 @@ class SharedViewModel(
                     if (lyricsProvider == LyricsProvider.XEVRAE) {
                         _translatedVoteState.value =
                             VoteData(
-                                id = lyrics.simpMusicLyrics?.id ?: "",
-                                vote = lyrics.simpMusicLyrics?.vote ?: 0,
+                                id = lyrics.xevraeLyrics?.id ?: "",
+                                vote = lyrics.xevraeLyrics?.vote ?: 0,
                                 state = VoteState.Idle,
                             )
                     }
@@ -1144,8 +1144,8 @@ class SharedViewModel(
                     if (lyricsProvider == LyricsProvider.XEVRAE) {
                         _lyricsVoteState.value =
                             VoteData(
-                                id = lyrics.simpMusicLyrics?.id ?: "",
-                                vote = lyrics.simpMusicLyrics?.vote ?: 0,
+                                id = lyrics.xevraeLyrics?.id ?: "",
+                                vote = lyrics.xevraeLyrics?.vote ?: 0,
                                 state = VoteState.Idle,
                             )
                     }
@@ -1740,9 +1740,9 @@ class SharedViewModel(
     fun voteLyrics(upvote: Boolean) {
         val lyricsData = _nowPlayingScreenData.value.lyricsData
         val lyricsProvider = lyricsData?.lyricsProvider
-        val simpMusicLyricsId = lyricsData?.lyrics?.simpMusicLyrics?.id ?: return
+        val xevraeLyricsId = lyricsData?.lyrics?.xevraeLyrics?.id ?: return
 
-        if (lyricsProvider != LyricsProvider.XEVRAE || simpMusicLyricsId.isEmpty()) {
+        if (lyricsProvider != LyricsProvider.XEVRAE || xevraeLyricsId.isEmpty()) {
             Logger.w(tag, "Cannot vote: not a Xevrae lyrics or missing ID")
             return
         }
@@ -1755,7 +1755,7 @@ class SharedViewModel(
             }
             lyricsCanvasRepository
                 .voteXevraeLyrics(
-                    lyricsId = simpMusicLyricsId,
+                    lyricsId = xevraeLyricsId,
                     upvote = upvote,
                 ).collectLatest { result ->
                     when (result) {
@@ -1795,9 +1795,9 @@ class SharedViewModel(
     fun voteTranslatedLyrics(upvote: Boolean) {
         val translatedLyrics = _nowPlayingScreenData.value.lyricsData?.translatedLyrics
         val lyricsProvider = translatedLyrics?.second
-        val simpMusicLyricsId = translatedLyrics?.first?.simpMusicLyrics?.id ?: return
+        val xevraeLyricsId = translatedLyrics?.first?.xevraeLyrics?.id ?: return
 
-        if (lyricsProvider != LyricsProvider.XEVRAE || simpMusicLyricsId.isEmpty()) {
+        if (lyricsProvider != LyricsProvider.XEVRAE || xevraeLyricsId.isEmpty()) {
             Logger.w(tag, "Cannot vote: not a Xevrae translated lyrics or missing ID")
             return
         }
@@ -1810,7 +1810,7 @@ class SharedViewModel(
             }
             lyricsCanvasRepository
                 .voteXevraeTranslatedLyrics(
-                    translatedLyricsId = simpMusicLyricsId,
+                    translatedLyricsId = xevraeLyricsId,
                     upvote = upvote,
                 ).collectLatest { result ->
                     when (result) {
