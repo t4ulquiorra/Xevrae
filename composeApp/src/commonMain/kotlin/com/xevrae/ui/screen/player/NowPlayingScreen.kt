@@ -52,6 +52,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -1307,10 +1308,8 @@ fun NowPlayingScreenContent(
                         TopAppBarDefaults.topAppBarColors().copy(
                             containerColor = Color.Transparent,
                         ),
-                    windowInsets =
-                        TopAppBarDefaults.windowInsets.only(
-                            WindowInsetsSides.Top,
-                        ),
+                    // Changed to use default window insets for proper edge padding
+                    windowInsets = TopAppBarDefaults.windowInsets,
                     title = {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -2212,11 +2211,11 @@ fun NowPlayingScreenContent(
                         Spacer(modifier = Modifier.height(5.dp))
                     }
                     Spacer(modifier = Modifier.height(10.dp))
+                    // Use systemBars padding for bottom edge
                     Spacer(
-                        modifier =
-                            Modifier.height(
-                                with(localDensity) { WindowInsets.systemBars.getBottom(localDensity).toDp() },
-                            ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsPadding(WindowInsets.systemBars)
                     )
                 }
             }
