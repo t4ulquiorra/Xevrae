@@ -165,6 +165,9 @@ dependencies {
 
     implementation(projects.composeApp)
     implementation(projects.data)
+    
+    // XiaoRi Fast Engine
+    implementation("com.github.t4ulquiorra:innertube-engine:1.5")
 
     if (isFullBuild) {
         implementation(projects.crashlytics)
