@@ -768,7 +768,15 @@ fun NowPlayingScreenContent(
     if (screenDataState.lyricsData != null && controllerState.isPlaying) {
         KeepScreenOn()
     }
-    Box {
+    
+    // FIX: Applied systemBars insets and 8dp horizontal padding to the outermost Box
+    // because ModalBottomSheet floats above App.kt and ignores its padding.
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .padding(horizontal = 8.dp)
+    ) {
         if (blurBg && screenDataState.canvasData == null) {
             AsyncImage(
                 model =
@@ -1308,8 +1316,8 @@ fun NowPlayingScreenContent(
                         TopAppBarDefaults.topAppBarColors().copy(
                             containerColor = Color.Transparent,
                         ),
-                    // Changed to use default window insets for proper edge padding
-                    windowInsets = TopAppBarDefaults.windowInsets,
+                    // FIX: Set to 0 because the outer Box is already handling systemBars padding.
+                    windowInsets = WindowInsets(0, 0, 0, 0),
                     title = {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -2211,12 +2219,8 @@ fun NowPlayingScreenContent(
                         Spacer(modifier = Modifier.height(5.dp))
                     }
                     Spacer(modifier = Modifier.height(10.dp))
-                    // Use systemBars padding for bottom edge
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsPadding(WindowInsets.systemBars)
-                    )
+                    // FIX: Removed windowInsetsPadding to prevent double padding.
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
         }
