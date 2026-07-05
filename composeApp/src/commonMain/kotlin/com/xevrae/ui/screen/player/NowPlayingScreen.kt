@@ -261,7 +261,8 @@ fun NowPlayingScreen(
     ModalBottomSheet(
         modifier =
             Modifier
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .padding(horizontal = 8.dp), // 8dp side padding to match App.kt
         onDismissRequest = {
             onDismiss()
         },
@@ -269,8 +270,9 @@ fun NowPlayingScreen(
         dragHandle = {},
         scrimColor = Color(0xFF121212),
         sheetState = sheetState,
-        contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
-        shape = RoundedCornerShape(16.dp),
+        // FIX: Only apply Top, Left, and Right insets. Ignore Bottom so it touches the screen edge.
+        contentWindowInsets = { WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Left + WindowInsetsSides.Right) },
+        shape = RoundedCornerShape(16.dp), // Rounded corners
     ) {
         NowPlayingScreenContent(
             sharedViewModel = sharedViewModel,
@@ -769,13 +771,9 @@ fun NowPlayingScreenContent(
         KeepScreenOn()
     }
     
-    // FIX: Applied systemBars insets and 8dp horizontal padding to the outermost Box
-    // because ModalBottomSheet floats above App.kt and ignores its padding.
+    // FIX: Removed inner padding because the ModalBottomSheet is now handling it.
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .padding(horizontal = 8.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         if (blurBg && screenDataState.canvasData == null) {
             AsyncImage(
@@ -1316,7 +1314,6 @@ fun NowPlayingScreenContent(
                         TopAppBarDefaults.topAppBarColors().copy(
                             containerColor = Color.Transparent,
                         ),
-                    // FIX: Set to 0 because the outer Box is already handling systemBars padding.
                     windowInsets = WindowInsets(0, 0, 0, 0),
                     title = {
                         Column(
@@ -2219,7 +2216,6 @@ fun NowPlayingScreenContent(
                         Spacer(modifier = Modifier.height(5.dp))
                     }
                     Spacer(modifier = Modifier.height(10.dp))
-                    // FIX: Removed windowInsetsPadding to prevent double padding.
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
