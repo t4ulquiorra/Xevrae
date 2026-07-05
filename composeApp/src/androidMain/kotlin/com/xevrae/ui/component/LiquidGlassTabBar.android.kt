@@ -95,8 +95,8 @@ fun LiquidGlassTabBar(
         modifier = modifier.height(BarHeight),
         contentAlignment = Alignment.CenterStart,
     ) {
-        // FIX: Determine width dynamically if the parent provides bounds (e.g., fillMaxWidth in Landscape)
-        val tabWidth = if (hasBoundedWidth) maxWidth / tabsCount else TabWidth
+        // FIX: Check if width is bounded to make it responsive
+        val tabWidth = if (maxWidth != Dp.Infinity) maxWidth / tabsCount else TabWidth
         val tabWidthPx = with(density) { tabWidth.toPx() }
 
         val dampedDrag =
