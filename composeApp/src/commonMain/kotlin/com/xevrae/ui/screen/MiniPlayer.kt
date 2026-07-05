@@ -178,7 +178,7 @@ fun MiniPlayer(
                     0.2126 * r + 0.7152 * g + 0.0722 * b
                 } / 25
             luminanceAnimation.animateTo(
-                averageLuminance.coerceIn(0.3f, 0.8f).toFloat(),
+                averageLuminance.coerceIn(0.3, 0.8).toFloat(),
                 tween(500),
             )
             delay(1.seconds)
@@ -294,7 +294,7 @@ fun MiniPlayer(
                 modifier
                     .then(
                         if (isLiquidGlassEnabled == DataStoreManager.TRUE) {
-                            Modifier.liquidGlass(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(12.dp), pressedScale = 1.04f)
+                            Modifier.liquidGlass(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(12.dp), interactive = true)
                         } else {
                             Modifier
                         },
