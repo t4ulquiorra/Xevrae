@@ -262,7 +262,9 @@ fun NowPlayingScreen(
         modifier =
             Modifier
                 .fillMaxHeight()
-                .padding(horizontal = 8.dp), // 8dp side padding to match App.kt
+                .padding(horizontal = 8.dp) // 8dp side padding to match App.kt
+                .windowInsetsPadding(WindowInsets.statusBars) // Pushes sheet below status bar so corners aren't clipped
+                .clip(RoundedCornerShape(16.dp)), // Force clip the corners
         onDismissRequest = {
             onDismiss()
         },
@@ -270,9 +272,8 @@ fun NowPlayingScreen(
         dragHandle = {},
         scrimColor = Color(0xFF121212),
         sheetState = sheetState,
-        // FIX: Only apply Top, Left, and Right insets. Ignore Bottom so it touches the screen edge.
-        contentWindowInsets = { WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Left + WindowInsetsSides.Right) },
-        shape = RoundedCornerShape(16.dp), // Rounded corners
+        contentWindowInsets = { WindowInsets(0, 0, 0, 0) },
+        shape = RoundedCornerShape(16.dp),
     ) {
         NowPlayingScreenContent(
             sharedViewModel = sharedViewModel,
