@@ -81,12 +81,12 @@ import com.xevrae.expect.Orientation
 import com.xevrae.expect.currentOrientation
 import com.xevrae.expect.openUrl
 import com.xevrae.expect.ui.layerBackdrop
-import com.xevrae.expect.ui.drawBackdropCustomShape
 import com.xevrae.expect.ui.rememberBackdrop
 import com.xevrae.extension.copy
 import com.xevrae.ui.component.AppBottomNavigationBar
 import com.xevrae.ui.component.AppNavigationRail
 import com.xevrae.ui.component.LiquidGlassAppBottomNavigationBar
+import com.xevrae.ui.component.LiquidGlassLandscapeNavBar
 import com.xevrae.ui.navigation.destination.home.NotificationDestination
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
 import com.xevrae.ui.navigation.destination.list.ArtistDestination
@@ -203,15 +203,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     NotificationDestination,
                 )
             } else if (data.host == "xevrae.org" || data.scheme == "xevrae") {
-                // https://xevrae.org/app/watch?v=VIDEO_ID
-                // https://xevrae.org/app/playlist?list=PLAYLIST_ID
-                // https://xevrae.org/app/channel/CHANNEL_ID
-                // xevrae://watch?v=VIDEO_ID  (host="watch", no path)
-                // xevrae://playlist?list=PLAYLIST_ID
-                // xevrae://channel/CHANNEL_ID
                 val segments = data.pathSegments
-                // For xevrae.org: segments = ["app", "watch"] → appPath = segments[1]
-                // For xevrae://: host IS the appPath (e.g. host="watch"), segments = []
                 val appPath =
                     if (data.scheme == "xevrae") {
                         data.host
@@ -240,8 +232,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     }
 
                     "channel", "c" -> {
-                        // xevrae://channel/UCxxx → segments = ["UCxxx"]
-                        // xevrae.org/app/channel/UCxxx → segments = ["app", "channel", "UCxxx"]
                         val artistId =
                             if (data.scheme == "xevrae") {
                                 segments.firstOrNull()
@@ -369,8 +359,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
     val miniPlayerPanelWidth = maxOf(screenWidthDp * 0.30f, 350.dp)
 
     val backdrop = rememberBackdrop()
-    val navBarLayer = rememberGraphicsLayer()
-    val navBarLuminance = remember { androidx.compose.animation.core.Animatable(0f) }
 
     AppTheme {
         Box(
@@ -615,23 +603,24 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .height(67.dp)
                                     .fillMaxWidth()
                                     .align(Alignment.BottomStart)
-                                    .then(
-                                        if (isLiquidGlassEnabled == TRUE) {
-                                            Modifier.drawBackdropCustomShape(backdrop, navBarLayer, navBarLuminance.value, androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
-                                        } else {
-                                            Modifier.clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
+                            ) {
+                                if (isLiquidGlassEnabled == TRUE) {
+                                    LiquidGlassLandscapeNavBar(
+                                        navController = navController,
+                                        backdrop = backdrop,
+                                        viewModel = viewModel,
+                                        reloadDestinationIfNeeded = { klass ->
+                                            viewModel.reloadDestination(klass)
                                         }
                                     )
-                            ) {
-                                AppBottomNavigationBar(
-                                    navController = navController,
-                                    isTranslucentBackground = false,
-                                    containerColor = if (isLiquidGlassEnabled == TRUE)
-                                        androidx.compose.ui.graphics.Color.Transparent
-                                    else
-                                        androidx.compose.ui.graphics.Color(0xFF1F1F1F),
-                                ) { klass ->
-                                    viewModel.reloadDestination(klass)
+                                } else {
+                                    AppBottomNavigationBar(
+                                        navController = navController,
+                                        isTranslucentBackground = false,
+                                        containerColor = androidx.compose.ui.graphics.Color(0xFF1F1F1F),
+                                    ) { klass ->
+                                        viewModel.reloadDestination(klass)
+                                    }
                                 }
                             }
                             Box(
