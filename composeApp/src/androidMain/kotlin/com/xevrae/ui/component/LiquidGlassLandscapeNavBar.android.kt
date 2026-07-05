@@ -3,12 +3,14 @@ package com.xevrae.ui.component
 import android.graphics.Bitmap
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.Modifier
 import androidx.core.graphics.scale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -95,6 +97,7 @@ actual fun LiquidGlassLandscapeNavBar(
     }
 
     LiquidGlassTabBar(
+        modifier = Modifier.fillMaxWidth(), // FIX: Make the tab bar stretch to fill the screen
         tabs = bottomNavScreens,
         selectedTab = selectedIndex,
         backdrop = backdrop,
