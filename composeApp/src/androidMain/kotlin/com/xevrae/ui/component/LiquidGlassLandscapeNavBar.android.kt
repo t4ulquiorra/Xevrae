@@ -3,15 +3,17 @@ package com.xevrae.ui.component
 import android.graphics.Bitmap
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.core.graphics.scale
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.core.graphics.scale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.xevrae.expect.ui.PlatformBackdrop
 import com.xevrae.logger.Logger
@@ -72,12 +74,11 @@ actual fun LiquidGlassLandscapeNavBar(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val bottomNavScreens = listOf(BottomNavScreen.Home, BottomNavScreen.Search, BottomNavScreen.Library)
 
-    val currentRoute = currentBackStackEntry?.destination?.route
-    val selectedIndex = when {
-        currentRoute?.startsWith("home") == true -> 0
-        currentRoute?.startsWith("search") == true -> 1
-        currentRoute?.startsWith("library") == true -> 2
-        else -> 0
+    // FIX: Use official hierarchy check to find the current selected tab
+    val selectedIndex = remember(currentBackStackEntry) {
+        bottomNavScreens.indexOfFirst { screen ->
+            currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(screen.destination::class) } == true
+        }.let { if (it == -1) 0 else it }
     }
 
     fun selectTab(index: Int) {
