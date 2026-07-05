@@ -102,7 +102,6 @@ import com.xevrae.logger.Logger
 import com.xevrae.Platform
 import com.xevrae.expect.toggleMiniPlayer
 import com.xevrae.expect.ui.PlatformBackdrop
-import com.xevrae.expect.ui.drawBackdropCustomShape
 import com.xevrae.expect.ui.toImageBitmap
 import com.xevrae.extension.formatDuration
 import com.xevrae.extension.getColorFromPalette
@@ -153,7 +152,7 @@ fun MiniPlayer(
     val luminanceAnimation = remember { Animatable(0f) }
 
     val textColor by animateColorAsState(
-        targetValue = if (luminanceAnimation.value > 0.6f) Color(0xFF121212) else Color.White,
+        targetValue = if (luminanceAnimation.value > 0.6f) Color.Black else Color.White,
         label = "MiniPlayerTextColor",
         animationSpec = tween(500),
     )
@@ -179,7 +178,7 @@ fun MiniPlayer(
                     0.2126 * r + 0.7152 * g + 0.0722 * b
                 } / 25
             luminanceAnimation.animateTo(
-                averageLuminance.coerceAtMost(0.8).toFloat(),
+                averageLuminance.coerceIn(0.3f, 0.8f).toFloat(),
                 tween(500),
             )
             delay(1.seconds)
@@ -285,7 +284,7 @@ fun MiniPlayer(
 
     if (getPlatform() == Platform.Android) {
         Card(
-            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(cornerRadius),
+            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(12.dp),
             colors =
                 CardDefaults.cardColors(
                     containerColor = if (isLiquidGlassEnabled == DataStoreManager.TRUE) transparent else background.value,
@@ -295,7 +294,7 @@ fun MiniPlayer(
                 modifier
                     .then(
                         if (isLiquidGlassEnabled == DataStoreManager.TRUE) {
-                            Modifier.liquidGlass(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(cornerRadius))
+                            Modifier.liquidGlass(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(12.dp), pressedScale = 1.04f)
                         } else {
                             Modifier
                         },
@@ -407,11 +406,10 @@ fun MiniPlayer(
                                 },
                                 modifier =
                                     Modifier
-                                        .padding(vertical = 6.dp, horizontal = 1.dp)
-                                        .fillMaxHeight()
-                                        .aspectRatio(1f)
+                                        .size(40.dp)
+                                        .align(Alignment.CenterVertically)
                                         .clip(
-                                            RoundedCornerShape(6.dp),
+                                            RoundedCornerShape(4.dp),
                                         ),
                             )
                             Spacer(modifier = Modifier.width(10.dp))
@@ -483,7 +481,7 @@ fun MiniPlayer(
                                                 text = (songEntity?.artistName?.connectArtists() ?: ""),
                                                 style = typo().bodySmall,
                                                 maxLines = 1,
-                                                color = textColor.copy(alpha = 0.6f),
+                                                color = textColor,
                                                 modifier =
                                                     Modifier
                                                         .weight(1f)
