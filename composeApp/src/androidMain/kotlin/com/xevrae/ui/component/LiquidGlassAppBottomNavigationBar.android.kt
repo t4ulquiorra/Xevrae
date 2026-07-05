@@ -1,15 +1,10 @@
 package com.xevrae.ui.component
 
 import android.graphics.Bitmap
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,24 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.LibraryMusic
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.FloatingToolbarDefaults
-import androidx.compose.material3.HorizontalFloatingToolbar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,15 +28,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -73,36 +46,18 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.xevrae.domain.data.player.GenericMediaItem
 import com.xevrae.logger.Logger
 import com.xevrae.expect.ui.PlatformBackdrop
-import com.xevrae.expect.ui.drawBackdropCustomShape
-import com.xevrae.extension.greyScale
 import com.xevrae.ui.navigation.destination.home.HomeDestination
 import com.xevrae.ui.navigation.destination.library.LibraryDestination
 import com.xevrae.ui.navigation.destination.search.SearchDestination
 import com.xevrae.ui.screen.MiniPlayer
-import com.xevrae.ui.theme.bottomBarSeedDark
-import com.xevrae.ui.theme.customDarkGray
-import com.xevrae.ui.theme.customGray
-import com.xevrae.ui.theme.transparent
-import com.xevrae.ui.theme.typo
-import com.xevrae.ui.theme.white
 import com.xevrae.viewModel.SharedViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.stringResource
-import xevrae.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.painterResource
-import xevrae.composeapp.generated.resources.home_filled
-import xevrae.composeapp.generated.resources.home_lined
-import xevrae.composeapp.generated.resources.search_filled
-import xevrae.composeapp.generated.resources.search_lined
-import xevrae.composeapp.generated.resources.library_filled
-import xevrae.composeapp.generated.resources.library_lined
 import java.nio.IntBuffer
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.seconds
-import androidx.compose.ui.graphics.lerp as colorLerp
 
 private const val TAG = "LiquidGlassAppBottomNavigationBar"
 
@@ -117,15 +72,10 @@ actual fun LiquidGlassAppBottomNavigationBar(
     onOpenNowPlaying: () -> Unit,
     reloadDestinationIfNeeded: (KClass<*>) -> Unit
 ) {
-    val density = LocalDensity.current
     val layer = rememberGraphicsLayer()
+    val toolbarInteraction = rememberGlassInteraction()
+    val searchFabInteraction = rememberGlassInteraction()
     val luminanceAnimation = remember { Animatable(0f) }
-
-    val customGrayColor by animateColorAsState(
-        targetValue = colorLerp(customGray, customDarkGray, luminanceAnimation.value * 1.25f),
-        animationSpec = tween(1000),
-        label = "CustomGrayColorAnimation",
-    )
 
     LaunchedEffect(layer) {
         val buffer = IntBuffer.allocate(25)
@@ -153,7 +103,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
                     0.2126 * r + 0.7152 * g + 0.0722 * b
                 } / 25
             luminanceAnimation.animateTo(
-                averageLuminance.coerceAtMost(0.8).toFloat(),
+                averageLuminance.coerceIn(0.3, 0.8).toFloat(),
                 tween(500),
             )
             delay(1.seconds)
@@ -161,7 +111,6 @@ actual fun LiquidGlassAppBottomNavigationBar(
     }
 
     val nowPlayingData by viewModel.nowPlayingState.collectAsStateWithLifecycle()
-    // MiniPlayer visibility logic
     var isShowMiniPlayer by rememberSaveable {
         mutableStateOf(true)
     }
@@ -173,18 +122,20 @@ actual fun LiquidGlassAppBottomNavigationBar(
             BottomNavScreen.Search,
             BottomNavScreen.Library,
         )
+    val barTabs =
+        listOf(
+            BottomNavScreen.Home,
+            BottomNavScreen.Library,
+        )
     var selectedIndex by rememberSaveable {
         mutableIntStateOf(
             when (startDestination) {
                 is HomeDestination -> BottomNavScreen.Home.ordinal
                 is SearchDestination -> BottomNavScreen.Search.ordinal
                 is LibraryDestination -> BottomNavScreen.Library.ordinal
-                else -> BottomNavScreen.Home.ordinal // Default to Home if not recognized
+                else -> BottomNavScreen.Home.ordinal
             },
         )
-    }
-    var previousSelectedIndex by rememberSaveable {
-        mutableIntStateOf(selectedIndex)
     }
     var isExpanded by rememberSaveable {
         mutableStateOf(true)
@@ -238,6 +189,29 @@ actual fun LiquidGlassAppBottomNavigationBar(
         }
     }
 
+    fun selectTab(index: Int) {
+        val screen = bottomNavScreens.find { it.ordinal == index } ?: return
+        if (selectedIndex == index) {
+            if (currentBackStackEntry?.destination?.hierarchy?.any {
+                    it.hasRoute(screen.destination::class)
+                } == true
+            ) {
+                reloadDestinationIfNeeded(screen.destination::class)
+            } else {
+                navController.navigate(screen.destination)
+            }
+        } else {
+            selectedIndex = index
+            navController.navigate(screen.destination) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    }
+
     ConstraintLayout(
         constraintSet = constraintSet,
         modifier =
@@ -252,257 +226,59 @@ actual fun LiquidGlassAppBottomNavigationBar(
                 .imePadding(),
         animateChangesSpec = tween(300),
     ) {
-        /**
-         * LTR: HOME -> MIX FOR YOU -> LIBRARY | SEARCH
-         */
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier =
                 Modifier
                     .padding(start = 16.dp)
                     .wrapContentSize()
-                    .layoutId("toolbar"),
+                    .layoutId("toolbar")
+                    .onGloballyPositioned { updateConstraints = true },
         ) {
-            HorizontalFloatingToolbar(
-                modifier =
-                    Modifier
-                        .drawBackdropCustomShape(
-                            backdrop,
-                            layer,
-                            luminanceAnimation.value,
-                            CircleShape,
-                        )
-                        .then(
-                            if (!isExpanded) {
-                                Modifier.size(48.dp)
-                            } else {
-                                Modifier.wrapContentSize()
-                            },
-                        )
-                        .onGloballyPositioned {
-                            updateConstraints = true
-                        },
-                contentPadding =
-                    PaddingValues(
-                        horizontal = if (isExpanded) 4.dp else 0.dp,
-                    ),
-                colors =
-                    FloatingToolbarDefaults
-                        .standardFloatingToolbarColors()
-                        .copy(
-                            toolbarContainerColor = transparent,
-                        ),
-                expanded = isExpanded,
-                trailingContent = {
-                    var buttonSize by remember { mutableStateOf(0.dp to 0.dp) }
-                    bottomNavScreens.filter { it != BottomNavScreen.Search }.forEach { screen ->
-                        Box {
-                            if (selectedIndex == screen.ordinal) {
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .size(buttonSize.first, buttonSize.second)
-                                            .clip(CircleShape)
-                                            .blur(8.dp),
-                                )
-                            }
-                            Button(
-                                modifier =
-                                    Modifier.onGloballyPositioned {
-                                        if (selectedIndex == screen.ordinal) {
-                                            buttonSize = with(density) { it.size.width.toDp() to it.size.height.toDp() }
-                                        }
-                                    },
-                                onClick = {
-                                    if (selectedIndex == screen.ordinal) {
-                                        if (currentBackStackEntry?.destination?.hierarchy?.any {
-                                                it.hasRoute(screen.destination::class)
-                                            } == true
-                                        ) {
-                                            reloadDestinationIfNeeded(
-                                                screen.destination::class,
-                                            )
-                                        } else {
-                                            navController.navigate(screen.destination)
-                                        }
-                                    } else {
-                                        previousSelectedIndex = selectedIndex
-                                        selectedIndex = screen.ordinal
-                                        navController.navigate(screen.destination) {
-                                            popUpTo(navController.graph.startDestinationId) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                },
-                                shape = CircleShape,
-                                colors =
-                                    ButtonDefaults
-                                        .buttonColors()
-                                        .copy(
-                                            disabledContainerColor = transparent,
-                                            containerColor =
-                                                if (selectedIndex == screen.ordinal) {
-                                                    customGrayColor
-                                                } else {
-                                                    transparent
-                                                },
-                                            contentColor =
-                                                if (selectedIndex == screen.ordinal) {
-                                                    bottomBarSeedDark
-                                                } else {
-                                                    white
-                                                },
-                                        ),
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    Icon(
-                                        painter = painterResource(
-                                            if (selectedIndex == screen.ordinal) when (screen) {
-                                                BottomNavScreen.Home -> Res.drawable.home_filled
-                                                BottomNavScreen.Search -> Res.drawable.search_filled
-                                                BottomNavScreen.Library -> Res.drawable.library_filled
-                                            } else when (screen) {
-                                                BottomNavScreen.Home -> Res.drawable.home_lined
-                                                BottomNavScreen.Search -> Res.drawable.search_lined
-                                                BottomNavScreen.Library -> Res.drawable.library_lined
-                                            }
-                                        ),
-                                        contentDescription = "",
-                                    )
-                                    Text(
-                                        stringResource(screen.title),
-                                        style =
-                                            if (selectedIndex == screen.ordinal) {
-                                                typo().bodySmall.copy(
-                                                    fontWeight = FontWeight.Bold,
-                                                )
-                                            } else {
-                                                typo().bodySmall.greyScale()
-                                            },
-                                        color =
-                                            if (selectedIndex == screen.ordinal) {
-                                                bottomBarSeedDark
-                                            } else {
-                                                white
-                                            },
-                                    )
-                                }
-                            }
-                        }
-                    }
-                },
-            ) {
-                if (!isExpanded) {
-                    val screen = bottomNavScreens.find { screen -> screen.ordinal == selectedIndex } ?: return@HorizontalFloatingToolbar
-                    val previousScreen =
-                        bottomNavScreens.find { screen -> screen.ordinal == previousSelectedIndex } ?: return@HorizontalFloatingToolbar
-                    IconButton(
-                        modifier =
-                            Modifier.size(
-                                FloatingToolbarDefaults.ContainerSize.value.dp,
-                            ),
-                        shape = CircleShape,
-                        onClick = {
-                            if (screen == BottomNavScreen.Search) {
-                                val destination =
-                                    when (previousScreen) {
-                                        BottomNavScreen.Home -> HomeDestination
-                                        BottomNavScreen.Library -> LibraryDestination
-                                        else -> HomeDestination
-                                    }
-                                selectedIndex = previousSelectedIndex
-                                previousSelectedIndex = BottomNavScreen.Search.ordinal
-                                navController.navigate(destination) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            } else {
-                                isExpanded = true
-                            }
-                        },
-                        colors =
-                            IconButtonDefaults.iconButtonColors().copy(
-                                contentColor = bottomBarSeedDark,
-                            ),
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                when (selectedIndex) {
-                                    BottomNavScreen.Home.ordinal -> Res.drawable.home_filled
-                                    BottomNavScreen.Search.ordinal ->
-                                        when (previousScreen) {
-                                            BottomNavScreen.Home -> Res.drawable.home_filled
-                                            BottomNavScreen.Library -> Res.drawable.library_filled
-                                            else -> Res.drawable.search_filled
-                                        }
-                                    BottomNavScreen.Library.ordinal -> Res.drawable.library_filled
-                                    else -> Res.drawable.home_filled
-                                }
-                            ),
-                            contentDescription = "",
-                        )
-                    }
-                }
-            }
-
             if (isExpanded) {
+                LiquidGlassTabBar(
+                    tabs = barTabs,
+                    selectedTab = barTabs.indexOfFirst { it.ordinal == selectedIndex },
+                    backdrop = backdrop,
+                    layer = layer,
+                    luminance = luminanceAnimation.value,
+                    onTabSelected = { position -> selectTab(barTabs[position].ordinal) },
+                )
                 Spacer(Modifier.size(12.dp))
-            }
-
-            val searchColor by animateColorAsState(
-                targetValue = if (luminanceAnimation.value > 0.6f) Color(0xFF121212) else Color.White,
-                label = "MiniPlayerTextColor",
-                animationSpec = tween(500),
-            )
-
-            AnimatedVisibility(
-                visible = !isInSearchDestination && isExpanded,
-                enter =
-                    slideInHorizontally(
-                        tween(100),
-                    ) { it / 2 },
-                exit =
-                    slideOutHorizontally(
-                        tween(100),
-                    ) { -it / 2 },
-            ) {
-                FloatingActionButton(
+                Box(
                     modifier =
-                        Modifier.drawBackdropCustomShape(
-                            backdrop,
-                            layer,
-                            luminanceAnimation.value,
-                            CircleShape,
-                        ),
-                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
-                    onClick = {
-                        previousSelectedIndex = selectedIndex
-                        selectedIndex = BottomNavScreen.Search.ordinal
-                        navController.navigate(BottomNavScreen.Search.destination) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    shape = CircleShape,
-                    containerColor = transparent,
-                    contentColor = transparent,
+                        Modifier
+                            .size(56.dp)
+                            .drawInteractiveGlass(
+                                backdrop,
+                                layer,
+                                luminanceAnimation.value,
+                                CircleShape,
+                                searchFabInteraction,
+                            )
+                            .clickable { selectTab(BottomNavScreen.Search.ordinal) },
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        Icons.Outlined.Search,
-                        "",
-                        tint = searchColor,
-                    )
+                    BottomNavScreen.Search.icon(true) // Xevrae custom icon
+                }
+            } else {
+                val selectedScreen =
+                    bottomNavScreens.find { it.ordinal == selectedIndex } ?: BottomNavScreen.Home
+                Box(
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .drawInteractiveGlass(
+                                backdrop,
+                                layer,
+                                luminanceAnimation.value,
+                                CircleShape,
+                                toolbarInteraction,
+                            )
+                            .clickable { isExpanded = true },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    selectedScreen.icon(true) // Xevrae custom icon
                 }
             }
         }
@@ -510,7 +286,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .height(60.dp)
+                .height(56.dp)
                 .layoutId("miniPlayer"),
             backdrop = backdrop,
             onClick = {
