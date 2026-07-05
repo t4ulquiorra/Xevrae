@@ -112,6 +112,7 @@ import com.xevrae.ui.component.ExplicitBadge
 import com.xevrae.ui.component.HeartCheckBox
 import com.xevrae.ui.component.PlayPauseButton
 import com.xevrae.ui.component.PlayerControlLayout
+import com.xevrae.ui.component.liquidGlass
 import com.xevrae.ui.theme.transparent
 import com.xevrae.ui.theme.typo
 import com.xevrae.viewModel.SharedViewModel
@@ -294,7 +295,7 @@ fun MiniPlayer(
                 modifier
                     .then(
                         if (isLiquidGlassEnabled == DataStoreManager.TRUE) {
-                            Modifier.drawBackdropCustomShape(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(cornerRadius))
+                            Modifier.liquidGlass(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(cornerRadius))
                         } else {
                             Modifier
                         },
@@ -504,6 +505,7 @@ fun MiniPlayer(
                         sharedViewModel.onUIEvent(UIEvent.ToggleLike)
                     }
                     Spacer(modifier = Modifier.width(15.dp))
+                    // Removed loading spinner as requested
                     PlayPauseButton(isPlaying = isPlaying, modifier = Modifier.size(48.dp)) {
                         sharedViewModel.onUIEvent(UIEvent.PlayPause)
                     }
@@ -523,7 +525,7 @@ fun MiniPlayer(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(2.dp)
+                                .height(1.dp) // 1.dp to match SimpMusic
                                 .background(
                                     color = Color.Transparent,
                                     shape = RoundedCornerShape(4.dp),
