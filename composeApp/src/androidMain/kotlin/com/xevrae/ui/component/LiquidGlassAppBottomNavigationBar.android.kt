@@ -238,7 +238,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
         ) {
             if (isExpanded) {
                 LiquidGlassTabBar(
-                    modifier = Modifier.width(TabWidth * barTabs.size), // FIX: Restore fixed width for portrait
+                    modifier = Modifier.width(TabWidth * barTabs.size),
                     tabs = barTabs,
                     selectedTab = barTabs.indexOfFirst { it.ordinal == selectedIndex },
                     backdrop = backdrop,
@@ -261,7 +261,8 @@ actual fun LiquidGlassAppBottomNavigationBar(
                             .clickable { selectTab(BottomNavScreen.Search.ordinal) },
                     contentAlignment = Alignment.Center,
                 ) {
-                    BottomNavScreen.Search.icon(true)
+                    // FIX: Only show filled icon if we are actually on the Search screen
+                    BottomNavScreen.Search.icon(selectedIndex == BottomNavScreen.Search.ordinal)
                 }
             } else {
                 val selectedScreen =
