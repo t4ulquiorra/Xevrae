@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
@@ -237,6 +238,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
         ) {
             if (isExpanded) {
                 LiquidGlassTabBar(
+                    modifier = Modifier.width(TabWidth * barTabs.size), // FIX: Restore fixed width for portrait
                     tabs = barTabs,
                     selectedTab = barTabs.indexOfFirst { it.ordinal == selectedIndex },
                     backdrop = backdrop,
@@ -259,7 +261,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
                             .clickable { selectTab(BottomNavScreen.Search.ordinal) },
                     contentAlignment = Alignment.Center,
                 ) {
-                    BottomNavScreen.Search.icon(true) // Xevrae custom icon
+                    BottomNavScreen.Search.icon(true)
                 }
             } else {
                 val selectedScreen =
@@ -278,7 +280,7 @@ actual fun LiquidGlassAppBottomNavigationBar(
                             .clickable { isExpanded = true },
                     contentAlignment = Alignment.Center,
                 ) {
-                    selectedScreen.icon(true) // Xevrae custom icon
+                    selectedScreen.icon(true)
                 }
             }
         }

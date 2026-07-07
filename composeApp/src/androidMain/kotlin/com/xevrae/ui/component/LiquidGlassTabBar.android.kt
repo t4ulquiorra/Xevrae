@@ -68,7 +68,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sign
 
 private val CapsuleShape = RoundedCornerShape(percent = 50)
-private val TabWidth = 96.dp
+val TabWidth = 96.dp // Made public so portrait navbar can use it
 private val BarHeight = 64.dp
 private val BlobHeight = 56.dp
 
