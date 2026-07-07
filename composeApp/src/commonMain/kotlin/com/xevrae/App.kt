@@ -149,17 +149,14 @@ fun App(viewModel: SharedViewModel = koinInject()) {
 
     val isTranslucentBottomBar by viewModel.getTranslucentBottomBar().collectAsStateWithLifecycle(DataStoreManager.FALSE)
     val isLiquidGlassEnabled by viewModel.getEnableLiquidGlass().collectAsStateWithLifecycle(DataStoreManager.FALSE)
-    // MiniPlayer visibility logic
     var isShowMiniPlayer by rememberSaveable {
         mutableStateOf(true)
     }
 
-    // Now playing screen
     var isShowNowPlaylistScreen by rememberSaveable {
         mutableStateOf(false)
     }
 
-    // Left panel
     var isShowLeftPanel by rememberSaveable {
         mutableStateOf(false)
     }
@@ -170,7 +167,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
         mutableStateOf("")
     }
 
-    // Fullscreen
     var isInFullscreen by rememberSaveable {
         mutableStateOf(false)
     }
@@ -444,7 +440,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                     Box(
                         Modifier.fillMaxSize(),
                     ) {
-                        // Content area + now playing panel side by side
                         Row(Modifier.fillMaxSize().background(Color(0xFF121212))) {
                             if (isTabletLandscape && !isInFullscreen && (isShowLeftPanel || leftPanelProgress.value > 0f)) {
                                 Box(
@@ -587,6 +582,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         }
                         // Nav bar and mini player: overlaid on full screen, never affected by content layout
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
+                            // FIX: Animate both left and right padding smoothly when NowPlayingScreen opens
                             val navBarLeftPad by animateDpAsState(
                                 targetValue = if (isShowNowPlaylistScreen) screenWidthDp * 0.075f else screenWidthDp * 0.0137f,
                                 animationSpec = tween(300),
@@ -601,10 +597,11 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 animationSpec = tween(300),
                                 label = "navBarRightReserve",
                             )
+                            
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(start = navBarStartPad + (screenWidthDp * 0.0137f), end = navBarRightReserve, bottom = 8.dp)
+                                    .padding(start = navBarStartPad + navBarLeftPad, end = navBarRightReserve, bottom = 8.dp)
                                     .height(67.dp)
                                     .fillMaxWidth()
                                     .align(Alignment.BottomStart)
@@ -633,7 +630,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(end = (screenWidthDp * 0.0137f), bottom = 8.dp)
+                                    .padding(end = screenWidthDp * 0.0137f, bottom = 8.dp)
                                     .height(67.dp)
                                     .width(miniPlayerPanelWidth)
                                     .align(Alignment.BottomEnd),
@@ -641,7 +638,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                 androidx.compose.animation.AnimatedVisibility(
                                     visible = isShowMiniPlayer && !isShowNowPlaylistScreen,
                                     enter = fadeIn() + slideInHorizontally { it },
-                                    exit = fadeOut(),
+                                    exit = fadeOut() + slideOutHorizontally { it },
                                 ) {
                                     MiniPlayer(
                                         Modifier.fillMaxSize(),
