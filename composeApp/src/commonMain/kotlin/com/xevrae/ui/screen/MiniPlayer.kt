@@ -139,7 +139,7 @@ private const val TAG = "MiniPlayer"
 fun MiniPlayer(
     modifier: Modifier,
     backdrop: PlatformBackdrop,
-    cornerRadius: androidx.compose.ui.unit.Dp = 10.dp,
+    cornerRadius: androidx.compose.ui.unit.Dp = 16.dp,
     sharedViewModel: SharedViewModel = koinInject(),
     onClose: () -> Unit,
     onClick: () -> Unit,

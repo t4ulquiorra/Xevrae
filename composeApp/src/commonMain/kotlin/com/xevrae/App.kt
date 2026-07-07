@@ -602,7 +602,6 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .padding(start = navBarStartPad + (screenWidthDp * 0.0137f), end = navBarRightReserve, bottom = 8.dp)
                                     .height(67.dp)
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(16.dp))
                                     .align(Alignment.BottomStart)
                             ) {
                                 if (isLiquidGlassEnabled == TRUE) {
@@ -615,12 +614,14 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                         }
                                     )
                                 } else {
-                                    AppBottomNavigationBar(
-                                        navController = navController,
-                                        isTranslucentBackground = false,
-                                        containerColor = androidx.compose.ui.graphics.Color(0xFF1F1F1F),
-                                    ) { klass ->
-                                        viewModel.reloadDestination(klass)
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
+                                        AppBottomNavigationBar(
+                                            navController = navController,
+                                            isTranslucentBackground = false,
+                                            containerColor = androidx.compose.ui.graphics.Color(0xFF1F1F1F),
+                                        ) { klass ->
+                                            viewModel.reloadDestination(klass)
+                                        }
                                     }
                                 }
                             }
