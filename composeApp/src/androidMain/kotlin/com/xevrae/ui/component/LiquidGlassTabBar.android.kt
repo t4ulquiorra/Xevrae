@@ -68,7 +68,7 @@ import kotlin.math.roundToInt
 import kotlin.math.sign
 
 private val CapsuleShape = RoundedCornerShape(percent = 50)
-val TabWidth = 96.dp // Made public so portrait navbar can use it
+val TabWidth = 96.dp
 private val BarHeight = 64.dp
 private val BlobHeight = 56.dp
 
@@ -95,7 +95,6 @@ fun LiquidGlassTabBar(
         modifier = modifier.height(BarHeight),
         contentAlignment = Alignment.CenterStart,
     ) {
-        // FIX: Check if width is bounded to make it responsive
         val tabWidth = if (maxWidth != Dp.Infinity) maxWidth / tabsCount else TabWidth
         val tabWidthPx = with(density) { tabWidth.toPx() }
 
@@ -138,10 +137,12 @@ fun LiquidGlassTabBar(
                 }
         }
 
+        // FIX: Added contentAlignment = Alignment.CenterStart to center the blob vertically
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .pointerInput(barInteraction) { barInteraction.detectPress(this) },
+            contentAlignment = Alignment.CenterStart 
         ) {
             Box(Modifier.matchParentSize().drawInteractiveGlass(backdrop, layer, luminance, CapsuleShape, barInteraction))
 
@@ -240,7 +241,7 @@ private fun LiquidGlassTab(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CompositionLocalProvider(LocalContentColor provides color) {
-            screen.icon(selected) // Uses Xevrae's custom selected icons
+            screen.icon(selected)
             Text(
                 text = stringResource(screen.title),
                 style = typo().bodySmall,
