@@ -589,9 +589,9 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
                             val navBarRightReserve by animateDpAsState(
                                 targetValue = when {
-                                    isShowNowPlaylistScreen -> nowPlayingPanelWidth + 8.dp
-                                    isShowMiniPlayer -> miniPlayerPanelWidth + 24.dp
-                                    else -> 16.dp
+                                    isShowNowPlaylistScreen -> nowPlayingPanelWidth + (screenWidthDp * 0.0206f)
+                                    isShowMiniPlayer -> miniPlayerPanelWidth + (screenWidthDp * 0.0206f)
+                                    else -> screenWidthDp * 0.0137f
                                 },
                                 animationSpec = tween(300),
                                 label = "navBarRightReserve",
@@ -599,7 +599,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(start = navBarStartPad + 16.dp, end = navBarRightReserve, bottom = 8.dp)
+                                    .padding(start = navBarStartPad + (screenWidthDp * 0.0137f), end = navBarRightReserve, bottom = 8.dp)
                                     .height(67.dp)
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(16.dp))
@@ -627,7 +627,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                             Box(
                                 modifier = Modifier
                                     .padding(innerPadding)
-                                    .padding(end = 16.dp, bottom = 8.dp)
+                                    .padding(end = (screenWidthDp * 0.0137f), bottom = 8.dp)
                                     .height(67.dp)
                                     .width(miniPlayerPanelWidth)
                                     .align(Alignment.BottomEnd),
