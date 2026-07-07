@@ -587,9 +587,14 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                         }
                         // Nav bar and mini player: overlaid on full screen, never affected by content layout
                         if (isTablet && isTabletLandscape && !isInFullscreen) {
+                            val navBarLeftPad by animateDpAsState(
+                                targetValue = if (isShowNowPlaylistScreen) screenWidthDp * 0.075f else screenWidthDp * 0.0137f,
+                                animationSpec = tween(300),
+                                label = "navBarLeftPad"
+                            )
                             val navBarRightReserve by animateDpAsState(
                                 targetValue = when {
-                                    isShowNowPlaylistScreen -> nowPlayingPanelWidth + (screenWidthDp * 0.0206f)
+                                    isShowNowPlaylistScreen -> nowPlayingPanelWidth + (screenWidthDp * 0.075f)
                                     isShowMiniPlayer -> miniPlayerPanelWidth + (screenWidthDp * 0.0206f)
                                     else -> screenWidthDp * 0.0137f
                                 },
