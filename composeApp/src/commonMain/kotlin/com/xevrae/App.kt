@@ -602,6 +602,7 @@ fun App(viewModel: SharedViewModel = koinInject()) {
                                     .padding(start = navBarStartPad + 16.dp, end = navBarRightReserve, bottom = 8.dp)
                                     .height(67.dp)
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(16.dp))
                                     .align(Alignment.BottomStart)
                             ) {
                                 if (isLiquidGlassEnabled == TRUE) {
