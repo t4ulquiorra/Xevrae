@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -80,6 +81,7 @@ fun LiquidGlassTabBar(
     layer: GraphicsLayer,
     luminance: Float,
     modifier: Modifier = Modifier,
+    shape: Shape = CapsuleShape, // FIX: Added shape parameter, default to CapsuleShape for portrait
     onTabSelected: (Int) -> Unit,
 ) {
     val density = LocalDensity.current
@@ -137,14 +139,14 @@ fun LiquidGlassTabBar(
                 }
         }
 
-        // FIX: Added contentAlignment = Alignment.CenterStart to center the blob vertically
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .pointerInput(barInteraction) { barInteraction.detectPress(this) },
             contentAlignment = Alignment.CenterStart 
         ) {
-            Box(Modifier.matchParentSize().drawInteractiveGlass(backdrop, layer, luminance, CapsuleShape, barInteraction))
+            // FIX: Use the passed shape instead of CapsuleShape
+            Box(Modifier.matchParentSize().drawInteractiveGlass(backdrop, layer, luminance, shape, barInteraction))
 
             Box(
                 Modifier
@@ -155,7 +157,7 @@ fun LiquidGlassTabBar(
                     }
                     .drawBackdrop(
                         backdrop = backdrop,
-                        shape = { CapsuleShape },
+                        shape = { shape }, // FIX: Use the passed shape
                         effects = {
                             val l = (luminance * 2f - 1f).let { sign(it) * it * it }
                             val progress = dampedDrag.pressProgress
@@ -204,6 +206,7 @@ fun LiquidGlassTabBar(
                         screen = screen,
                         selected = currentIndex == position,
                         width = tabWidth,
+                        shape = shape // FIX: Pass shape to the tab as well
                     ) {
                         if (position == currentIndex) {
                             onTabSelected(position)
@@ -223,6 +226,7 @@ private fun LiquidGlassTab(
     screen: BottomNavScreen,
     selected: Boolean,
     width: Dp,
+    shape: Shape, // FIX: Accept shape
     onClick: () -> Unit,
 ) {
     val color = if (selected) bottomBarSeedDark else white
@@ -230,7 +234,7 @@ private fun LiquidGlassTab(
         Modifier
             .width(width)
             .fillMaxHeight()
-            .clip(CapsuleShape)
+            .clip(shape) // FIX: Use shape for clipping bounds
             .clickable(
                 interactionSource = null,
                 indication = null,
@@ -241,7 +245,7 @@ private fun LiquidGlassTab(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CompositionLocalProvider(LocalContentColor provides color) {
-            screen.icon(selected)
+            screen.icon(selected) 
             Text(
                 text = stringResource(screen.title),
                 style = typo().bodySmall,

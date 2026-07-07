@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -76,7 +77,6 @@ actual fun LiquidGlassLandscapeNavBar(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val bottomNavScreens = listOf(BottomNavScreen.Home, BottomNavScreen.Search, BottomNavScreen.Library)
 
-    // FIX: Use official hierarchy check to find the current selected tab
     val selectedIndex = remember(currentBackStackEntry) {
         bottomNavScreens.indexOfFirst { screen ->
             currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(screen.destination::class) } == true
@@ -97,7 +97,8 @@ actual fun LiquidGlassLandscapeNavBar(
     }
 
     LiquidGlassTabBar(
-        modifier = Modifier.fillMaxWidth(), // FIX: Make the tab bar stretch to fill the screen
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp), // FIX: Apply 16.dp rounded rectangle to landscape
         tabs = bottomNavScreens,
         selectedTab = selectedIndex,
         backdrop = backdrop,
