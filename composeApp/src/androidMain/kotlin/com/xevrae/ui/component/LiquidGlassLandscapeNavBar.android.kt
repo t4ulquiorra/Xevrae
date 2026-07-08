@@ -78,17 +78,18 @@ actual fun LiquidGlassLandscapeNavBar(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val bottomNavScreens = listOf(BottomNavScreen.Home, BottomNavScreen.Search, BottomNavScreen.Library)
 
-    val selectedIndex = remember(currentBackStackEntry) {
-        bottomNavScreens.indexOfFirst { screen ->
-            currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(screen.destination::class) } == true
-        }.let { if (it == -1) 0 else it }
-    }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
     fun selectTab(index: Int) {
         val screen = bottomNavScreens[index]
         if (selectedIndex == index) {
-            reloadDestinationIfNeeded(screen.destination::class)
+            if (currentBackStackEntry?.destination?.hierarchy?.any { it.hasRoute(screen.destination::class) } == true) {
+                reloadDestinationIfNeeded(screen.destination::class)
+            } else {
+                navController.navigate(screen.destination)
+            }
         } else {
+            selectedIndex = index
             navController.navigate(screen.destination) {
                 popUpTo(navController.graph.startDestinationId) { saveState = true }
                 launchSingleTop = true
