@@ -223,3 +223,4 @@
 -dontwarn io.sentry.instrumentation.file.SentryFileOutputStream$Factory
 -dontwarn io.sentry.okhttp.SentryOkHttpEventListener
 -dontwarn io.sentry.okhttp.SentryOkHttpInterceptor-keep class dev.maxrave.pipepipe.extractor.timeago.patterns.** { *; }
+-keep class dev.maxrave.pipepipe.extractor.timeago.patterns.** { *; }
