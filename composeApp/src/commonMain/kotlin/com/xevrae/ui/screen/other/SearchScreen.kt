@@ -1,6 +1,7 @@
 package com.xevrae.ui.screen.other
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -10,7 +11,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +53,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,6 +69,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
@@ -97,6 +100,7 @@ import com.xevrae.domain.mediaservice.handler.QueueData
 import com.xevrae.domain.utils.connectArtists
 import com.xevrae.domain.utils.toSongEntity
 import com.xevrae.domain.utils.toTrack
+import com.xevrae.expect.pressClickable
 import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.extension.getStringBlocking
 import com.xevrae.extension.toAppDeepLinkOrNull
@@ -122,12 +126,16 @@ import com.xevrae.viewModel.SearchType
 import com.xevrae.viewModel.SearchViewModel
 import com.xevrae.viewModel.SharedViewModel
 import com.xevrae.viewModel.toStringRes
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import xevrae.composeapp.generated.resources.Res
-import xevrae.composeapp.generated.resources.app_icon
 import xevrae.composeapp.generated.resources.albums
 import xevrae.composeapp.generated.resources.artists
 import xevrae.composeapp.generated.resources.baseline_arrow_outward_24
@@ -138,9 +146,7 @@ import xevrae.composeapp.generated.resources.clear_search_history
 import xevrae.composeapp.generated.resources.error_occurred
 import xevrae.composeapp.generated.resources.everything_you_need
 import xevrae.composeapp.generated.resources.genre
-import xevrae.composeapp.generated.resources.holder
 import xevrae.composeapp.generated.resources.in_search
-import xevrae.composeapp.generated.resources.moods_amp_moment
 import xevrae.composeapp.generated.resources.no_results_found
 import xevrae.composeapp.generated.resources.playlists
 import xevrae.composeapp.generated.resources.podcasts
@@ -149,9 +155,8 @@ import xevrae.composeapp.generated.resources.search_for
 import xevrae.composeapp.generated.resources.search_for_songs_artists_albums_playlists_and_more
 import xevrae.composeapp.generated.resources.song
 import xevrae.composeapp.generated.resources.videos
-import xevrae.composeapp.generated.resources.what_do_you_want_to_listen_to
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel = koinInject(),
@@ -178,7 +183,28 @@ fun SearchScreen(
     val screenInfo = getScreenSizeInfo()
     val isMobilePortrait = getPlatform() == Platform.Android && screenInfo.wDP < screenInfo.hDP
     val moodGridColumns = if (isMobilePortrait) 2 else 4
+
+    val hazeState = rememberHazeState(blurEnabled = true)
+    val suggestionsState = rememberLazyListState()
+    val historyState = rememberLazyListState()
     val moodGridState = rememberLazyGridState()
+    val resultsState = rememberLazyListState()
+    var searchBarHeightPx by remember { mutableIntStateOf(0) }
+    val searchBarHeight = with(LocalDensity.current) { searchBarHeightPx.toDp() }
+    val isContentAtTop by remember {
+        derivedStateOf {
+            when (searchUIType) {
+                SearchUIType.EMPTY ->
+                    moodGridState.firstVisibleItemIndex == 0 && moodGridState.firstVisibleItemScrollOffset == 0
+                SearchUIType.SEARCH_HISTORY ->
+                    historyState.firstVisibleItemIndex == 0 && historyState.firstVisibleItemScrollOffset == 0
+                SearchUIType.SEARCH_SUGGESTIONS ->
+                    suggestionsState.firstVisibleItemIndex == 0 && suggestionsState.firstVisibleItemScrollOffset == 0
+                SearchUIType.SEARCH_RESULTS ->
+                    resultsState.firstVisibleItemIndex == 0 && resultsState.firstVisibleItemScrollOffset == 0
+            }
+        }
+    }
 
     val searchForString = stringResource(Res.string.search_for)
     val songString = stringResource(Res.string.song).lowercase()
@@ -268,112 +294,28 @@ fun SearchScreen(
         )
     }
 
-    Column(
+    Box(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Color.Transparent)
-                .padding(vertical = 10.dp),
+                .background(Color.Transparent),
     ) {
-        // Search Bar with Animated Placeholder
-        SearchBar(
-            inputField = {
-                SearchBarDefaults.InputField(
-                    query = searchText,
-                    onQueryChange = { newText ->
-                        searchText = newText
-                    },
-                    onSearch = { query ->
-                        val deepLink = query.toAppDeepLinkOrNull()
-                        if (deepLink != null) {
-                            focusManager.clearFocus()
-                            sharedViewModel.setIntent(GenericIntent(data = deepLink))
-                        } else if (query.isNotEmpty()) {
-                            isSearchSubmitted = true
-                            focusManager.clearFocus()
-                            searchViewModel.insertSearchHistory(query)
-                            when (searchScreenState.searchType) {
-                                SearchType.ALL -> searchViewModel.searchAll(query)
-                                SearchType.SONGS -> searchViewModel.searchSongs(query)
-                                SearchType.VIDEOS -> searchViewModel.searchVideos(query)
-                                SearchType.ALBUMS -> searchViewModel.searchAlbums(query)
-                                SearchType.ARTISTS -> searchViewModel.searchArtists(query)
-                                SearchType.PLAYLISTS -> searchViewModel.searchPlaylists(query)
-                                SearchType.FEATURED_PLAYLISTS -> searchViewModel.searchFeaturedPlaylist(query)
-                                SearchType.PODCASTS -> searchViewModel.searchPodcast(query)
-                            }
-                        }
-                    },
-                    expanded = false,
-                    onExpandedChange = {},
-                    enabled = true,
-                    placeholder = {
-                        // Animated placeholder text
-                        AnimatedContent(
-                            targetState = currentPlaceholderIndex,
-                            transitionSpec = {
-                                (
-                                    fadeIn(animationSpec = tween(500)) +
-                                        slideInVertically { height -> height }
-                                ).togetherWith(
-                                    fadeOut(animationSpec = tween(500)) +
-                                        slideOutVertically { height -> -height },
-                                )
-                            },
-                            label = "placeholder_animation",
-                        ) { index ->
-                            Text(
-                                text = placeholderTexts[index],
-                                style = typo().labelMedium,
-                            )
-                        }
-                    },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(Res.drawable.baseline_search_24),
-                            contentDescription = "Search",
-                        )
-                    },
-                    trailingIcon = {
-                        // X button only shows when there's text
-                        if (searchText.isNotEmpty()) {
-                            IconButton(
-                                modifier = Modifier.clip(CircleShape),
-                                onClick = {
-                                    searchText = ""
-                                    isSearchSubmitted = false
-                                },
-                            ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.baseline_close_24),
-                                    contentDescription = "Clear search",
-                                )
-                            }
-                        }
-                    },
-                )
-            },
-            expanded = false,
-            onExpandedChange = {},
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-                    .onFocusChanged {
-                        isFocused = it.isFocused
-                    }.padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(8.dp),
-            content = {},
-        )
-
-        Crossfade(targetState = searchUIType) {
+        // Content scrolls under the bar (it is the haze source), so it needs top padding
+        // equal to the bar's measured height to keep its first item clear of it.
+        Crossfade(
+            targetState = searchUIType,
+            modifier = Modifier.fillMaxSize().hazeSource(hazeState),
+        ) {
             when (it) {
                 SearchUIType.SEARCH_SUGGESTIONS -> {
                     LazyColumn(
-                        Modifier.padding(
-                            horizontal = 16.dp,
-                            vertical = 10.dp,
-                        ),
+                        Modifier.padding(horizontal = 16.dp),
+                        state = suggestionsState,
+                        contentPadding =
+                            PaddingValues(
+                                top = searchBarHeight,
+                                bottom = 10.dp,
+                            ),
                     ) {
                         items(searchScreenState.suggestYTItems) { item ->
                             SuggestItemRow(
@@ -479,12 +421,16 @@ fun SearchScreen(
                         modifier =
                             Modifier
                                 .fillMaxSize()
-                                .padding(
-                                    horizontal = 16.dp,
-                                    vertical = 10.dp,
-                                ),
+                                .padding(horizontal = 16.dp),
                     ) {
-                        LazyColumn {
+                        LazyColumn(
+                            state = historyState,
+                            contentPadding =
+                                PaddingValues(
+                                    top = searchBarHeight,
+                                    bottom = 10.dp,
+                                ),
+                        ) {
                             stickyHeader {
                                 Crossfade(
                                     targetState = searchHistory.isNotEmpty(),
@@ -582,6 +528,7 @@ fun SearchScreen(
                                         .widthIn(max = 1100.dp)
                                         .padding(horizontal = 16.dp),
                                 state = moodGridState,
+                                contentPadding = PaddingValues(top = searchBarHeight),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
@@ -590,7 +537,7 @@ fun SearchScreen(
                                         modifier =
                                             Modifier
                                                 .fillMaxWidth()
-                                                .padding(top = 20.dp, bottom = 20.dp),
+                                                .padding(top = 36.dp, bottom = 20.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                     ) {
                                         Text(
@@ -660,32 +607,10 @@ fun SearchScreen(
                 SearchUIType.SEARCH_RESULTS -> {
                     // Content area
                     Column(modifier = Modifier.fillMaxSize()) {
-                        // Filter chips
-                        Row(
-                            modifier =
-                                Modifier
-                                    .horizontalScroll(chipRowState)
-                                    .padding(top = 10.dp)
-                                    .padding(horizontal = 12.dp),
-                        ) {
-                            SearchType.entries.forEach { id ->
-                                val isSelected = id == searchScreenState.searchType
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Chip(
-                                    isAnimated = uiState is SearchScreenUIState.Loading,
-                                    isSelected = isSelected,
-                                    text = stringResource(id.toStringRes()),
-                                ) {
-                                    searchViewModel.setSearchType(id)
-                                }
-                                Spacer(modifier = Modifier.width(4.dp))
-                            }
-                        }
                         PullToRefreshBox(
                             modifier =
                                 Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 10.dp),
+                                    .fillMaxSize(),
                             state = pullToRefreshState,
                             onRefresh = {
                                 val query = searchText.trim()
@@ -709,7 +634,10 @@ fun SearchScreen(
                                 PullToRefreshDefaults.Indicator(
                                     state = pullToRefreshState,
                                     isRefreshing = uiState is SearchScreenUIState.Loading,
-                                    modifier = Modifier.align(Alignment.TopCenter),
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.TopCenter)
+                                            .padding(top = searchBarHeight),
                                     containerColor = PullToRefreshDefaults.indicatorContainerColor,
                                     color = PullToRefreshDefaults.indicatorColor,
                                     maxDistance = PullToRefreshDefaults.PositionalThreshold - 5.dp,
@@ -720,7 +648,13 @@ fun SearchScreen(
                                 when (uiState) {
                                     is SearchScreenUIState.Loading -> {
                                         // Loading state
-                                        LazyColumn {
+                                        LazyColumn(
+                                            contentPadding =
+                                                PaddingValues(
+                                                    top = searchBarHeight,
+                                                    bottom = 10.dp,
+                                                ),
+                                        ) {
                                             items(10) {
                                                 ShimmerSearchItem()
                                             }
@@ -746,8 +680,14 @@ fun SearchScreen(
                                             Crossfade(targetState = currentResults.isNotEmpty()) {
                                                 if (it) {
                                                     LazyColumn(
-                                                        contentPadding = PaddingValues(horizontal = 4.dp),
-                                                        state = rememberLazyListState(),
+                                                        contentPadding =
+                                                            PaddingValues(
+                                                                start = 4.dp,
+                                                                end = 4.dp,
+                                                                top = searchBarHeight,
+                                                                bottom = 10.dp,
+                                                            ),
+                                                        state = resultsState,
                                                     ) {
                                                         items(currentResults) { result ->
                                                             when (result) {
@@ -890,7 +830,10 @@ fun SearchScreen(
                                     }
 
                                     is SearchScreenUIState.Error -> {
-                                        Box {
+                                        Box(
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
                                             // Error state
                                             Column(
                                                 modifier = Modifier.align(Alignment.Center),
@@ -931,6 +874,151 @@ fun SearchScreen(
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Floating search bar and filter chips header with glass blur scrim
+        AnimatedContent(
+            targetState = isContentAtTop,
+            transitionSpec = {
+                fadeIn(tween(300)).togetherWith(fadeOut(tween(300)))
+            },
+            modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .onGloballyPositioned { searchBarHeightPx = it.size.height },
+            label = "search_bar_scrim",
+        ) { atTop ->
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (atTop) {
+                                Modifier.background(Color.Transparent)
+                            } else {
+                                Modifier.hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
+                                    blurEnabled = true
+                                }
+                            },
+                        ).padding(vertical = 10.dp),
+            ) {
+                // Search Bar with Animated Placeholder
+                SearchBar(
+                    inputField = {
+                        SearchBarDefaults.InputField(
+                            query = searchText,
+                            onQueryChange = { newText ->
+                                searchText = newText
+                            },
+                            onSearch = { query ->
+                                val deepLink = query.toAppDeepLinkOrNull()
+                                if (deepLink != null) {
+                                    focusManager.clearFocus()
+                                    sharedViewModel.setIntent(GenericIntent(data = deepLink))
+                                } else if (query.isNotEmpty()) {
+                                    isSearchSubmitted = true
+                                    focusManager.clearFocus()
+                                    searchViewModel.insertSearchHistory(query)
+                                    when (searchScreenState.searchType) {
+                                        SearchType.ALL -> searchViewModel.searchAll(query)
+                                        SearchType.SONGS -> searchViewModel.searchSongs(query)
+                                        SearchType.VIDEOS -> searchViewModel.searchVideos(query)
+                                        SearchType.ALBUMS -> searchViewModel.searchAlbums(query)
+                                        SearchType.ARTISTS -> searchViewModel.searchArtists(query)
+                                        SearchType.PLAYLISTS -> searchViewModel.searchPlaylists(query)
+                                        SearchType.FEATURED_PLAYLISTS -> searchViewModel.searchFeaturedPlaylist(query)
+                                        SearchType.PODCASTS -> searchViewModel.searchPodcast(query)
+                                    }
+                                }
+                            },
+                            expanded = false,
+                            onExpandedChange = {},
+                            enabled = true,
+                            placeholder = {
+                                // Animated placeholder text
+                                AnimatedContent(
+                                    targetState = currentPlaceholderIndex,
+                                    transitionSpec = {
+                                        (
+                                            fadeIn(animationSpec = tween(500)) +
+                                                slideInVertically { height -> height }
+                                        ).togetherWith(
+                                            fadeOut(animationSpec = tween(500)) +
+                                                slideOutVertically { height -> -height },
+                                        )
+                                    },
+                                    label = "placeholder_animation",
+                                ) { index ->
+                                    Text(
+                                        text = placeholderTexts[index],
+                                        style = typo().labelMedium,
+                                    )
+                                }
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(Res.drawable.baseline_search_24),
+                                    contentDescription = "Search",
+                                )
+                            },
+                            trailingIcon = {
+                                // X button only shows when there's text
+                                if (searchText.isNotEmpty()) {
+                                    IconButton(
+                                        modifier = Modifier.clip(CircleShape),
+                                        onClick = {
+                                            searchText = ""
+                                            isSearchSubmitted = false
+                                        },
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(Res.drawable.baseline_close_24),
+                                            contentDescription = "Clear search",
+                                        )
+                                    }
+                                }
+                            },
+                        )
+                    },
+                    expanded = false,
+                    onExpandedChange = {},
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester)
+                            .onFocusChanged {
+                                isFocused = it.isFocused
+                            }.padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    content = {},
+                )
+
+                // Filter chips ride along inside the blurred block instead of sitting in the
+                // results branch. That way searchBarHeight covers them too, results scroll
+                // underneath the whole thing, and the glass has something to blur.
+                AnimatedVisibility(visible = searchUIType == SearchUIType.SEARCH_RESULTS) {
+                    Row(
+                        modifier =
+                            Modifier
+                                .horizontalScroll(chipRowState)
+                                .padding(top = 10.dp)
+                                .padding(horizontal = 12.dp),
+                    ) {
+                        SearchType.entries.forEach { id ->
+                            val isSelected = id == searchScreenState.searchType
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Chip(
+                                isAnimated = uiState is SearchScreenUIState.Loading,
+                                isSelected = isSelected,
+                                text = stringResource(id.toStringRes()),
+                            ) {
+                                searchViewModel.setSearchType(id)
+                            }
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                     }
                 }
