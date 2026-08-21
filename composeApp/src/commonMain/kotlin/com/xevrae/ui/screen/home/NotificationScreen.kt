@@ -26,18 +26,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
+import com.xevrae.extension.getScreenSizeInfo
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -124,13 +131,31 @@ fun NotificationItem(
     notification: NotificationEntity,
     navController: NavController,
 ) {
+    val density = LocalDensity.current
+    val screenInfo = getScreenSizeInfo()
+    var containerWidthDp by remember { mutableStateOf(0.dp) }
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
+            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (150.dp * scaleRatio).coerceAtLeast(80.dp)
+
     Box(
         modifier =
             Modifier
-                .padding(5.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 5.dp),
     ) {
-        Column {
+        Column(
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    with(density) {
+                        containerWidthDp = coordinates.size.width.toDp()
+                    }
+                },
+        ) {
             Row(
                 Modifier.clickable {
                     navController.navigate(
@@ -178,7 +203,8 @@ fun NotificationItem(
                         browseId = single["browseId"] ?: "",
                         title = single["title"] ?: "",
                         thumbnail = single["thumbnails"],
-                        navController,
+                        navController = navController,
+                        thumbSize = dynamicThumbSize,
                     )
                 }
                 items(notification.album) { album ->
@@ -188,6 +214,7 @@ fun NotificationItem(
                         title = album["title"] ?: "",
                         thumbnail = album["thumbnails"],
                         navController = navController,
+                        thumbSize = dynamicThumbSize,
                     )
                 }
             }
@@ -211,6 +238,7 @@ fun ItemAlbumNotification(
     title: String,
     thumbnail: String?,
     navController: NavController,
+    thumbSize: Dp = 150.dp,
 ) {
     Box(
         modifier =
@@ -242,7 +270,7 @@ fun ItemAlbumNotification(
                 modifier =
                     Modifier
                         .align(Alignment.CenterHorizontally)
-                        .size(150.dp)
+                        .size(thumbSize)
                         .clip(
                             RoundedCornerShape(10),
                         ),
@@ -254,7 +282,7 @@ fun ItemAlbumNotification(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(150.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .padding(top = 10.dp)
                         .basicMarquee(
@@ -268,7 +296,7 @@ fun ItemAlbumNotification(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(150.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .padding(top = 10.dp)
                         .basicMarquee(

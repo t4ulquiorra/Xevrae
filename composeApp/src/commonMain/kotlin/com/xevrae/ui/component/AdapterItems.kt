@@ -1341,8 +1341,26 @@ fun MoodAndGenresContentItem(
     navController: NavController,
     homeViewModel: HomeViewModel = koinViewModel(),
 ) {
+    val screenInfo = getScreenSizeInfo()
+    var containerWidthDp by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
+            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
+
     Column(
-        modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically, unbounded = true),
+        modifier =
+            Modifier
+                .wrapContentHeight(align = Alignment.CenterVertically, unbounded = true)
+                .onGloballyPositioned { coordinates ->
+                    with(density) {
+                        containerWidthDp = coordinates.size.width.toDp()
+                    }
+                },
     ) {
         Text(
             text =
@@ -1373,53 +1391,57 @@ fun MoodAndGenresContentItem(
                     else -> listOf()
                 }
             items(itemList) { item ->
-                HomeItemContentPlaylist(onClick = {
-                    // The "Songs" shelf mixes tracks into a list that is otherwise all playlists,
-                    // so route by videoId: a track starts its radio, everything else opens a page.
-                    val moodSong = item as? com.xevrae.domain.data.model.mood.moodmoments.Content
-                    val songVideoId = moodSong?.videoId
-                    if (moodSong != null && songVideoId != null) {
-                        val track =
-                            Track(
-                                album = null,
-                                artists = listOf(Artist(id = null, name = moodSong.subtitle)),
-                                duration = null,
-                                durationSeconds = null,
-                                isAvailable = true,
-                                isExplicit = false,
-                                likeStatus = null,
-                                thumbnails = moodSong.thumbnails,
-                                title = moodSong.title,
-                                videoId = songVideoId,
-                                videoType = null,
-                                category = null,
-                                feedbackTokens = null,
-                                resultType = null,
+                HomeItemContentPlaylist(
+                    onClick = {
+                        // The "Songs" shelf mixes tracks into a list that is otherwise all playlists,
+                        // so route by videoId: a track starts its radio, everything else opens a page.
+                        val moodSong = item as? com.xevrae.domain.data.model.mood.moodmoments.Content
+                        val songVideoId = moodSong?.videoId
+                        if (moodSong != null && songVideoId != null) {
+                            val track =
+                                Track(
+                                    album = null,
+                                    artists = listOf(Artist(id = null, name = moodSong.subtitle)),
+                                    duration = null,
+                                    durationSeconds = null,
+                                    isAvailable = true,
+                                    isExplicit = false,
+                                    likeStatus = null,
+                                    thumbnails = moodSong.thumbnails,
+                                    title = moodSong.title,
+                                    videoId = songVideoId,
+                                    videoType = null,
+                                    category = null,
+                                    feedbackTokens = null,
+                                    resultType = null,
+                                )
+                            homeViewModel.setQueueData(
+                                QueueData.Data(
+                                    listTracks = arrayListOf(track),
+                                    firstPlayedTrack = track,
+                                    playlistId = "RDAMVM$songVideoId",
+                                    playlistName = "\"${moodSong.title}\" Radio",
+                                    playlistType = PlaylistType.RADIO,
+                                    continuation = null,
+                                ),
                             )
-                        homeViewModel.setQueueData(
-                            QueueData.Data(
-                                listTracks = arrayListOf(track),
-                                firstPlayedTrack = track,
-                                playlistId = "RDAMVM$songVideoId",
-                                playlistName = "\"${moodSong.title}\" Radio",
-                                playlistType = PlaylistType.RADIO,
-                                continuation = null,
-                            ),
-                        )
-                        homeViewModel.loadMediaItem(track, type = Config.SONG_CLICK)
-                    } else {
-                        navController.navigate(
-                            PlaylistDestination(
-                                playlistId =
-                                    if (item is com.xevrae.domain.data.model.mood.genre.Content) {
-                                        item.playlistBrowseId
-                                    } else {
-                                        (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
-                                    },
-                            ),
-                        )
-                    }
-                }, data = item)
+                            homeViewModel.loadMediaItem(track, type = Config.SONG_CLICK)
+                        } else {
+                            navController.navigate(
+                                PlaylistDestination(
+                                    playlistId =
+                                        if (item is com.xevrae.domain.data.model.mood.genre.Content) {
+                                            item.playlistBrowseId
+                                        } else {
+                                            (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
+                                        },
+                                ),
+                            )
+                        }
+                    },
+                    data = item,
+                    thumbSize = dynamicThumbSize,
+                )
             }
         }
     }

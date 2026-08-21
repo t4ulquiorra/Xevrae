@@ -32,8 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -56,6 +57,7 @@ import com.xevrae.domain.data.type.RecentlyType
 import com.xevrae.domain.mediaservice.handler.QueueData
 import com.xevrae.domain.utils.connectArtists
 import com.xevrae.domain.utils.toTrack
+import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
 import com.xevrae.ui.navigation.destination.list.ArtistDestination
 import com.xevrae.ui.navigation.destination.list.LocalPlaylistDestination
@@ -90,6 +92,18 @@ fun LibraryItem(
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var songEntity by remember { mutableStateOf<SongEntity?>(null) }
+    val density = LocalDensity.current
+    val screenInfo = getScreenSizeInfo()
+    var containerWidthDp by remember { mutableStateOf(0.dp) }
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
+            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (125.dp * scaleRatio).coerceAtLeast(70.dp)
+    val dynamicCanvasWidth = (170.dp * scaleRatio).coerceAtLeast(95.dp)
+
     val title =
         when (state.type) {
             is LibraryItemType.RecentlyAdded -> stringResource(Res.string.recently_added)
@@ -118,7 +132,14 @@ fun LibraryItem(
                 },
             )
         }
-        Column {
+        Column(
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    with(density) {
+                        containerWidthDp = coordinates.size.width.toDp()
+                    }
+                },
+        ) {
             Row(
                 modifier = Modifier.padding(top = 15.dp, start = 10.dp, end = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -242,7 +263,7 @@ fun LibraryItem(
                                     Modifier
                                         .padding(horizontal = 10.dp)
                                         .height(300.dp)
-                                        .width(170.dp)
+                                        .width(dynamicCanvasWidth)
                                         .pressClickable {
                                             val firstQueue: Track = song.toTrack()
                                             viewModel.setQueueData(
@@ -383,7 +404,7 @@ fun LibraryItem(
                                                 }
                                             },
                                             data = item as? PlaylistType ?: return@items,
-                                            thumbSize = 125.dp,
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                 }

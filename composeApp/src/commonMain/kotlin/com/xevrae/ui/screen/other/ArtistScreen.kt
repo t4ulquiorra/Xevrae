@@ -45,6 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -60,6 +62,7 @@ import com.xevrae.domain.mediaservice.handler.QueueData
 import com.xevrae.domain.utils.toSongEntity
 import com.xevrae.domain.utils.toTrack
 import com.xevrae.expect.ui.MediaPlayerView
+import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.extension.getStringBlocking
 import com.xevrae.extension.rgbFactor
 import com.xevrae.ui.component.CenterLoadingBox
@@ -125,6 +128,17 @@ fun ArtistScreen(
         mutableStateOf(false)
     }
 
+    val density = LocalDensity.current
+    val screenInfo = getScreenSizeInfo()
+    var shelfWidthDp by remember { mutableStateOf(0.dp) }
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && shelfWidthDp > 0.dp) {
+            (shelfWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(80.dp)
+
     LaunchedEffect(channelId) {
         if (channelId != artistScreenState.data.channelId) {
             viewModel.browseArtist(channelId)
@@ -151,7 +165,14 @@ fun ArtistScreen(
                         navController.navigateUp()
                     },
                 ) { color ->
-                    Column {
+                    Column(
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates ->
+                                with(density) {
+                                    shelfWidthDp = coordinates.size.width.toDp()
+                                }
+                            },
+                    ) {
                         Column(
                             Modifier
                                 .padding(horizontal = 20.dp)
@@ -232,21 +253,14 @@ fun ArtistScreen(
                                         Spacer(Modifier.width(12.dp))
                                     }
                                 }
-                                LimitedBorderAnimationView(
-                                    isAnimated = !isFollowed,
-                                    brush = Brush.sweepGradient(listOf(Color.Gray, Color.White)),
-                                    backgroundColor = Color.Transparent,
-                                    contentPadding = 0.dp,
-                                    borderWidth = 2.dp,
-                                    shape = ButtonDefaults.outlinedShape,
-                                    oneCircleDurationMillis = 3000,
-                                    interactionNumber = 1,
-                                ) {
-                                    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+                                AnimatedVisibility(isFollowed != null) {
+                                    CompositionLocalProvider(
+                                        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+                                    ) {
                                         OutlinedButton(
                                             onClick = {
                                                 viewModel.updateFollowed(
-                                                    if (isFollowed) 0 else 1,
+                                                    if (isFollowed == true) 0 else 1,
                                                     state.data.channelId ?: return@OutlinedButton,
                                                 )
                                             },
@@ -256,11 +270,10 @@ fun ArtistScreen(
                                                     containerColor = Color.Transparent,
                                                 ),
                                         ) {
-                                            if (isFollowed) {
-                                                Text(text = stringResource(Res.string.followed), color = Color.White)
-                                            } else {
-                                                Text(text = stringResource(Res.string.follow), color = Color.White)
-                                            }
+                                            Text(
+                                                text = stringResource(if (isFollowed == true) Res.string.followed else Res.string.follow),
+                                                color = Color.White,
+                                            )
                                         }
                                     }
                                 }
@@ -298,7 +311,11 @@ fun ArtistScreen(
                                         Icon(Icons.Outlined.Sensors, "")
                                         if (canvasUrl == null) {
                                             Spacer(Modifier.width(6.dp))
-                                            Text(text = stringResource(Res.string.start_radio))
+                                            Text(
+                                                text = stringResource(Res.string.start_radio),
+                                                style = typo().bodySmall,
+                                                color = Color.White,
+                                            )
                                         }
                                     }
                                 }
@@ -307,70 +324,44 @@ fun ArtistScreen(
 
                         // Popular Songs
                         AnimatedVisibility(state.data.popularSongs.isNotEmpty()) {
-                            Column {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 20.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.popular),
-                                        style = typo().labelMedium,
-                                        color = Color.White,
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                    TextButton(
-                                        onClick = {
-                                            val id = state.data.listSongParam
-                                            if (id != null) {
-                                                navController.navigate(PlaylistDestination(id))
-                                            } else {
-                                                viewModel.makeToast(runBlocking { getString(Res.string.error) })
-                                            }
-                                        },
-                                        colors =
-                                            ButtonDefaults
-                                                .textButtonColors()
-                                                .copy(
-                                                    contentColor = Color.White,
-                                                ),
-                                    ) {
-                                        Text(stringResource(Res.string.more), style = typo().bodySmall)
+                            SongFullWidthItems(
+                                title = stringResource(Res.string.popular_songs),
+                                songs = state.data.popularSongs,
+                                onMoreClick = {
+                                    val id = state.data.listSongParam
+                                    if (id != null) {
+                                        navController.navigate(PlaylistDestination(id))
+                                    } else {
+                                        viewModel.makeToast(runBlocking { getString(Res.string.error) })
                                     }
-                                }
-                                state.data.popularSongs.forEach { song ->
-                                    SongFullWidthItems(
-                                        track = song,
-                                        isPlaying = song.videoId == playingTrack,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        onMoreClickListener = {
-                                            choosingTrack = song
-                                            showBottomSheet = true
-                                        },
-                                        onClickListener = {
-                                            val firstQueue: Track = song
-                                            viewModel.setQueueData(
-                                                QueueData.Data(
-                                                    listTracks = arrayListOf(firstQueue),
-                                                    firstPlayedTrack = firstQueue,
-                                                    playlistId = "RDAMVM${song.videoId}",
-                                                    playlistName = "\"${state.data.title ?: ""}\" ${getStringBlocking(Res.string.popular)}",
-                                                    playlistType = PlaylistType.RADIO,
-                                                    continuation = null,
-                                                ),
-                                            )
-                                            viewModel.loadMediaItem(
-                                                firstQueue,
-                                                type = Config.SONG_CLICK,
-                                            )
-                                        },
-                                        onAddToQueue = {
-                                            sharedViewModel.addListToQueue(
-                                                arrayListOf(song),
-                                            )
-                                        },
+                                },
+                                onSongClick = { index ->
+                                    val firstQueue: Track = state.data.popularSongs[index]
+                                    viewModel.setQueueData(
+                                        QueueData.Data(
+                                            listTracks = arrayListOf(firstQueue),
+                                            firstPlayedTrack = firstQueue,
+                                            playlistId = "RDAMVM${firstQueue.videoId}",
+                                            playlistName = "\"${(state.data.title ?: "")}\" ${
+                                                getStringBlocking(
+                                                    Res.string.popular_songs,
+                                                )
+                                            }",
+                                            playlistType = PlaylistType.RADIO,
+                                            continuation = null,
+                                        ),
                                     )
-                                }
-                            }
+                                    viewModel.loadMediaItem(
+                                        firstQueue,
+                                        type = Config.SONG_CLICK,
+                                    )
+                                },
+                                onLongClick = {
+                                    choosingTrack = it
+                                    showBottomSheet = true
+                                },
+                                playingTrack = playingTrack,
+                            )
                         }
 
                         // Singles
@@ -430,7 +421,7 @@ fun ArtistScreen(
                                                 )
                                             },
                                             data = single,
-                                            thumbSize = 180.dp,
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                     item {
@@ -497,7 +488,7 @@ fun ArtistScreen(
                                                 )
                                             },
                                             data = album,
-                                            thumbSize = 180.dp,
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                     item {
@@ -589,6 +580,7 @@ fun ArtistScreen(
                                                     videoId = video.videoId,
                                                     views = video.videoType,
                                                 ),
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                     item {
@@ -631,7 +623,7 @@ fun ArtistScreen(
                                                 )
                                             },
                                             data = feature,
-                                            thumbSize = 180.dp,
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                     item {
@@ -698,6 +690,7 @@ fun ArtistScreen(
                                                     durationSeconds = null,
                                                     radio = null,
                                                 ),
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                     item {

@@ -67,6 +67,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -890,7 +892,23 @@ fun AlbumScreen(
                     }
                     item(contentType = "other_version") {
                         AnimatedVisibility(uiState.otherVersion.isNotEmpty()) {
-                            Column {
+                            var shelfWidthDp by remember { mutableStateOf(0.dp) }
+                            val scaleRatio =
+                                if (screenInfo.wDP > 0 && shelfWidthDp > 0.dp) {
+                                    (shelfWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+                                } else {
+                                    1f
+                                }
+                            val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(80.dp)
+
+                            Column(
+                                modifier =
+                                    Modifier.onGloballyPositioned { coordinates ->
+                                        with(density) {
+                                            shelfWidthDp = coordinates.size.width.toDp()
+                                        }
+                                    },
+                            ) {
                                 Spacer(Modifier.height(10.dp))
                                 Text(
                                     text = stringResource(Res.string.other_version),
@@ -915,7 +933,7 @@ fun AlbumScreen(
                                                 )
                                             },
                                             data = album,
-                                            thumbSize = 180.dp,
+                                            thumbSize = dynamicThumbSize,
                                         )
                                     }
                                 }
