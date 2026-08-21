@@ -75,6 +75,7 @@ import com.xevrae.domain.data.model.mood.genre.ItemsPlaylist
 import com.xevrae.domain.data.model.mood.moodmoments.Item
 import com.xevrae.domain.data.model.searchResult.albums.AlbumsResult
 import com.xevrae.domain.data.model.searchResult.playlists.PlaylistsResult
+import com.xevrae.domain.data.model.searchResult.songs.Artist
 import com.xevrae.domain.data.type.ChartItem
 import com.xevrae.domain.data.type.HomeContentType
 import com.xevrae.domain.mediaservice.handler.PlaylistType
@@ -1335,6 +1336,7 @@ fun ItemTrackChart(
 fun MoodAndGenresContentItem(
     data: Any?,
     navController: NavController,
+    homeViewModel: HomeViewModel = koinViewModel(),
 ) {
     Column(
         modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically, unbounded = true),
@@ -1369,16 +1371,51 @@ fun MoodAndGenresContentItem(
                 }
             items(itemList) { item ->
                 HomeItemContentPlaylist(onClick = {
-                    navController.navigate(
-                        PlaylistDestination(
-                            playlistId =
-                                if (item is com.xevrae.domain.data.model.mood.genre.Content) {
-                                    item.playlistBrowseId
-                                } else {
-                                    (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
-                                },
-                        ),
-                    )
+                    // The "Songs" shelf mixes tracks into a list that is otherwise all playlists,
+                    // so route by videoId: a track starts its radio, everything else opens a page.
+                    val moodSong = item as? com.xevrae.domain.data.model.mood.moodmoments.Content
+                    val songVideoId = moodSong?.videoId
+                    if (moodSong != null && songVideoId != null) {
+                        val track =
+                            Track(
+                                album = null,
+                                artists = listOf(Artist(id = null, name = moodSong.subtitle)),
+                                duration = null,
+                                durationSeconds = null,
+                                isAvailable = true,
+                                isExplicit = false,
+                                likeStatus = null,
+                                thumbnails = moodSong.thumbnails,
+                                title = moodSong.title,
+                                videoId = songVideoId,
+                                videoType = null,
+                                category = null,
+                                feedbackTokens = null,
+                                resultType = null,
+                            )
+                        homeViewModel.setQueueData(
+                            QueueData.Data(
+                                listTracks = arrayListOf(track),
+                                firstPlayedTrack = track,
+                                playlistId = "RDAMVM$songVideoId",
+                                playlistName = "\"${moodSong.title}\" Radio",
+                                playlistType = PlaylistType.RADIO,
+                                continuation = null,
+                            ),
+                        )
+                        homeViewModel.loadMediaItem(track, type = Config.SONG_CLICK)
+                    } else {
+                        navController.navigate(
+                            PlaylistDestination(
+                                playlistId =
+                                    if (item is com.xevrae.domain.data.model.mood.genre.Content) {
+                                        item.playlistBrowseId
+                                    } else {
+                                        (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
+                                    },
+                            ),
+                        )
+                    }
                 }, data = item)
             }
         }
