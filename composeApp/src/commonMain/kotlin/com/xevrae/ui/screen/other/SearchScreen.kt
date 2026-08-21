@@ -164,6 +164,7 @@ fun SearchScreen(
     val uiState by searchViewModel.searchScreenUIState.collectAsStateWithLifecycle()
     val searchHistory by searchViewModel.searchHistory.collectAsStateWithLifecycle()
     val moodAndGenres by searchViewModel.moodAndGenres.collectAsStateWithLifecycle()
+    val moodArtwork by searchViewModel.moodArtwork.collectAsStateWithLifecycle()
 
     var searchUIType by rememberSaveable { mutableStateOf(SearchUIType.EMPTY) }
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -624,8 +625,12 @@ fun SearchScreen(
                                         )
                                     }
                                     items(mood.moodsMoments, key = { "mood/${it.params}" }) { item ->
+                                        LaunchedEffect(item.params) {
+                                            searchViewModel.loadMoodArtwork(item.params)
+                                        }
                                         MoodCategoryCard(
                                             title = item.title,
+                                            artworkUrl = moodArtwork[item.params],
                                         ) {
                                             navController.navigate(MoodDestination(item.params))
                                         }
@@ -642,8 +647,12 @@ fun SearchScreen(
                                         )
                                     }
                                     items(mood.genres, key = { "genre/${it.params}" }) { item ->
+                                        LaunchedEffect(item.params) {
+                                            searchViewModel.loadMoodArtwork(item.params)
+                                        }
                                         MoodCategoryCard(
                                             title = item.title,
+                                            artworkUrl = moodArtwork[item.params],
                                         ) {
                                             navController.navigate(MoodDestination(item.params))
                                         }

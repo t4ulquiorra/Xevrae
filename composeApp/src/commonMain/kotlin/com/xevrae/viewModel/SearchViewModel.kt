@@ -3,6 +3,10 @@ package com.xevrae.viewModel
 import androidx.lifecycle.viewModelScope
 import com.xevrae.common.SELECTED_LANGUAGE
 import com.xevrae.domain.data.entities.SearchHistory
+import com.xevrae.domain.data.model.mood.Mood
+import com.xevrae.domain.data.model.mood.genre.ItemsPlaylist
+import com.xevrae.domain.data.model.mood.moodmoments.Item
+import com.xevrae.domain.data.model.mood.moodmoments.MoodsMomentObject
 import com.xevrae.domain.data.model.searchResult.albums.AlbumsResult
 import com.xevrae.domain.data.model.searchResult.artists.ArtistsResult
 import com.xevrae.domain.data.model.searchResult.playlists.PlaylistsResult
@@ -106,6 +110,12 @@ class SearchViewModel(
     private val _moodAndGenres: MutableStateFlow<Mood?> = MutableStateFlow(null)
     val moodAndGenres: StateFlow<Mood?> get() = _moodAndGenres.asStateFlow()
 
+    /** Cover art per category params, filled in as tiles scroll into view. */
+    private val _moodArtwork: MutableStateFlow<Map<String, String>> = MutableStateFlow(emptyMap())
+    val moodArtwork: StateFlow<Map<String, String>> get() = _moodArtwork.asStateFlow()
+
+    private val requestedArtwork = mutableSetOf<String>()
+
     var regionCode: String? = null
     var language: String? = null
 
@@ -130,6 +140,48 @@ class SearchViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * Resolve the cover for one category using [HomeRepository.getMoodData]. Called from the tile
+     * itself, so only categories the user actually scrolls to cost a request — [requestedArtwork]
+     * keeps a tile scrolling in and out of view from firing it again.
+     */
+    fun loadMoodArtwork(params: String) {
+        if (!requestedArtwork.add(params)) return
+        viewModelScope.launch {
+            homeRepository.getMoodData(params).collect { resource ->
+                if (resource is Resource.Success && resource.data != null) {
+                    val artworkUrl = extractMoodArtworkUrl(resource.data)
+                    if (artworkUrl != null) {
+                        _moodArtwork.update { it + (params to artworkUrl) }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun extractMoodArtworkUrl(data: MoodsMomentObject): String? {
+        for (item in data.items) {
+            val contents =
+                when (item) {
+                    is ItemsPlaylist -> item.contents
+                    is Item -> item.contents
+                    else -> emptyList()
+                }
+            for (content in contents) {
+                val url =
+                    when (content) {
+                        is com.xevrae.domain.data.model.mood.genre.Content ->
+                            content.thumbnail?.lastOrNull()?.url ?: content.thumbnail?.firstOrNull()?.url
+                        is com.xevrae.domain.data.model.mood.moodmoments.Content ->
+                            content.thumbnails?.lastOrNull()?.url ?: content.thumbnails?.firstOrNull()?.url
+                        else -> null
+                    }
+                if (!url.isNullOrEmpty()) return url
+            }
+        }
+        return null
     }
 
     private fun getSearchHistory() {
