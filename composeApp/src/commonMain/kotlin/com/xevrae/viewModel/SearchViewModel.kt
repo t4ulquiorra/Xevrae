@@ -11,7 +11,6 @@ import com.xevrae.domain.data.model.searchResult.albums.AlbumsResult
 import com.xevrae.domain.data.model.searchResult.artists.ArtistsResult
 import com.xevrae.domain.data.model.searchResult.playlists.PlaylistsResult
 import com.xevrae.domain.data.model.searchResult.songs.SongsResult
-import com.xevrae.domain.data.model.mood.Mood
 import com.xevrae.domain.data.model.searchResult.videos.VideosResult
 import com.xevrae.domain.data.type.SearchResultType
 import com.xevrae.domain.manager.DataStoreManager
@@ -151,10 +150,13 @@ class SearchViewModel(
         if (!requestedArtwork.add(params)) return
         viewModelScope.launch {
             homeRepository.getMoodData(params).collect { resource ->
-                if (resource is Resource.Success && resource.data != null) {
-                    val artworkUrl = extractMoodArtworkUrl(resource.data)
-                    if (artworkUrl != null) {
-                        _moodArtwork.update { it + (params to artworkUrl) }
+                if (resource is Resource.Success) {
+                    val data = resource.data
+                    if (data != null) {
+                        val artworkUrl = extractMoodArtworkUrl(data)
+                        if (artworkUrl != null) {
+                            _moodArtwork.update { it + (params to artworkUrl) }
+                        }
                     }
                 }
             }
