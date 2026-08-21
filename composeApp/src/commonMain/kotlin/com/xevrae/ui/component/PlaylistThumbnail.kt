@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
@@ -34,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.xevrae.logger.Logger
 import org.jetbrains.compose.resources.painterResource
 import xevrae.composeapp.generated.resources.Res
-import xevrae.composeapp.generated.resources.monochrome
+import xevrae.composeapp.generated.resources.mono
 import kotlin.math.abs
 
 @Composable
@@ -157,7 +158,10 @@ private class PlaylistThumbnailPainter(
             top = centerY - size.height * 0.15f / 2,
         ) {
             with(iconPainter) {
-                draw(size * 0.15f, alpha = 0.2f)
+                draw(
+                    size = size * 0.15f,
+                    colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.2f)),
+                )
             }
         }
     }
@@ -213,7 +217,7 @@ fun painterPlaylistThumbnail(
                     ),
             )
         }
-    val painterRes = painterResource(Res.drawable.monochrome)
+    val painterRes = painterResource(Res.drawable.mono)
     return PlaylistThumbnailPainter(
         size = Size(
             width = with(density) { sizeDp.first.toPx() },

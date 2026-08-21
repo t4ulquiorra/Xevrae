@@ -12,15 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.clipPath
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -28,12 +21,9 @@ import coil3.compose.AsyncImage
 import com.xevrae.expect.pressClickable
 import com.xevrae.extension.angledGradientBackground
 import com.xevrae.ui.theme.typo
-import org.jetbrains.compose.resources.painterResource
-import xevrae.composeapp.generated.resources.Res
-import xevrae.composeapp.generated.resources.mono
 
 /**
- * A "Moods & Genres" browse category tile: the [playlistTitleGradient] and Xevrae badge of an
+ * A "Moods & Genres" browse category tile: the [playlistTitleGradient] of an
  * artwork-less playlist tile, plus the tilted cover put on browse cards.
  *
  * [artworkUrl] is null until resolved — the category list carries no artwork at all, so the cover
@@ -47,7 +37,6 @@ fun MoodCategoryCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val badge = painterResource(Res.drawable.mono)
     Box(
         modifier =
             modifier
@@ -57,42 +46,7 @@ fun MoodCategoryCard(
                 .angledGradientBackground(
                     colors = playlistTitleGradient(title),
                     degrees = 45f,
-                ).drawBehind {
-                    // PlaylistThumbnailPainter sizes the badge off the width because its tile is
-                    // square. This one is 2:1, so the same fractions would double it — anchor on
-                    // the height instead to keep the badge the size the eye expects.
-                    val radius = size.height * 0.09f
-                    val centerX = size.width - radius * 2f
-                    val centerY = radius * 2f
-                    drawCircle(
-                        center = Offset(centerX, centerY),
-                        color = Color.White,
-                        radius = radius,
-                    )
-                    val iconSize = size.copy(width = radius * 1.4f, height = radius * 1.4f)
-                    clipPath(
-                        Path().apply {
-                            addOval(
-                                Rect(
-                                    center = Offset(centerX, centerY),
-                                    radius = radius,
-                                ),
-                            )
-                        },
-                    ) {
-                        translate(
-                            left = centerX - iconSize.width / 2f,
-                            top = centerY - iconSize.height / 2f,
-                        ) {
-                            with(badge) {
-                                draw(
-                                    size = iconSize,
-                                    colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.25f)),
-                                )
-                            }
-                        }
-                    }
-                }.pressClickable(onClick = onClick),
+                ).pressClickable(onClick = onClick),
     ) {
         if (artworkUrl != null) {
             AsyncImage(

@@ -185,7 +185,7 @@
 
         <meta-data
             android:name="androidx.car.app.TintableAttributionIcon"
-            android:resource="@drawable/monochrome" />
+            android:resource="@drawable/mono" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
