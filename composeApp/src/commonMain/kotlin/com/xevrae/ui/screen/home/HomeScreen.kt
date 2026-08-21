@@ -21,6 +21,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -623,21 +624,23 @@ fun HomeScreen(
                                     Crossfade(targetState = regionChart) {
                                         Logger.w("HomeScreen", "regionChart: $it")
                                         if (it != null) {
-                                            DropdownButton(
-                                                items = CHART_SUPPORTED_COUNTRY.itemsData.toList(),
-                                                defaultSelected =
-                                                    CHART_SUPPORTED_COUNTRY.itemsData.getOrNull(
-                                                        CHART_SUPPORTED_COUNTRY.items.indexOf(it),
+                                            Box(modifier = Modifier.padding(start = 16.dp)) {
+                                                DropdownButton(
+                                                    items = CHART_SUPPORTED_COUNTRY.itemsData.toList(),
+                                                    defaultSelected =
+                                                        CHART_SUPPORTED_COUNTRY.itemsData.getOrNull(
+                                                            CHART_SUPPORTED_COUNTRY.items.indexOf(it),
+                                                        )
+                                                            ?: CHART_SUPPORTED_COUNTRY.itemsData[1],
+                                                ) {
+                                                    viewModel.exploreChart(
+                                                        CHART_SUPPORTED_COUNTRY.items[
+                                                            CHART_SUPPORTED_COUNTRY.itemsData.indexOf(
+                                                                it,
+                                                            ),
+                                                        ],
                                                     )
-                                                        ?: CHART_SUPPORTED_COUNTRY.itemsData[1],
-                                            ) {
-                                                viewModel.exploreChart(
-                                                    CHART_SUPPORTED_COUNTRY.items[
-                                                        CHART_SUPPORTED_COUNTRY.itemsData.indexOf(
-                                                            it,
-                                                        ),
-                                                    ],
-                                                )
+                                                }
                                             }
                                         }
                                     }
@@ -731,7 +734,7 @@ fun HomeScreen(
                     modifier =
                         Modifier
                             .horizontalScroll(chipRowState)
-                            .padding(top = 8.dp, bottom = 8.dp, start = 0.dp)
+                            .padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                             .background(Color.Transparent),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
@@ -855,7 +858,9 @@ fun AccountLayout(
     accountName: String,
     url: String,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.padding(start = 16.dp),
+    ) {
         Text(
             text = stringResource(Res.string.welcome_back),
             style = typo().bodyMedium,
@@ -864,7 +869,7 @@ fun AccountLayout(
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp),
+            modifier = Modifier.padding(vertical = 5.dp),
         ) {
             AsyncImage(
                 model =
@@ -922,6 +927,7 @@ fun QuickPicks(
         Text(
             text = stringResource(Res.string.let_s_start_with_a_radio),
             style = typo().bodySmall,
+            modifier = Modifier.padding(start = 16.dp),
         )
         Text(
             text = stringResource(Res.string.quick_picks),
@@ -931,13 +937,14 @@ fun QuickPicks(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp),
+                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
         )
         LazyHorizontalGrid(
             rows = GridCells.Fixed(4),
             modifier = Modifier.height(256.dp),
             state = lazyListState,
             flingBehavior = snapperFlingBehavior,
+            contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
         ) {
             items(homeItem.contents, key = { it.hashCode() }) {
                 if (it != null) {
@@ -986,6 +993,7 @@ fun MoodMomentAndGenre(
         Text(
             text = stringResource(Res.string.let_s_pick_a_playlist_for_you),
             style = typo().bodyMedium,
+            modifier = Modifier.padding(start = 16.dp),
         )
         Text(
             text = stringResource(Res.string.moods_amp_moment),
@@ -995,13 +1003,14 @@ fun MoodMomentAndGenre(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp),
+                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
         )
         LazyHorizontalGrid(
             rows = GridCells.Fixed(3),
             modifier = Modifier.height(210.dp),
             state = lazyListState1,
             flingBehavior = snapperFlingBehavior1,
+            contentPadding = PaddingValues(start = 8.dp, end = 8.dp),
         ) {
             items(mood.moodsMoments, key = { it.title }) {
                 MoodMomentAndGenreHomeItem(title = it.title) {
@@ -1021,13 +1030,14 @@ fun MoodMomentAndGenre(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp),
+                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
         )
         LazyHorizontalGrid(
             rows = GridCells.Fixed(3),
             modifier = Modifier.height(210.dp),
             state = lazyListState2,
             flingBehavior = snapperFlingBehavior2,
+            contentPadding = PaddingValues(start = 8.dp, end = 8.dp),
         ) {
             items(mood.genres, key = { it.title }) {
                 MoodMomentAndGenreHomeItem(title = it.title) {
@@ -1044,7 +1054,7 @@ fun MoodMomentAndGenre(
 
 @Composable
 fun ChartTitle() {
-    Column {
+    Column(modifier = Modifier.padding(start = 16.dp)) {
         Text(
             text = stringResource(Res.string.what_is_best_choice_today),
             style = typo().bodyMedium,
@@ -1091,11 +1101,14 @@ fun ChartData(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 10.dp),
+                        .padding(start = 16.dp, top = 10.dp, bottom = 10.dp),
             )
             val lazyListState = rememberLazyListState()
             val snapperFlingBehavior = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyListState = lazyListState))
-            LazyRow(flingBehavior = snapperFlingBehavior) {
+            LazyRow(
+                flingBehavior = snapperFlingBehavior,
+                contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
+            ) {
                 items(item.playlists.size, key = { index ->
                     val data = item.playlists[index]
                     data.id + data.title + index
@@ -1122,13 +1135,14 @@ fun ChartData(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp),
+                    .padding(start = 16.dp, top = 10.dp, bottom = 10.dp),
         )
         LazyHorizontalGrid(
             rows = GridCells.Fixed(3),
             modifier = Modifier.height(240.dp),
             state = lazyListState2,
             flingBehavior = snapperFlingBehavior2,
+            contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
         ) {
             items(chart.artists.itemArtists.size, key = { index ->
                 val item = chart.artists.itemArtists[index]

@@ -18,6 +18,7 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -141,7 +142,7 @@ fun HomeItem(
     Column {
         Row(
             modifier =
-                if (channelId != null) {
+                (if (channelId != null) {
                     Modifier
                         .focusable(true)
                         .pressClickable {
@@ -153,7 +154,7 @@ fun HomeItem(
                         }
                 } else {
                     Modifier
-                },
+                }).padding(start = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AnimatedVisibility(
@@ -182,7 +183,7 @@ fun HomeItem(
             }
             Column(
                 Modifier
-                    .padding(start = 10.dp),
+                    .padding(start = if (data.thumbnail?.lastOrNull() != null) 10.dp else 0.dp),
             ) {
                 AnimatedVisibility(visible = (data.subtitle != null && data.subtitle != "")) {
                     Text(
@@ -202,6 +203,7 @@ fun HomeItem(
         LazyRow(
             state = lazyListState,
             flingBehavior = snapperFlingBehavior,
+            contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
         ) {
             items(data.contents) { temp ->
                 if (temp != null) {
