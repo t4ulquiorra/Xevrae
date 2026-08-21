@@ -47,6 +47,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -86,6 +88,7 @@ import com.xevrae.domain.utils.toTrack
 import com.xevrae.logger.Logger
 import com.xevrae.Platform
 import com.xevrae.expect.ui.HorizontalScrollBar
+import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.extension.ifNullOrEmpty
 import com.xevrae.getPlatform
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
@@ -135,8 +138,26 @@ fun HomeItem(
         )
     }
 
+    val screenInfo = getScreenSizeInfo()
+    var containerWidthDp by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
+            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
+
     val channelId = data.channelId
-    Column {
+    Column(
+        modifier =
+            Modifier.onGloballyPositioned { coordinates ->
+                with(density) {
+                    containerWidthDp = coordinates.size.width.toDp()
+                }
+            },
+    ) {
         Row(
             modifier =
                 (if (channelId != null) {
@@ -208,39 +229,55 @@ fun HomeItem(
                     val playlistId = temp.playlistId
                     if ((playlistId != null && temp.videoId == null) || (playlistId != null && temp.videoId == "")) {
                         if (playlistId.startsWith("UC")) {
-                            HomeItemArtist(onClick = {
-                                navController.navigate(
-                                    ArtistDestination(
-                                        channelId = playlistId,
-                                    ),
-                                )
-                            }, data = temp)
+                            HomeItemArtist(
+                                onClick = {
+                                    navController.navigate(
+                                        ArtistDestination(
+                                            channelId = playlistId,
+                                        ),
+                                    )
+                                },
+                                data = temp,
+                                thumbSize = dynamicThumbSize,
+                            )
                         } else {
-                            HomeItemContentPlaylist(onClick = {
-                                navController.navigate(
-                                    PlaylistDestination(
-                                        playlistId = playlistId,
-                                    ),
-                                )
-                            }, data = temp)
+                            HomeItemContentPlaylist(
+                                onClick = {
+                                    navController.navigate(
+                                        PlaylistDestination(
+                                            playlistId = playlistId,
+                                        ),
+                                    )
+                                },
+                                data = temp,
+                                thumbSize = dynamicThumbSize,
+                            )
                         }
                     } else if ((browseId != null && temp.videoId == null) || (browseId != null && temp.videoId == "")) {
                         if (browseId.startsWith("UC")) {
-                            HomeItemArtist(onClick = {
-                                navController.navigate(
-                                    ArtistDestination(
-                                        channelId = browseId,
-                                    ),
-                                )
-                            }, data = temp)
+                            HomeItemArtist(
+                                onClick = {
+                                    navController.navigate(
+                                        ArtistDestination(
+                                            channelId = browseId,
+                                        ),
+                                    )
+                                },
+                                data = temp,
+                                thumbSize = dynamicThumbSize,
+                            )
                         } else {
-                            HomeItemContentPlaylist(onClick = {
-                                navController.navigate(
-                                    AlbumDestination(
-                                        browseId = browseId,
-                                    ),
-                                )
-                            }, data = temp)
+                            HomeItemContentPlaylist(
+                                onClick = {
+                                    navController.navigate(
+                                        AlbumDestination(
+                                            browseId = browseId,
+                                        ),
+                                    )
+                                },
+                                data = temp,
+                                thumbSize = dynamicThumbSize,
+                            )
                         }
                     } else if (temp.thumbnails.firstOrNull()?.width != temp.thumbnails.firstOrNull()?.height) {
                         HomeItemVideo(
@@ -266,6 +303,7 @@ fun HomeItem(
                                 bottomSheetShow = true
                             },
                             data = temp,
+                            thumbSize = dynamicThumbSize,
                         )
                     } else {
                         HomeItemSong(
@@ -291,6 +329,7 @@ fun HomeItem(
                                 bottomSheetShow = true
                             },
                             data = temp,
+                            thumbSize = dynamicThumbSize,
                         )
                     }
                 }
@@ -662,6 +701,7 @@ fun HomeItemSong(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     data: Content,
+    thumbSize: Dp = 160.dp,
 ) {
     val interactionSource1 = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     val isPressed1 by interactionSource1.collectIsPressedAsState()
@@ -718,7 +758,7 @@ fun HomeItemSong(
                 modifier =
                     Modifier
                         .align(Alignment.CenterHorizontally)
-                        .size(160.dp)
+                        .size(thumbSize)
                         .clip(
                             RoundedCornerShape(10.dp),
                         ),
@@ -730,7 +770,7 @@ fun HomeItemSong(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(160.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .padding(top = 8.dp)
                         .basicMarquee(
@@ -754,7 +794,7 @@ fun HomeItemSong(
                     maxLines = 1,
                     modifier =
                         Modifier
-                            .width(160.dp)
+                            .width(thumbSize)
                             .wrapContentHeight(align = Alignment.CenterVertically)
                             .basicMarquee(
                                 iterations = Int.MAX_VALUE,
@@ -769,7 +809,7 @@ fun HomeItemSong(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(160.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .basicMarquee(
                             iterations = Int.MAX_VALUE,
@@ -786,6 +826,7 @@ fun HomeItemVideo(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     data: Content,
+    thumbSize: Dp = 160.dp,
 ) {
     val interactionSource2 = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     val isPressed2 by interactionSource2.collectIsPressedAsState()
@@ -799,6 +840,7 @@ fun HomeItemVideo(
         animationSpec = androidx.compose.animation.core.tween(80),
         label = "alpha2",
     )
+    val videoWidth = thumbSize * (16f / 9f)
     Box(
         Modifier
             .fillMaxSize()
@@ -834,7 +876,7 @@ fun HomeItemVideo(
                 modifier =
                     Modifier
                         .align(Alignment.CenterHorizontally)
-                        .height(160.dp)
+                        .height(thumbSize)
                         .aspectRatio(16f / 9f)
                         .clip(
                             RoundedCornerShape(10.dp),
@@ -847,7 +889,7 @@ fun HomeItemVideo(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(284.5.dp)
+                        .width(videoWidth)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .padding(top = 8.dp)
                         .basicMarquee(
@@ -861,7 +903,7 @@ fun HomeItemVideo(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(284.5.dp)
+                        .width(videoWidth)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .basicMarquee(
                             iterations = Int.MAX_VALUE,
@@ -875,7 +917,7 @@ fun HomeItemVideo(
                 maxLines = 1,
                 modifier =
                     Modifier
-                        .width(284.5.dp)
+                        .width(videoWidth)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .basicMarquee(
                             iterations = Int.MAX_VALUE,
@@ -891,6 +933,7 @@ fun HomeItemVideo(
 fun HomeItemArtist(
     onClick: () -> Unit,
     data: Content,
+    thumbSize: Dp = 160.dp,
 ) {
     Box(
         Modifier
@@ -923,7 +966,7 @@ fun HomeItemArtist(
                 modifier =
                     Modifier
                         .align(Alignment.CenterHorizontally)
-                        .size(160.dp)
+                        .size(thumbSize)
                         .clip(
                             CircleShape,
                         ),
@@ -936,7 +979,7 @@ fun HomeItemArtist(
                 textAlign = TextAlign.Center,
                 modifier =
                     Modifier
-                        .width(160.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .padding(top = 8.dp)
                         .basicMarquee(
@@ -951,7 +994,7 @@ fun HomeItemArtist(
                 textAlign = TextAlign.Center,
                 modifier =
                     Modifier
-                        .width(160.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .basicMarquee(
                             iterations = Int.MAX_VALUE,
@@ -965,7 +1008,7 @@ fun HomeItemArtist(
                 textAlign = TextAlign.Center,
                 modifier =
                     Modifier
-                        .width(160.dp)
+                        .width(thumbSize)
                         .wrapContentHeight(align = Alignment.CenterVertically)
                         .basicMarquee(
                             iterations = Int.MAX_VALUE,

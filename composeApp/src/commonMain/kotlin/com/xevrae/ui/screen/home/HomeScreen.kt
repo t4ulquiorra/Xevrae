@@ -98,6 +98,7 @@ import com.xevrae.domain.mediaservice.handler.QueueData
 import com.xevrae.domain.utils.toTrack
 import com.xevrae.logger.Logger
 import com.xevrae.extension.angledGradientBackground
+import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.extension.isScrollingUp
 import com.xevrae.extension.rgbFactor
 import com.xevrae.ui.component.CenterLoadingBox
@@ -983,6 +984,14 @@ fun ChartData(
         mutableStateOf(0.dp)
     }
     val density = LocalDensity.current
+    val screenInfo = getScreenSizeInfo()
+    val scaleRatio =
+        if (screenInfo.wDP > 0 && gridWidthDp > 0.dp) {
+            (gridWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+        } else {
+            1f
+        }
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
 
     val lazyListState2 = rememberLazyGridState()
     val snapperFlingBehavior2 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState2))
@@ -1025,6 +1034,7 @@ fun ChartData(
                             )
                         },
                         data = item.playlists[it],
+                        thumbSize = dynamicThumbSize,
                     )
                 }
             }
