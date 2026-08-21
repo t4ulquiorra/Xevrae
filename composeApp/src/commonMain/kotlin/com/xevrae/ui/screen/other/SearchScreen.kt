@@ -72,7 +72,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -114,7 +113,6 @@ import com.xevrae.ui.component.NowPlayingBottomSheet
 import com.xevrae.ui.component.PlaylistFullWidthItems
 import com.xevrae.ui.component.ShimmerSearchItem
 import com.xevrae.ui.component.SongFullWidthItems
-import com.xevrae.ui.component.XevraeChartButton
 import com.xevrae.ui.navigation.destination.home.MoodDestination
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
 import com.xevrae.ui.navigation.destination.list.ArtistDestination
@@ -144,7 +142,6 @@ import xevrae.composeapp.generated.resources.baseline_history_24
 import xevrae.composeapp.generated.resources.baseline_search_24
 import xevrae.composeapp.generated.resources.clear_search_history
 import xevrae.composeapp.generated.resources.error_occurred
-import xevrae.composeapp.generated.resources.everything_you_need
 import xevrae.composeapp.generated.resources.genre
 import xevrae.composeapp.generated.resources.in_search
 import xevrae.composeapp.generated.resources.no_results_found
@@ -152,7 +149,6 @@ import xevrae.composeapp.generated.resources.playlists
 import xevrae.composeapp.generated.resources.podcasts
 import xevrae.composeapp.generated.resources.retry
 import xevrae.composeapp.generated.resources.search_for
-import xevrae.composeapp.generated.resources.search_for_songs_artists_albums_playlists_and_more
 import xevrae.composeapp.generated.resources.song
 import xevrae.composeapp.generated.resources.videos
 
@@ -163,7 +159,6 @@ fun SearchScreen(
     sharedViewModel: SharedViewModel = koinInject(),
     navController: NavController,
 ) {
-    val uriHandler = LocalUriHandler.current
     val focusManager = LocalFocusManager.current
     val searchScreenState by searchViewModel.searchScreenState.collectAsStateWithLifecycle()
     val uiState by searchViewModel.searchScreenUIState.collectAsStateWithLifecycle()
@@ -528,39 +523,10 @@ fun SearchScreen(
                                         .widthIn(max = 1100.dp)
                                         .padding(horizontal = 16.dp),
                                 state = moodGridState,
-                                contentPadding = PaddingValues(top = searchBarHeight),
+                                contentPadding = PaddingValues(top = searchBarHeight + 16.dp, bottom = 16.dp),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
-                                item(span = { GridItemSpan(maxLineSpan) }) {
-                                    Column(
-                                        modifier =
-                                            Modifier
-                                                .fillMaxWidth()
-                                                .padding(top = 36.dp, bottom = 20.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                    ) {
-                                        Text(
-                                            text = stringResource(Res.string.everything_you_need),
-                                            style = typo().titleMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.fillMaxWidth(),
-                                        )
-                                        Spacer(modifier = Modifier.height(10.dp))
-                                        Text(
-                                            text = stringResource(Res.string.search_for_songs_artists_albums_playlists_and_more),
-                                            style = typo().bodyMedium,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier.fillMaxWidth(),
-                                        )
-                                        XevraeChartButton(
-                                            modifier = Modifier.padding(top = 10.dp),
-                                        ) {
-                                            uriHandler.openUri("https://xevrae.org")
-                                        }
-                                    }
-                                }
                                 if (mood.moodsMoments.isNotEmpty()) {
                                     items(mood.moodsMoments, key = { "mood/${it.params}" }) { item ->
                                         LaunchedEffect(item.params) {
@@ -993,7 +959,7 @@ fun SearchScreen(
                             .onFocusChanged {
                                 isFocused = it.isFocused
                             }.padding(horizontal = 16.dp),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(10.dp),
                     content = {},
                 )
 
