@@ -40,6 +40,7 @@ val viewModelModule =
             SearchViewModel(
                 get(),
                 get(),
+                get(),
             )
         }
         viewModel {
