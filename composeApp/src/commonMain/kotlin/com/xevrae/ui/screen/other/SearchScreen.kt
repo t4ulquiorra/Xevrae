@@ -615,15 +615,6 @@ fun SearchScreen(
                                     }
                                 }
                                 if (mood.moodsMoments.isNotEmpty()) {
-                                    item(span = { GridItemSpan(maxLineSpan) }) {
-                                        Text(
-                                            text = stringResource(Res.string.moods_amp_moment),
-                                            style = typo().titleMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onBackground,
-                                            modifier = Modifier.padding(top = 8.dp),
-                                        )
-                                    }
                                     items(mood.moodsMoments, key = { "mood/${it.params}" }) { item ->
                                         LaunchedEffect(item.params) {
                                             searchViewModel.loadMoodArtwork(item.params)
