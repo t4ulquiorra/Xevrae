@@ -92,7 +92,6 @@ import com.xevrae.common.Config
 import com.xevrae.domain.data.model.browse.album.Track
 import com.xevrae.domain.data.model.home.HomeItem
 import com.xevrae.domain.data.model.home.chart.Chart
-import com.xevrae.domain.data.model.mood.Mood
 import com.xevrae.domain.extension.now
 import com.xevrae.domain.mediaservice.handler.PlaylistType
 import com.xevrae.domain.mediaservice.handler.QueueData
@@ -109,7 +108,6 @@ import com.xevrae.ui.component.HomeItem
 import com.xevrae.ui.component.HomeItemContentPlaylist
 import com.xevrae.ui.component.HomeShimmer
 import com.xevrae.ui.component.ItemArtistChart
-import com.xevrae.ui.component.MoodMomentAndGenreHomeItem
 import com.xevrae.ui.component.QuickPicksItem
 import com.xevrae.ui.component.ReviewDialog
 import com.xevrae.ui.component.RippleIconButton
@@ -164,17 +162,14 @@ import xevrae.composeapp.generated.resources.do_not_show_again
 import xevrae.composeapp.generated.resources.energize
 import xevrae.composeapp.generated.resources.feel_good
 import xevrae.composeapp.generated.resources.focus
-import xevrae.composeapp.generated.resources.genre
 import xevrae.composeapp.generated.resources.go_to_log_in_page
 import xevrae.composeapp.generated.resources.good_afternoon
 import xevrae.composeapp.generated.resources.good_evening
 import xevrae.composeapp.generated.resources.good_morning
 import xevrae.composeapp.generated.resources.good_night
 import xevrae.composeapp.generated.resources.holder
-import xevrae.composeapp.generated.resources.let_s_pick_a_playlist_for_you
 import xevrae.composeapp.generated.resources.let_s_start_with_a_radio
 import xevrae.composeapp.generated.resources.log_in_warning
-import xevrae.composeapp.generated.resources.moods_amp_moment
 import xevrae.composeapp.generated.resources.outline_notifications_24
 import xevrae.composeapp.generated.resources.party
 import xevrae.composeapp.generated.resources.quick_picks
@@ -222,7 +217,6 @@ fun HomeScreen(
     val homeData by viewModel.homeItemList.collectAsStateWithLifecycle()
     val newRelease by viewModel.newRelease.collectAsStateWithLifecycle()
     val chart by viewModel.chart.collectAsStateWithLifecycle()
-    val moodMomentAndGenre by viewModel.exploreMoodItem.collectAsStateWithLifecycle()
     val chartLoading by viewModel.loadingChart.collectAsStateWithLifecycle()
     val loading by viewModel.loading.collectAsStateWithLifecycle()
     var accountShow by rememberSaveable {
@@ -464,9 +458,12 @@ fun HomeScreen(
                         state = scrollState,
                         verticalArrangement = Arrangement.spacedBy(28.dp),
                     ) {
-                        itemsIndexed(homeData, key = { _, item ->
-                            item.hashCode().toString() + (mainHomeThumbnail ?: "nothumb")
-                        }) { index, item ->
+                        itemsIndexed(
+                            homeData.filter { it.contents.isNotEmpty() && !it.title.equals("Shows for you", ignoreCase = true) },
+                            key = { _, item ->
+                                item.hashCode().toString() + (mainHomeThumbnail ?: "nothumb")
+                            },
+                        ) { index, item ->
                             Box {
                                 if (index == 0) {
                                     Box(
@@ -591,24 +588,6 @@ fun HomeScreen(
                                             navController = navController,
                                             data = it,
                                         )
-                                    }
-                                }
-                            }
-                            item {
-                                AnimatedVisibility(
-                                    visible = moodMomentAndGenre != null,
-                                ) {
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .padding(start = 0.dp),
-                                    ) {
-                                        moodMomentAndGenre?.let {
-                                            MoodMomentAndGenre(
-                                                mood = it,
-                                                navController = navController,
-                                            )
-                                        }
                                     }
                                 }
                             }
@@ -968,83 +947,6 @@ fun QuickPicks(
                         },
                         data = it,
                         widthDp = widthDp,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MoodMomentAndGenre(
-    mood: Mood,
-    navController: NavController,
-) {
-    val lazyListState1 = rememberLazyGridState()
-    val snapperFlingBehavior1 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState1))
-
-    val lazyListState2 = rememberLazyGridState()
-    val snapperFlingBehavior2 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState2))
-
-    Column(
-        Modifier
-            .padding(vertical = 8.dp),
-    ) {
-        Text(
-            text = stringResource(Res.string.let_s_pick_a_playlist_for_you),
-            style = typo().bodyMedium,
-            modifier = Modifier.padding(start = 16.dp),
-        )
-        Text(
-            text = stringResource(Res.string.moods_amp_moment),
-            style = typo().headlineMedium,
-            color = white,
-            maxLines = 1,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
-        )
-        LazyHorizontalGrid(
-            rows = GridCells.Fixed(3),
-            modifier = Modifier.height(210.dp),
-            state = lazyListState1,
-            flingBehavior = snapperFlingBehavior1,
-            contentPadding = PaddingValues(start = 8.dp, end = 8.dp),
-        ) {
-            items(mood.moodsMoments, key = { it.title }) {
-                MoodMomentAndGenreHomeItem(title = it.title) {
-                    navController.navigate(
-                        MoodDestination(
-                            it.params,
-                        ),
-                    )
-                }
-            }
-        }
-        Text(
-            text = stringResource(Res.string.genre),
-            style = typo().headlineMedium,
-            maxLines = 1,
-            color = white,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
-        )
-        LazyHorizontalGrid(
-            rows = GridCells.Fixed(3),
-            modifier = Modifier.height(210.dp),
-            state = lazyListState2,
-            flingBehavior = snapperFlingBehavior2,
-            contentPadding = PaddingValues(start = 8.dp, end = 8.dp),
-        ) {
-            items(mood.genres, key = { it.title }) {
-                MoodMomentAndGenreHomeItem(title = it.title) {
-                    navController.navigate(
-                        MoodDestination(
-                            it.params,
-                        ),
                     )
                 }
             }

@@ -35,8 +35,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -88,7 +86,6 @@ import com.xevrae.domain.utils.toTrack
 import com.xevrae.logger.Logger
 import com.xevrae.Platform
 import com.xevrae.expect.ui.HorizontalScrollBar
-import com.xevrae.extension.generateRandomColor
 import com.xevrae.extension.ifNullOrEmpty
 import com.xevrae.getPlatform
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
@@ -974,45 +971,6 @@ fun HomeItemArtist(
                             iterations = Int.MAX_VALUE,
                             animationMode = MarqueeAnimationMode.Immediately,
                         ).focusable(),
-            )
-        }
-    }
-}
-
-@Composable
-fun MoodMomentAndGenreHomeItem(
-    title: String,
-    onClick: () -> Unit,
-) {
-    ElevatedCard(
-        elevation =
-            CardDefaults.cardElevation(
-                defaultElevation = 6.dp,
-            ),
-        onClick = onClick,
-        shape = RoundedCornerShape(5.dp),
-        modifier =
-            Modifier
-                .width(160.dp)
-                .height(50.dp)
-                .padding(8.dp),
-    ) {
-        Row {
-            Box(
-                Modifier
-                    .width(10.dp)
-                    .height(64.dp)
-                    .background(generateRandomColor()),
-            )
-            Text(
-                text = title,
-                style = typo().titleSmall,
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterVertically),
             )
         }
     }

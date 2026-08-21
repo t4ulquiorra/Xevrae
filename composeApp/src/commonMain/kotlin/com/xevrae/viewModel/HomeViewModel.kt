@@ -7,7 +7,6 @@ import com.xevrae.domain.data.entities.SongEntity
 import com.xevrae.domain.data.model.home.HomeDataCombine
 import com.xevrae.domain.data.model.home.HomeItem
 import com.xevrae.domain.data.model.home.chart.Chart
-import com.xevrae.domain.data.model.mood.Mood
 import com.xevrae.domain.manager.DataStoreManager
 import com.xevrae.domain.manager.DataStoreManager.Values.TRUE
 import com.xevrae.domain.repository.HomeRepository
@@ -48,8 +47,6 @@ class HomeViewModel(
     private var _continuation = MutableStateFlow<String?>(null)
     val continuation: StateFlow<String?> = _continuation
 
-    private val _exploreMoodItem: MutableStateFlow<Mood?> = MutableStateFlow(null)
-    val exploreMoodItem: StateFlow<Mood?> = _exploreMoodItem
     private val _accountInfo: MutableStateFlow<Pair<String?, String?>?> = MutableStateFlow(null)
     val accountInfo: StateFlow<Pair<String?, String?>?> = _accountInfo
 
@@ -197,18 +194,16 @@ class HomeViewModel(
                         getString(Res.string.view_count),
                         getString(Res.string.song),
                     ),
-                    homeRepository.getMoodAndMomentsData(),
                     homeRepository.getChartData(dataStoreManager.chartKey.first()),
                     homeRepository.getNewRelease(
                         getString(Res.string.new_release),
                         getString(Res.string.music_video),
                     ),
-                ) { home, exploreMood, exploreChart, newRelease ->
-                    HomeDataCombine(home, exploreMood, exploreChart, newRelease)
+                ) { home, exploreChart, newRelease ->
+                    HomeDataCombine(home, exploreChart, newRelease)
                 }.collect { result ->
                     val home = result.home
                     Logger.d("home size", "${home.data?.second?.size}")
-                    val exploreMoodItem = result.mood
                     val chart = result.chart
                     val newRelease = result.newRelease
                     when (home) {
@@ -245,15 +240,6 @@ class HomeViewModel(
                             _newRelease.value = arrayListOf()
                         }
                     }
-                    when (exploreMoodItem) {
-                        is Resource.Success -> {
-                            _exploreMoodItem.value = exploreMoodItem.data
-                        }
-
-                        else -> {
-                            _exploreMoodItem.value = null
-                        }
-                    }
                     regionCodeChart.value = dataStoreManager.chartKey.first()
                     Logger.d("HomeViewModel", "getHomeItemList: $result")
                     dataStoreManager.cookie.first().let {
@@ -268,13 +254,11 @@ class HomeViewModel(
                     }
                     when {
                         home is Resource.Error -> home.message
-                        exploreMoodItem is Resource.Error -> exploreMoodItem.message
                         chart is Resource.Error -> chart.message
                         else -> null
                     }?.let {
                         showSnackBarErrorState.emit(it)
                         Logger.w("Error", "getHomeItemList: ${home.message}")
-                        Logger.w("Error", "getHomeItemList: ${exploreMoodItem.message}")
                         Logger.w("Error", "getHomeItemList: ${chart.message}")
                     }
                     loading.value = false
