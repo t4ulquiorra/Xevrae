@@ -15,7 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,7 +30,7 @@ import com.xevrae.extension.angledGradientBackground
 import com.xevrae.ui.theme.typo
 import org.jetbrains.compose.resources.painterResource
 import xevrae.composeapp.generated.resources.Res
-import xevrae.composeapp.generated.resources.monochrome
+import xevrae.composeapp.generated.resources.mono
 
 /**
  * A "Moods & Genres" browse category tile: the [playlistTitleGradient] and Xevrae badge of an
@@ -43,7 +47,7 @@ fun MoodCategoryCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val badge = painterResource(Res.drawable.monochrome)
+    val badge = painterResource(Res.drawable.mono)
     Box(
         modifier =
             modifier
@@ -65,13 +69,27 @@ fun MoodCategoryCard(
                         color = Color.White,
                         radius = radius,
                     )
-                    val badgeSize = size.copy(width = radius * 3f, height = radius * 3f)
-                    translate(
-                        left = centerX - badgeSize.width / 2f,
-                        top = centerY - badgeSize.height / 2f,
+                    val iconSize = size.copy(width = radius * 1.4f, height = radius * 1.4f)
+                    clipPath(
+                        Path().apply {
+                            addOval(
+                                Rect(
+                                    center = Offset(centerX, centerY),
+                                    radius = radius,
+                                ),
+                            )
+                        },
                     ) {
-                        with(badge) {
-                            draw(badgeSize, alpha = 0.2f)
+                        translate(
+                            left = centerX - iconSize.width / 2f,
+                            top = centerY - iconSize.height / 2f,
+                        ) {
+                            with(badge) {
+                                draw(
+                                    size = iconSize,
+                                    colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.25f)),
+                                )
+                            }
                         }
                     }
                 }.pressClickable(onClick = onClick),
