@@ -223,6 +223,7 @@ fun AlbumScreen(
     // Apple Music-inspired immersive treatment: gated to mobile portrait so tablets,
     // foldable open state, landscape orientation, and Desktop keep the existing layout.
     val screenInfo = getScreenSizeInfo()
+    val density = LocalDensity.current
     val isMobilePortrait = getPlatform() == Platform.Android && screenInfo.wDP < screenInfo.hDP
     val dominantColor = uiState.colors.firstOrNull() ?: md_theme_dark_background
     // Apple Music-style page background: derived from palette's Muted swatch (medium-bright,

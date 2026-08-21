@@ -324,44 +324,70 @@ fun ArtistScreen(
 
                         // Popular Songs
                         AnimatedVisibility(state.data.popularSongs.isNotEmpty()) {
-                            SongFullWidthItems(
-                                title = stringResource(Res.string.popular_songs),
-                                songs = state.data.popularSongs,
-                                onMoreClick = {
-                                    val id = state.data.listSongParam
-                                    if (id != null) {
-                                        navController.navigate(PlaylistDestination(id))
-                                    } else {
-                                        viewModel.makeToast(runBlocking { getString(Res.string.error) })
+                            Column {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 20.dp),
+                                ) {
+                                    Text(
+                                        text = stringResource(Res.string.popular),
+                                        style = typo().labelMedium,
+                                        color = Color.White,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    TextButton(
+                                        onClick = {
+                                            val id = state.data.listSongParam
+                                            if (id != null) {
+                                                navController.navigate(PlaylistDestination(id))
+                                            } else {
+                                                viewModel.makeToast(runBlocking { getString(Res.string.error) })
+                                            }
+                                        },
+                                        colors =
+                                            ButtonDefaults
+                                                .textButtonColors()
+                                                .copy(
+                                                    contentColor = Color.White,
+                                                ),
+                                    ) {
+                                        Text(stringResource(Res.string.more), style = typo().bodySmall)
                                     }
-                                },
-                                onSongClick = { index ->
-                                    val firstQueue: Track = state.data.popularSongs[index]
-                                    viewModel.setQueueData(
-                                        QueueData.Data(
-                                            listTracks = arrayListOf(firstQueue),
-                                            firstPlayedTrack = firstQueue,
-                                            playlistId = "RDAMVM${firstQueue.videoId}",
-                                            playlistName = "\"${(state.data.title ?: "")}\" ${
-                                                getStringBlocking(
-                                                    Res.string.popular_songs,
-                                                )
-                                            }",
-                                            playlistType = PlaylistType.RADIO,
-                                            continuation = null,
-                                        ),
+                                }
+                                state.data.popularSongs.forEach { song ->
+                                    SongFullWidthItems(
+                                        track = song,
+                                        isPlaying = song.videoId == playingTrack,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        onMoreClickListener = {
+                                            choosingTrack = song
+                                            showBottomSheet = true
+                                        },
+                                        onClickListener = {
+                                            val firstQueue: Track = song
+                                            viewModel.setQueueData(
+                                                QueueData.Data(
+                                                    listTracks = arrayListOf(firstQueue),
+                                                    firstPlayedTrack = firstQueue,
+                                                    playlistId = "RDAMVM${song.videoId}",
+                                                    playlistName = "\"${state.data.title ?: ""}\" ${getStringBlocking(Res.string.popular)}",
+                                                    playlistType = PlaylistType.RADIO,
+                                                    continuation = null,
+                                                ),
+                                            )
+                                            viewModel.loadMediaItem(
+                                                firstQueue,
+                                                type = Config.SONG_CLICK,
+                                            )
+                                        },
+                                        onAddToQueue = {
+                                            sharedViewModel.addListToQueue(
+                                                arrayListOf(song),
+                                            )
+                                        },
                                     )
-                                    viewModel.loadMediaItem(
-                                        firstQueue,
-                                        type = Config.SONG_CLICK,
-                                    )
-                                },
-                                onLongClick = {
-                                    choosingTrack = it
-                                    showBottomSheet = true
-                                },
-                                playingTrack = playingTrack,
-                            )
+                                }
+                            }
                         }
 
                         // Singles
