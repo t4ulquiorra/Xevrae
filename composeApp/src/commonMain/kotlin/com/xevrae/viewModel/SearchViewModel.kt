@@ -106,12 +106,6 @@ class SearchViewModel(
     private val _moodAndGenres: MutableStateFlow<Mood?> = MutableStateFlow(null)
     val moodAndGenres: StateFlow<Mood?> get() = _moodAndGenres.asStateFlow()
 
-    /** Cover art per category params, filled in as tiles scroll into view. */
-    private val _moodArtwork: MutableStateFlow<Map<String, String>> = MutableStateFlow(emptyMap())
-    val moodArtwork: StateFlow<Map<String, String>> get() = _moodArtwork.asStateFlow()
-
-    private val requestedArtwork = mutableSetOf<String>()
-
     var regionCode: String? = null
     var language: String? = null
 
@@ -133,22 +127,6 @@ class SearchViewModel(
             homeRepository.getMoodAndMomentsData().collect { resource ->
                 if (resource is Resource.Success) {
                     _moodAndGenres.value = resource.data
-                }
-            }
-        }
-    }
-
-    /**
-     * Resolve the cover for one category. Called from the tile itself, so only categories the user
-     * actually scrolls to cost a request — [requestedArtwork] keeps a tile scrolling in and out of
-     * view from firing it again.
-     */
-    fun loadMoodArtwork(params: String) {
-        if (!requestedArtwork.add(params)) return
-        viewModelScope.launch {
-            homeRepository.getMoodCategoryArtwork(params).collect { url ->
-                if (url != null) {
-                    _moodArtwork.update { it + (params to url) }
                 }
             }
         }

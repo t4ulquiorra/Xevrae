@@ -39,7 +39,7 @@ import xevrae.composeapp.generated.resources.monochrome
 @Composable
 fun MoodCategoryCard(
     title: String,
-    artworkUrl: String?,
+    artworkUrl: String? = null,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

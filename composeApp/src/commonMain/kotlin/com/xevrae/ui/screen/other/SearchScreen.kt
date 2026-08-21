@@ -137,8 +137,10 @@ import xevrae.composeapp.generated.resources.baseline_search_24
 import xevrae.composeapp.generated.resources.clear_search_history
 import xevrae.composeapp.generated.resources.error_occurred
 import xevrae.composeapp.generated.resources.everything_you_need
+import xevrae.composeapp.generated.resources.genre
 import xevrae.composeapp.generated.resources.holder
 import xevrae.composeapp.generated.resources.in_search
+import xevrae.composeapp.generated.resources.moods_amp_moment
 import xevrae.composeapp.generated.resources.no_results_found
 import xevrae.composeapp.generated.resources.playlists
 import xevrae.composeapp.generated.resources.podcasts
@@ -162,7 +164,6 @@ fun SearchScreen(
     val uiState by searchViewModel.searchScreenUIState.collectAsStateWithLifecycle()
     val searchHistory by searchViewModel.searchHistory.collectAsStateWithLifecycle()
     val moodAndGenres by searchViewModel.moodAndGenres.collectAsStateWithLifecycle()
-    val moodArtwork by searchViewModel.moodArtwork.collectAsStateWithLifecycle()
 
     var searchUIType by rememberSaveable { mutableStateOf(SearchUIType.EMPTY) }
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -612,25 +613,37 @@ fun SearchScreen(
                                         }
                                     }
                                 }
-                                mood.sections.forEachIndexed { index, section ->
-                                    if (index > 0) {
-                                        item(span = { GridItemSpan(maxLineSpan) }) {
-                                            Text(
-                                                text = section.title,
-                                                style = typo().titleMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.onBackground,
-                                                modifier = Modifier.padding(top = 8.dp),
-                                            )
-                                        }
+                                if (mood.moodsMoments.isNotEmpty()) {
+                                    item(span = { GridItemSpan(maxLineSpan) }) {
+                                        Text(
+                                            text = stringResource(Res.string.moods_amp_moment),
+                                            style = typo().titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            modifier = Modifier.padding(top = 8.dp),
+                                        )
                                     }
-                                    items(section.items, key = { "${section.title}/${it.params}" }) { item ->
-                                        LaunchedEffect(item.params) {
-                                            searchViewModel.loadMoodArtwork(item.params)
-                                        }
+                                    items(mood.moodsMoments, key = { "mood/${it.params}" }) { item ->
                                         MoodCategoryCard(
                                             title = item.title,
-                                            artworkUrl = moodArtwork[item.params],
+                                        ) {
+                                            navController.navigate(MoodDestination(item.params))
+                                        }
+                                    }
+                                }
+                                if (mood.genres.isNotEmpty()) {
+                                    item(span = { GridItemSpan(maxLineSpan) }) {
+                                        Text(
+                                            text = stringResource(Res.string.genre),
+                                            style = typo().titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            modifier = Modifier.padding(top = 8.dp),
+                                        )
+                                    }
+                                    items(mood.genres, key = { "genre/${it.params}" }) { item ->
+                                        MoodCategoryCard(
+                                            title = item.title,
                                         ) {
                                             navController.navigate(MoodDestination(item.params))
                                         }
