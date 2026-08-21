@@ -13,18 +13,26 @@ import androidx.compose.foundation.clickable
 import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -73,9 +81,11 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.xevrae.Platform
 import com.xevrae.common.Config
 import com.xevrae.domain.data.entities.SongEntity
 import com.xevrae.domain.data.model.browse.album.Track
+import com.xevrae.domain.data.model.intent.GenericIntent
 import com.xevrae.domain.data.model.searchResult.albums.AlbumsResult
 import com.xevrae.domain.data.model.searchResult.artists.ArtistsResult
 import com.xevrae.domain.data.model.searchResult.playlists.PlaylistsResult
@@ -87,15 +97,21 @@ import com.xevrae.domain.mediaservice.handler.QueueData
 import com.xevrae.domain.utils.connectArtists
 import com.xevrae.domain.utils.toSongEntity
 import com.xevrae.domain.utils.toTrack
+import com.xevrae.extension.getScreenSizeInfo
 import com.xevrae.extension.getStringBlocking
+import com.xevrae.extension.toAppDeepLinkOrNull
+import com.xevrae.getPlatform
 import com.xevrae.ui.component.ArtistFullWidthItems
+import com.xevrae.ui.component.CenterLoadingBox
 import com.xevrae.ui.component.Chip
 import com.xevrae.ui.component.EndOfPage
+import com.xevrae.ui.component.MoodCategoryCard
 import com.xevrae.ui.component.NowPlayingBottomSheet
 import com.xevrae.ui.component.PlaylistFullWidthItems
 import com.xevrae.ui.component.ShimmerSearchItem
-import com.xevrae.ui.component.XevraeChartButton
 import com.xevrae.ui.component.SongFullWidthItems
+import com.xevrae.ui.component.XevraeChartButton
+import com.xevrae.ui.navigation.destination.home.MoodDestination
 import com.xevrae.ui.navigation.destination.list.AlbumDestination
 import com.xevrae.ui.navigation.destination.list.ArtistDestination
 import com.xevrae.ui.navigation.destination.list.PlaylistDestination
@@ -145,6 +161,8 @@ fun SearchScreen(
     val searchScreenState by searchViewModel.searchScreenState.collectAsStateWithLifecycle()
     val uiState by searchViewModel.searchScreenUIState.collectAsStateWithLifecycle()
     val searchHistory by searchViewModel.searchHistory.collectAsStateWithLifecycle()
+    val moodAndGenres by searchViewModel.moodAndGenres.collectAsStateWithLifecycle()
+    val moodArtwork by searchViewModel.moodArtwork.collectAsStateWithLifecycle()
 
     var searchUIType by rememberSaveable { mutableStateOf(SearchUIType.EMPTY) }
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -154,6 +172,11 @@ fun SearchScreen(
     val focusRequester = remember { FocusRequester() }
 
     var isFocused by rememberSaveable { mutableStateOf(false) }
+
+    val screenInfo = getScreenSizeInfo()
+    val isMobilePortrait = getPlatform() == Platform.Android && screenInfo.wDP < screenInfo.hDP
+    val moodGridColumns = if (isMobilePortrait) 2 else 4
+    val moodGridState = rememberLazyGridState()
 
     val searchForString = stringResource(Res.string.search_for)
     val songString = stringResource(Res.string.song).lowercase()
@@ -259,7 +282,11 @@ fun SearchScreen(
                         searchText = newText
                     },
                     onSearch = { query ->
-                        if (query.isNotEmpty()) {
+                        val deepLink = query.toAppDeepLinkOrNull()
+                        if (deepLink != null) {
+                            focusManager.clearFocus()
+                            sharedViewModel.setIntent(GenericIntent(data = deepLink))
+                        } else if (query.isNotEmpty()) {
                             isSearchSubmitted = true
                             focusManager.clearFocus()
                             searchViewModel.insertSearchHistory(query)
@@ -537,30 +564,82 @@ fun SearchScreen(
                 }
 
                 SearchUIType.EMPTY -> {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                    ) {
-                        // Default empty state
-                        Column(
-                            modifier = Modifier.align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally,
+                    val mood = moodAndGenres
+                    if (mood == null) {
+                        CenterLoadingBox(Modifier.fillMaxSize())
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.TopCenter,
                         ) {
-                            Text(
-                                text = stringResource(Res.string.everything_you_need),
-                                style = typo().titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Text(
-                                text = stringResource(Res.string.search_for_songs_artists_albums_playlists_and_more),
-                                style = typo().bodyMedium,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth(),
-                            )
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(moodGridColumns),
+                                modifier =
+                                    Modifier
+                                        .fillMaxHeight()
+                                        .widthIn(max = 1100.dp)
+                                        .padding(horizontal = 16.dp),
+                                state = moodGridState,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    Column(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 20.dp, bottom = 20.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                    ) {
+                                        Text(
+                                            text = stringResource(Res.string.everything_you_need),
+                                            style = typo().titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth(),
+                                        )
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                        Text(
+                                            text = stringResource(Res.string.search_for_songs_artists_albums_playlists_and_more),
+                                            style = typo().bodyMedium,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.fillMaxWidth(),
+                                        )
+                                        XevraeChartButton(
+                                            modifier = Modifier.padding(top = 10.dp),
+                                        ) {
+                                            uriHandler.openUri("https://xevrae.org")
+                                        }
+                                    }
+                                }
+                                mood.sections.forEachIndexed { index, section ->
+                                    if (index > 0) {
+                                        item(span = { GridItemSpan(maxLineSpan) }) {
+                                            Text(
+                                                text = section.title,
+                                                style = typo().titleMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                                modifier = Modifier.padding(top = 8.dp),
+                                            )
+                                        }
+                                    }
+                                    items(section.items, key = { "${section.title}/${it.params}" }) { item ->
+                                        LaunchedEffect(item.params) {
+                                            searchViewModel.loadMoodArtwork(item.params)
+                                        }
+                                        MoodCategoryCard(
+                                            title = item.title,
+                                            artworkUrl = moodArtwork[item.params],
+                                        ) {
+                                            navController.navigate(MoodDestination(item.params))
+                                        }
+                                    }
+                                }
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    EndOfPage()
+                                }
+                            }
                         }
                     }
                 }
