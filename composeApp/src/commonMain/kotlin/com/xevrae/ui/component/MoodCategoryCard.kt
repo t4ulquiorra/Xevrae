@@ -42,11 +42,12 @@ fun MoodCategoryCard(
             modifier
                 .fillMaxWidth()
                 .aspectRatio(2f)
+                .pressClickable(onClick = onClick)
                 .clip(RoundedCornerShape(10.dp))
                 .angledGradientBackground(
                     colors = playlistTitleGradient(title),
                     degrees = 45f,
-                ).pressClickable(onClick = onClick),
+                ),
     ) {
         if (artworkUrl != null) {
             AsyncImage(
