@@ -991,7 +991,7 @@ fun ChartData(
         } else {
             1f
         }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
 
     val lazyListState2 = rememberLazyGridState()
     val snapperFlingBehavior2 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState2))

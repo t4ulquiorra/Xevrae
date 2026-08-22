@@ -147,7 +147,7 @@ fun HomeItem(
         } else {
             1f
         }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
 
     val channelId = data.channelId
     Column(
@@ -1350,7 +1350,7 @@ fun MoodAndGenresContentItem(
         } else {
             1f
         }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(80.dp)
+    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
 
     Column(
         modifier =

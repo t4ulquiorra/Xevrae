@@ -137,7 +137,7 @@ fun ArtistScreen(
         } else {
             1f
         }
-    val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(80.dp)
+    val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(120.dp)
 
     LaunchedEffect(channelId) {
         if (channelId != artistScreenState.data.channelId) {

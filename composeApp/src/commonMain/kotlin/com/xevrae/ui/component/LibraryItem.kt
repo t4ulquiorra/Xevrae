@@ -102,8 +102,8 @@ fun LibraryItem(
         } else {
             1f
         }
-    val dynamicThumbSize = (125.dp * scaleRatio).coerceAtLeast(70.dp)
-    val dynamicCanvasWidth = (170.dp * scaleRatio).coerceAtLeast(95.dp)
+    val dynamicThumbSize = (125.dp * scaleRatio).coerceAtLeast(100.dp)
+    val dynamicCanvasWidth = (170.dp * scaleRatio).coerceAtLeast(130.dp)
 
     val title =
         when (state.type) {
