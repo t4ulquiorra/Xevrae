@@ -182,6 +182,24 @@ fun ArtistBrowse.toArtistScreenData(): ArtistScreenData =
         featuredOn = this.featuredOn ?: emptyList(),
     )
 
+/**
+ * Clamp a YouTube image URL's `w`/`h` size spec to the smaller dimension so it's square
+ * (`...=w2880-h1200-...` -> `...=w1200-h1200-...`). Only the size spec after the last `=` is
+ * touched. Returns the url unchanged when it has no `w`/`h` spec or is already square.
+ */
+fun String.toSquareThumbnailUrl(): String {
+    val eq = lastIndexOf('=')
+    if (eq < 0 || eq == lastIndex) return this
+    val base = substring(0, eq + 1)
+    val spec = substring(eq + 1)
+    val width = Regex("(?:^|-)w(\\d+)").find(spec)?.groupValues?.get(1)?.toIntOrNull()
+    val height = Regex("(?:^|-)h(\\d+)").find(spec)?.groupValues?.get(1)?.toIntOrNull()
+    if (width == null || height == null || width == height) return this
+    val min = minOf(width, height)
+    return base +
+        spec.replace(Regex("(^|-)([wh])\\d+")) { m -> "${m.groupValues[1]}${m.groupValues[2]}$min" }
+}
+
 fun isValidProxyHost(host: String): Boolean {
     // Regular expression to validate proxy host (without port)
     val proxyHostRegex =
