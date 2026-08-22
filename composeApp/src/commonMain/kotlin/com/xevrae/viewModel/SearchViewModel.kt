@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.xevrae.common.SELECTED_LANGUAGE
 import com.xevrae.domain.data.entities.SearchHistory
 import com.xevrae.domain.data.model.mood.Mood
-import com.xevrae.domain.data.model.mood.Mood
 import com.xevrae.domain.data.model.searchResult.albums.AlbumsResult
 import com.xevrae.domain.data.model.searchResult.artists.ArtistsResult
 import com.xevrae.domain.data.model.searchResult.playlists.PlaylistsResult
