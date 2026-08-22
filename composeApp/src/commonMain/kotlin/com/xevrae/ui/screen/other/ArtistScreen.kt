@@ -78,6 +78,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.kmpalette.rememberPaletteState
 import com.xevrae.Platform
 import com.xevrae.common.Config
