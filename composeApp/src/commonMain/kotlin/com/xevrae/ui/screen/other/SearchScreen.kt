@@ -527,30 +527,19 @@ fun SearchScreen(
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
-                                if (mood.moodsMoments.isNotEmpty()) {
-                                    items(mood.moodsMoments, key = { "mood/${it.params}" }) { item ->
-                                        LaunchedEffect(item.params) {
-                                            searchViewModel.loadMoodArtwork(item.params)
-                                        }
-                                        MoodCategoryCard(
-                                            title = item.title,
-                                            artworkUrl = moodArtwork[item.params],
-                                        ) {
-                                            navController.navigate(MoodDestination(item.params))
+                                mood.sections.forEachIndexed { index, section ->
+                                    if (index > 0) {
+                                        item(span = { GridItemSpan(maxLineSpan) }) {
+                                            Text(
+                                                text = section.title,
+                                                style = typo().titleMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                                modifier = Modifier.padding(top = 8.dp),
+                                            )
                                         }
                                     }
-                                }
-                                if (mood.genres.isNotEmpty()) {
-                                    item(span = { GridItemSpan(maxLineSpan) }) {
-                                        Text(
-                                            text = stringResource(Res.string.genre),
-                                            style = typo().titleMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onBackground,
-                                            modifier = Modifier.padding(top = 8.dp),
-                                        )
-                                    }
-                                    items(mood.genres, key = { "genre/${it.params}" }) { item ->
+                                    items(section.items, key = { "${section.title}/${it.params}" }) { item ->
                                         LaunchedEffect(item.params) {
                                             searchViewModel.loadMoodArtwork(item.params)
                                         }
