@@ -144,12 +144,18 @@ class SearchViewModel(
      * keeps a tile scrolling in and out of view from firing it again.
      */
     fun loadMoodArtwork(params: String) {
-        if (!requestedArtwork.add(params)) return
+        if (_moodArtwork.value.containsKey(params) || !requestedArtwork.add(params)) return
         viewModelScope.launch {
-            homeRepository.getMoodCategoryArtwork(params).collect { url ->
-                if (url != null) {
-                    _moodArtwork.update { it + (params to url) }
+            try {
+                homeRepository.getMoodCategoryArtwork(params).collect { url ->
+                    if (url != null) {
+                        _moodArtwork.update { it + (params to url) }
+                    } else {
+                        requestedArtwork.remove(params)
+                    }
                 }
+            } catch (e: Exception) {
+                requestedArtwork.remove(params)
             }
         }
     }
