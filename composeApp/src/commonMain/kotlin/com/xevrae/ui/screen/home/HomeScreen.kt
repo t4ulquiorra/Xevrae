@@ -20,6 +20,7 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -269,7 +270,7 @@ fun HomeScreen(
         mutableStateOf(false)
     }
 
-    var topAppBarHeightPx by rememberSaveable {
+    var maxTopAppBarHeightPx by rememberSaveable {
         mutableIntStateOf(0)
     }
 
@@ -461,8 +462,8 @@ fun HomeScreen(
                     ) {
                         itemsIndexed(
                             homeData.filter { it.contents.isNotEmpty() && !it.title.equals("Shows for you", ignoreCase = true) },
-                            key = { _, item ->
-                                item.hashCode().toString() + (mainHomeThumbnail ?: "nothumb")
+                            key = { index, item ->
+                                "${item.title}_${item.subtitle ?: ""}_$index"
                             },
                         ) { index, item ->
                             Box {
@@ -497,11 +498,11 @@ fun HomeScreen(
                                     modifier =
                                         Modifier
                                             .padding(start = 0.dp),
-                                ) {
+                                 ) {
                                     if (index == 0) {
                                         Spacer(
                                             Modifier.height(
-                                                with(LocalDensity.current) { topAppBarHeightPx.toDp() },
+                                                with(LocalDensity.current) { maxTopAppBarHeightPx.toDp() },
                                             ),
                                         )
                                     }
@@ -657,7 +658,7 @@ fun HomeScreen(
                         Spacer(
                             Modifier.height(
                                 with(LocalDensity.current) {
-                                    topAppBarHeightPx.toDp()
+                                    maxTopAppBarHeightPx.toDp()
                                 },
                             ),
                         )
@@ -686,7 +687,9 @@ fun HomeScreen(
                                     }
                             },
                         ).onGloballyPositioned { coordinates ->
-                            topAppBarHeightPx = coordinates.size.height
+                            if (coordinates.size.height > maxTopAppBarHeightPx) {
+                                maxTopAppBarHeightPx = coordinates.size.height
+                            }
                         },
             ) {
                 AnimatedVisibility(
@@ -891,64 +894,57 @@ fun QuickPicks(
 ) {
     val lazyListState = rememberLazyGridState()
     val snapperFlingBehavior = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState, snapPosition = SnapPosition.Start))
-    val density = LocalDensity.current
-    var widthDp by remember {
-        mutableStateOf(0.dp)
-    }
-    Column(
-        Modifier
-            .padding(vertical = 8.dp)
-            .onGloballyPositioned { coordinates ->
-                with(density) {
-                    widthDp = (coordinates.size.width).toDp()
-                }
-            },
-    ) {
-        Text(
-            text = stringResource(Res.string.let_s_start_with_a_radio),
-            style = typo().bodySmall,
-            modifier = Modifier.padding(start = 16.dp),
-        )
-        Text(
-            text = stringResource(Res.string.quick_picks),
-            style = typo().headlineMedium,
-            color = Color.White,
-            maxLines = 1,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
-        )
-        LazyHorizontalGrid(
-            rows = GridCells.Fixed(4),
-            modifier = Modifier.height(256.dp),
-            state = lazyListState,
-            flingBehavior = snapperFlingBehavior,
-            contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val widthDp = maxWidth
+        Column(
+            Modifier.padding(vertical = 8.dp),
         ) {
-            items(homeItem.contents, key = { it.hashCode() }) {
-                if (it != null) {
-                    QuickPicksItem(
-                        onClick = {
-                            val firstQueue: Track = it.toTrack()
-                            viewModel.setQueueData(
-                                QueueData.Data(
-                                    listTracks = arrayListOf(firstQueue),
-                                    firstPlayedTrack = firstQueue,
-                                    playlistId = "RDAMVM${it.videoId}",
-                                    playlistName = "\"${it.title}\" Radio",
-                                    playlistType = PlaylistType.RADIO,
-                                    continuation = null,
-                                ),
-                            )
-                            viewModel.loadMediaItem(
-                                firstQueue,
-                                type = Config.SONG_CLICK,
-                            )
-                        },
-                        data = it,
-                        widthDp = widthDp,
-                    )
+            Text(
+                text = stringResource(Res.string.let_s_start_with_a_radio),
+                style = typo().bodySmall,
+                modifier = Modifier.padding(start = 16.dp),
+            )
+            Text(
+                text = stringResource(Res.string.quick_picks),
+                style = typo().headlineMedium,
+                color = Color.White,
+                maxLines = 1,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 5.dp, bottom = 5.dp),
+            )
+            LazyHorizontalGrid(
+                rows = GridCells.Fixed(4),
+                modifier = Modifier.height(256.dp),
+                state = lazyListState,
+                flingBehavior = snapperFlingBehavior,
+                contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
+            ) {
+                items(homeItem.contents, key = { it.hashCode() }) {
+                    if (it != null) {
+                        QuickPicksItem(
+                            onClick = {
+                                val firstQueue: Track = it.toTrack()
+                                viewModel.setQueueData(
+                                    QueueData.Data(
+                                        listTracks = arrayListOf(firstQueue),
+                                        firstPlayedTrack = firstQueue,
+                                        playlistId = "RDAMVM${it.videoId}",
+                                        playlistName = "\"${it.title}\" Radio",
+                                        playlistType = PlaylistType.RADIO,
+                                        continuation = null,
+                                    ),
+                                )
+                                viewModel.loadMediaItem(
+                                    firstQueue,
+                                    type = Config.SONG_CLICK,
+                                )
+                            },
+                            data = it,
+                            widthDp = widthDp,
+                        )
+                    }
                 }
             }
         }
@@ -980,32 +976,58 @@ fun ChartData(
     chart: Chart,
     navController: NavController,
 ) {
-    var gridWidthDp by remember {
-        mutableStateOf(0.dp)
-    }
-    val density = LocalDensity.current
-    val screenInfo = getScreenSizeInfo()
-    val scaleRatio =
-        if (screenInfo.wDP > 0 && gridWidthDp > 0.dp) {
-            (gridWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
-        } else {
-            1f
-        }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
-
-    val lazyListState2 = rememberLazyGridState()
-    val snapperFlingBehavior2 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState2))
-
-    Column(
-        Modifier.onGloballyPositioned { coordinates ->
-            with(density) {
-                gridWidthDp = (coordinates.size.width).toDp()
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val screenInfo = getScreenSizeInfo()
+        val scaleRatio =
+            if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+            } else {
+                1f
             }
-        },
-    ) {
-        chart.listChartItem.forEach { item ->
+        val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
+
+        val lazyListState2 = rememberLazyGridState()
+        val snapperFlingBehavior2 = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyGridState = lazyListState2))
+
+        Column {
+            chart.listChartItem.forEach { item ->
+                Text(
+                    text = item.title,
+                    style = typo().headlineMedium,
+                    color = white,
+                    maxLines = 1,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, top = 10.dp, bottom = 10.dp),
+                )
+                val lazyListState = rememberLazyListState()
+                val snapperFlingBehavior = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyListState = lazyListState))
+                LazyRow(
+                    flingBehavior = snapperFlingBehavior,
+                    contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
+                ) {
+                    items(item.playlists.size, key = { index ->
+                        val data = item.playlists[index]
+                        data.id + data.title + index
+                    }) {
+                        HomeItemContentPlaylist(
+                            onClick = {
+                                navController.navigate(
+                                    PlaylistDestination(
+                                        playlistId = item.playlists[it].id,
+                                        isYourYouTubePlaylist = false,
+                                    ),
+                                )
+                            },
+                            data = item.playlists[it],
+                            thumbSize = dynamicThumbSize,
+                        )
+                    }
+                }
+            }
             Text(
-                text = item.title,
+                text = stringResource(Res.string.top_artists),
                 style = typo().headlineMedium,
                 color = white,
                 maxLines = 1,
@@ -1014,64 +1036,30 @@ fun ChartData(
                         .fillMaxWidth()
                         .padding(start = 16.dp, top = 10.dp, bottom = 10.dp),
             )
-            val lazyListState = rememberLazyListState()
-            val snapperFlingBehavior = rememberSnapFlingBehavior(SnapLayoutInfoProvider(lazyListState = lazyListState))
-            LazyRow(
-                flingBehavior = snapperFlingBehavior,
+            LazyHorizontalGrid(
+                rows = GridCells.Fixed(3),
+                modifier = Modifier.height(240.dp),
+                state = lazyListState2,
+                flingBehavior = snapperFlingBehavior2,
                 contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
             ) {
-                items(item.playlists.size, key = { index ->
-                    val data = item.playlists[index]
-                    data.id + data.title + index
+                items(chart.artists.itemArtists.size, key = { index ->
+                    val item = chart.artists.itemArtists[index]
+                    item.title + item.browseId + index
                 }) {
-                    HomeItemContentPlaylist(
+                    val data = chart.artists.itemArtists[it]
+                    ItemArtistChart(
                         onClick = {
                             navController.navigate(
-                                PlaylistDestination(
-                                    playlistId = item.playlists[it].id,
-                                    isYourYouTubePlaylist = false,
+                                ArtistDestination(
+                                    channelId = data.browseId,
                                 ),
                             )
                         },
-                        data = item.playlists[it],
-                        thumbSize = dynamicThumbSize,
+                        data = data,
+                        widthDp = maxWidth,
                     )
                 }
-            }
-        }
-        Text(
-            text = stringResource(Res.string.top_artists),
-            style = typo().headlineMedium,
-            color = white,
-            maxLines = 1,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 10.dp, bottom = 10.dp),
-        )
-        LazyHorizontalGrid(
-            rows = GridCells.Fixed(3),
-            modifier = Modifier.height(240.dp),
-            state = lazyListState2,
-            flingBehavior = snapperFlingBehavior2,
-            contentPadding = PaddingValues(start = 6.dp, end = 6.dp),
-        ) {
-            items(chart.artists.itemArtists.size, key = { index ->
-                val item = chart.artists.itemArtists[index]
-                item.title + item.browseId + index
-            }) {
-                val data = chart.artists.itemArtists[it]
-                ItemArtistChart(
-                    onClick = {
-                        navController.navigate(
-                            ArtistDestination(
-                                channelId = data.browseId,
-                            ),
-                        )
-                    },
-                    data = data,
-                    widthDp = gridWidthDp,
-                )
             }
         }
     }

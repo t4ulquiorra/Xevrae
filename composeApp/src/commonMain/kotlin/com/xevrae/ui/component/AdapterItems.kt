@@ -17,6 +17,7 @@ import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -138,27 +139,19 @@ fun HomeItem(
         )
     }
 
-    val screenInfo = getScreenSizeInfo()
-    var containerWidthDp by remember { mutableStateOf(0.dp) }
-    val density = LocalDensity.current
-    val scaleRatio =
-        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
-            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
-        } else {
-            1f
-        }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val screenInfo = getScreenSizeInfo()
+        val scaleRatio =
+            if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+            } else {
+                1f
+            }
+        val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
 
-    val channelId = data.channelId
-    Column(
-        modifier =
-            Modifier.onGloballyPositioned { coordinates ->
-                with(density) {
-                    containerWidthDp = coordinates.size.width.toDp()
-                }
-            },
-    ) {
-        Row(
+        val channelId = data.channelId
+        Column {
+            Row(
             modifier =
                 (if (channelId != null) {
                     Modifier
@@ -345,6 +338,7 @@ fun HomeItem(
             )
         }
     }
+}
 }
 
 @Composable
@@ -1341,107 +1335,100 @@ fun MoodAndGenresContentItem(
     navController: NavController,
     homeViewModel: HomeViewModel = koinViewModel(),
 ) {
-    val screenInfo = getScreenSizeInfo()
-    var containerWidthDp by remember { mutableStateOf(0.dp) }
-    val density = LocalDensity.current
-    val scaleRatio =
-        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
-            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
-        } else {
-            1f
-        }
-    val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val screenInfo = getScreenSizeInfo()
+        val scaleRatio =
+            if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+            } else {
+                1f
+            }
+        val dynamicThumbSize = (160.dp * scaleRatio).coerceAtLeast(120.dp)
 
-    Column(
-        modifier =
-            Modifier
-                .wrapContentHeight(align = Alignment.CenterVertically, unbounded = true)
-                .onGloballyPositioned { coordinates ->
-                    with(density) {
-                        containerWidthDp = coordinates.size.width.toDp()
-                    }
-                },
-    ) {
-        Text(
-            text =
-                when (data) {
-                    is ItemsPlaylist -> (data).header
-                    is Item -> (data).header
-                    else -> ""
-                },
-            style = typo().titleMedium,
-            color = Color.White,
-            modifier =
-                Modifier
-                    .padding(top = 8.dp)
-                    .padding(
-                        horizontal = 15.dp,
-                    ).fillMaxWidth(),
-        )
-        LazyRow(
-            modifier =
-                Modifier.padding(
-                    10.dp,
-                ),
+        Column(
+            modifier = Modifier.wrapContentHeight(align = Alignment.CenterVertically, unbounded = true),
         ) {
-            val itemList =
-                when (data) {
-                    is ItemsPlaylist -> (data).contents
-                    is Item -> (data).contents
-                    else -> listOf()
-                }
-            items(itemList) { item ->
-                HomeItemContentPlaylist(
-                    onClick = {
-                        // The "Songs" shelf mixes tracks into a list that is otherwise all playlists,
-                        // so route by videoId: a track starts its radio, everything else opens a page.
-                        val moodSong = item as? com.xevrae.domain.data.model.mood.moodmoments.Content
-                        val songVideoId = moodSong?.videoId
-                        if (moodSong != null && songVideoId != null) {
-                            val track =
-                                Track(
-                                    album = null,
-                                    artists = listOf(Artist(id = null, name = moodSong.subtitle)),
-                                    duration = null,
-                                    durationSeconds = null,
-                                    isAvailable = true,
-                                    isExplicit = false,
-                                    likeStatus = null,
-                                    thumbnails = moodSong.thumbnails,
-                                    title = moodSong.title,
-                                    videoId = songVideoId,
-                                    videoType = null,
-                                    category = null,
-                                    feedbackTokens = null,
-                                    resultType = null,
-                                )
-                            homeViewModel.setQueueData(
-                                QueueData.Data(
-                                    listTracks = arrayListOf(track),
-                                    firstPlayedTrack = track,
-                                    playlistId = "RDAMVM$songVideoId",
-                                    playlistName = "\"${moodSong.title}\" Radio",
-                                    playlistType = PlaylistType.RADIO,
-                                    continuation = null,
-                                ),
-                            )
-                            homeViewModel.loadMediaItem(track, type = Config.SONG_CLICK)
-                        } else {
-                            navController.navigate(
-                                PlaylistDestination(
-                                    playlistId =
-                                        if (item is com.xevrae.domain.data.model.mood.genre.Content) {
-                                            item.playlistBrowseId
-                                        } else {
-                                            (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
-                                        },
-                                ),
-                            )
-                        }
+            Text(
+                text =
+                    when (data) {
+                        is ItemsPlaylist -> (data).header
+                        is Item -> (data).header
+                        else -> ""
                     },
-                    data = item,
-                    thumbSize = dynamicThumbSize,
-                )
+                style = typo().titleMedium,
+                color = Color.White,
+                modifier =
+                    Modifier
+                        .padding(top = 8.dp)
+                        .padding(
+                            horizontal = 15.dp,
+                        ).fillMaxWidth(),
+            )
+            LazyRow(
+                modifier =
+                    Modifier.padding(
+                        10.dp,
+                    ),
+            ) {
+                val itemList =
+                    when (data) {
+                        is ItemsPlaylist -> (data).contents
+                        is Item -> (data).contents
+                        else -> listOf()
+                    }
+                items(itemList) { item ->
+                    HomeItemContentPlaylist(
+                        onClick = {
+                            // The "Songs" shelf mixes tracks into a list that is otherwise all playlists,
+                            // so route by videoId: a track starts its radio, everything else opens a page.
+                            val moodSong = item as? com.xevrae.domain.data.model.mood.moodmoments.Content
+                            val songVideoId = moodSong?.videoId
+                            if (moodSong != null && songVideoId != null) {
+                                val track =
+                                    Track(
+                                        album = null,
+                                        artists = listOf(Artist(id = null, name = moodSong.subtitle)),
+                                        duration = null,
+                                        durationSeconds = null,
+                                        isAvailable = true,
+                                        isExplicit = false,
+                                        likeStatus = null,
+                                        thumbnails = moodSong.thumbnails,
+                                        title = moodSong.title,
+                                        videoId = songVideoId,
+                                        videoType = null,
+                                        category = null,
+                                        feedbackTokens = null,
+                                        resultType = null,
+                                    )
+                                homeViewModel.setQueueData(
+                                    QueueData.Data(
+                                        listTracks = arrayListOf(track),
+                                        firstPlayedTrack = track,
+                                        playlistId = "RDAMVM$songVideoId",
+                                        playlistName = "\"${moodSong.title}\" Radio",
+                                        playlistType = PlaylistType.RADIO,
+                                        continuation = null,
+                                    ),
+                                )
+                                homeViewModel.loadMediaItem(track, type = Config.SONG_CLICK)
+                            } else {
+                                navController.navigate(
+                                    PlaylistDestination(
+                                        playlistId =
+                                            if (item is com.xevrae.domain.data.model.mood.genre.Content) {
+                                                item.playlistBrowseId
+                                            } else {
+                                                (item as com.xevrae.domain.data.model.mood.moodmoments.Content).playlistBrowseId
+                                            },
+                                    ),
+                                )
+                            }
+                        },
+                        data = item,
+                        thumbSize = dynamicThumbSize,
+                    )
+                }
             }
         }
     }
