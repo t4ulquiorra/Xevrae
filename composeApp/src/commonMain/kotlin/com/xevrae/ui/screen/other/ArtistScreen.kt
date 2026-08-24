@@ -490,10 +490,9 @@ fun ArtistScreen(
                         // Content shelves
                         item(contentType = "sections") {
                             BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                                val width = maxWidth
                                 val scaleRatio =
-                                    if (width > 0.dp) {
-                                        (width / 400.dp).coerceIn(0.7f, 1.2f)
+                                    if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                                        (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
                                     } else {
                                         1f
                                     }

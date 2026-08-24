@@ -8,6 +8,7 @@ import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import com.xevrae.extension.getScreenSizeInfo
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -115,133 +117,144 @@ internal inline fun <reified T> GridLibraryPlaylist(
         Crossfade(targetState = data) { data ->
             val list = (data as? LocalResource.Success)?.data ?: emptyList()
             if ((data is LocalResource.Success && list.isNotEmpty()) || createNewPlaylist != null) {
-                LazyVerticalGrid(
-                    columns = GridCells.FixedSize(size = 132.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    contentPadding = contentPadding,
-                    state = state,
-                ) {
-                    if (createNewPlaylist != null) {
-                        item {
-                            Box(
-                                modifier =
-                                    Modifier.pressClickable {
-                                        createNewPlaylist()
-                                    },
-                            ) {
-                                Column(
+                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                    val screenInfo = getScreenSizeInfo()
+                    val scaleRatio =
+                        if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                            (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+                        } else {
+                            1f
+                        }
+                    val dynamicThumbSize = (132.dp * scaleRatio).coerceAtLeast(120.dp)
+
+                    LazyVerticalGrid(
+                        columns = GridCells.FixedSize(size = dynamicThumbSize),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        contentPadding = contentPadding,
+                        state = state,
+                    ) {
+                        if (createNewPlaylist != null) {
+                            item {
+                                Box(
                                     modifier =
-                                        Modifier
-                                            .padding(10.dp),
+                                        Modifier.pressClickable {
+                                            createNewPlaylist()
+                                        },
                                 ) {
-                                    Box(
-                                        Modifier
-                                            .size(132.dp)
-                                            .aspectRatio(1f)
-                                            .clip(RoundedCornerShape(10.dp))
-                                            .angledGradientBackground(
-                                                colors =
-                                                    listOf(
-                                                        seed,
-                                                        white.copy(alpha = 0.8f),
-                                                    ),
-                                                degrees = 45f,
-                                            ),
-                                        Alignment.Center,
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.size(84.dp),
-                                            imageVector = Icons.Rounded.Add,
-                                            tint = white,
-                                            contentDescription = null,
-                                        )
-                                    }
-                                    Text(
-                                        text = stringResource(Res.string.create),
-                                        style = typo().titleSmall,
-                                        color = Color.White,
-                                        maxLines = 1,
+                                    Column(
                                         modifier =
                                             Modifier
-                                                .width(132.dp)
-                                                .wrapContentHeight(align = Alignment.CenterVertically)
-                                                .padding(top = 8.dp)
-                                                .basicMarquee(
-                                                    iterations = Int.MAX_VALUE,
-                                                    animationMode = MarqueeAnimationMode.Immediately,
-                                                ).focusable(),
-                                    )
+                                                .padding(10.dp),
+                                    ) {
+                                        Box(
+                                            Modifier
+                                                .size(dynamicThumbSize)
+                                                .aspectRatio(1f)
+                                                .clip(RoundedCornerShape(10.dp))
+                                                .angledGradientBackground(
+                                                    colors =
+                                                        listOf(
+                                                            seed,
+                                                            white.copy(alpha = 0.8f),
+                                                        ),
+                                                    degrees = 45f,
+                                                ),
+                                            Alignment.Center,
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.size(84.dp),
+                                                imageVector = Icons.Rounded.Add,
+                                                tint = white,
+                                                contentDescription = null,
+                                            )
+                                        }
+                                        Text(
+                                            text = stringResource(Res.string.create),
+                                            style = typo().titleSmall,
+                                            color = Color.White,
+                                            maxLines = 1,
+                                            modifier =
+                                                Modifier
+                                                    .width(dynamicThumbSize)
+                                                    .wrapContentHeight(align = Alignment.CenterVertically)
+                                                    .padding(top = 8.dp)
+                                                    .basicMarquee(
+                                                        iterations = Int.MAX_VALUE,
+                                                        animationMode = MarqueeAnimationMode.Immediately,
+                                                    ).focusable(),
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                    items(list) { item ->
-                        if (item !is PlaylistType) {
-                            return@items
+                        items(list) { item ->
+                            if (item !is PlaylistType) {
+                                return@items
+                            }
+                            HomeItemContentPlaylist(
+                                onClick = {
+                                    when (item) {
+                                        is ChartItem -> {
+                                            navController.navigate(
+                                                PlaylistDestination(
+                                                    playlistId = item.ytPlaylistId,
+                                                    isYourYouTubePlaylist = false,
+                                                ),
+                                            )
+                                        }
+
+                                        is LocalPlaylistEntity -> {
+                                            navController.navigate(
+                                                LocalPlaylistDestination(
+                                                    item.id,
+                                                ),
+                                            )
+                                        }
+
+                                        is PlaylistsResult -> {
+                                            navController.navigate(
+                                                PlaylistDestination(
+                                                    item.browseId,
+                                                    isYourYouTubePlaylist = true,
+                                                ),
+                                            )
+                                        }
+
+                                        is AlbumEntity -> {
+                                            navController.navigate(
+                                                AlbumDestination(
+                                                    item.browseId,
+                                                ),
+                                            )
+                                        }
+
+                                        is PlaylistEntity -> {
+                                            navController.navigate(
+                                                PlaylistDestination(
+                                                    item.id,
+                                                ),
+                                            )
+                                        }
+
+                                        is PodcastsEntity -> {
+                                            navController.navigate(
+                                                PodcastDestination(
+                                                    podcastId = item.podcastId,
+                                                ),
+                                            )
+                                        }
+                                    }
+                                },
+                                data = item,
+                                thumbSize = dynamicThumbSize,
+                            )
                         }
-                        HomeItemContentPlaylist(
-                            onClick = {
-                                when (item) {
-                                    is ChartItem -> {
-                                        navController.navigate(
-                                            PlaylistDestination(
-                                                playlistId = item.ytPlaylistId,
-                                                isYourYouTubePlaylist = false,
-                                            ),
-                                        )
-                                    }
-
-                                    is LocalPlaylistEntity -> {
-                                        navController.navigate(
-                                            LocalPlaylistDestination(
-                                                item.id,
-                                            ),
-                                        )
-                                    }
-
-                                    is PlaylistsResult -> {
-                                        navController.navigate(
-                                            PlaylistDestination(
-                                                item.browseId,
-                                                isYourYouTubePlaylist = true,
-                                            ),
-                                        )
-                                    }
-
-                                    is AlbumEntity -> {
-                                        navController.navigate(
-                                            AlbumDestination(
-                                                item.browseId,
-                                            ),
-                                        )
-                                    }
-
-                                    is PlaylistEntity -> {
-                                        navController.navigate(
-                                            PlaylistDestination(
-                                                item.id,
-                                            ),
-                                        )
-                                    }
-
-                                    is PodcastsEntity -> {
-                                        navController.navigate(
-                                            PodcastDestination(
-                                                podcastId = item.podcastId,
-                                            ),
-                                        )
-                                    }
-                                }
-                            },
-                            data = item,
-                            thumbSize = 132.dp,
-                        )
-                    }
 
 
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        EndOfPage()
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            EndOfPage()
+                        }
                     }
                 }
             } else if (data is LocalResource.Loading) {

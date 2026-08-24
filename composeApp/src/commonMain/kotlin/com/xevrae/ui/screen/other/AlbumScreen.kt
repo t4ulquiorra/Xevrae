@@ -449,46 +449,55 @@ fun AlbumScreen(
                                         val headerBackdrop = rememberBackdrop()
                                         val backBtnLayer = rememberGraphicsLayer()
                                         val rightGroupLayer = rememberGraphicsLayer()
-                                        Box(modifier = Modifier.fillMaxWidth()) {
-                                            Column(
-                                                modifier =
-                                                    Modifier
-                                                        .fillMaxWidth()
-                                                        .layerBackdrop(headerBackdrop)
-                                                        .windowInsetsPadding(WindowInsets.statusBars)
-                                                        .padding(horizontal = 32.dp, vertical = 16.dp),
-                                            ) {
-                                                // Reserves the strip the sibling glass buttons are drawn over.
-                                                Spacer(modifier = Modifier.height(48.dp))
-                                                Spacer(modifier = Modifier.height(16.dp))
-                                                Row(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                                                    verticalAlignment = Alignment.Top,
+                                        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                                            val scaleRatio =
+                                                if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                                                    (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+                                                } else {
+                                                    1f
+                                                }
+                                            val dynamicArtworkSize = (280.dp * scaleRatio).coerceAtLeast(120.dp)
+
+                                            Box(modifier = Modifier.fillMaxWidth()) {
+                                                Column(
+                                                    modifier =
+                                                        Modifier
+                                                            .fillMaxWidth()
+                                                            .layerBackdrop(headerBackdrop)
+                                                            .windowInsetsPadding(WindowInsets.statusBars)
+                                                            .padding(horizontal = 32.dp, vertical = 16.dp),
                                                 ) {
-                                                    AsyncImage(
-                                                        model =
-                                                            ImageRequest
-                                                                .Builder(LocalPlatformContext.current)
-                                                                .data(uiState.thumbnail)
-                                                                .diskCachePolicy(CachePolicy.ENABLED)
-                                                                .memoryCachePolicy(CachePolicy.ENABLED)
-                                                                .diskCacheKey(uiState.thumbnail)
-                                                                .memoryCacheKey(uiState.thumbnail)
-                                                                .crossfade(false)
-                                                                .build(),
-                                                        placeholder = painterResource(Res.drawable.holder),
-                                                        error = painterResource(Res.drawable.holder),
-                                                        contentDescription = null,
-                                                        contentScale = ContentScale.Crop,
-                                                        onSuccess = { res ->
-                                                            bitmap = res.result.image.toImageBitmap()
-                                                        },
-                                                        modifier =
-                                                            Modifier
-                                                                .size(280.dp)
-                                                                .clip(RoundedCornerShape(8.dp)),
-                                                    )
+                                                    // Reserves the strip the sibling glass buttons are drawn over.
+                                                    Spacer(modifier = Modifier.height(48.dp))
+                                                    Spacer(modifier = Modifier.height(16.dp))
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                                                        verticalAlignment = Alignment.Top,
+                                                    ) {
+                                                        AsyncImage(
+                                                            model =
+                                                                ImageRequest
+                                                                    .Builder(LocalPlatformContext.current)
+                                                                    .data(uiState.thumbnail)
+                                                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                                                    .diskCacheKey(uiState.thumbnail)
+                                                                    .memoryCacheKey(uiState.thumbnail)
+                                                                    .crossfade(false)
+                                                                    .build(),
+                                                            placeholder = painterResource(Res.drawable.holder),
+                                                            error = painterResource(Res.drawable.holder),
+                                                            contentDescription = null,
+                                                            contentScale = ContentScale.Crop,
+                                                            onSuccess = { res ->
+                                                                bitmap = res.result.image.toImageBitmap()
+                                                            },
+                                                            modifier =
+                                                                Modifier
+                                                                    .size(dynamicArtworkSize)
+                                                                    .clip(RoundedCornerShape(8.dp)),
+                                                        )
                                                     Column(
                                                         modifier = Modifier.weight(1f),
                                                     ) {
@@ -734,6 +743,7 @@ fun AlbumScreen(
                                             }
                                         }
                                     }
+                                    }
                                     Box(
                                         modifier =
                                             Modifier
@@ -957,10 +967,9 @@ fun AlbumScreen(
                     item(contentType = "other_version") {
                         AnimatedVisibility(uiState.otherVersion.isNotEmpty()) {
                             BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-                                val width = maxWidth
                                 val scaleRatio =
-                                    if (width > 0.dp) {
-                                        (width / 400.dp).coerceIn(0.7f, 1.2f)
+                                    if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                                        (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
                                     } else {
                                         1f
                                     }

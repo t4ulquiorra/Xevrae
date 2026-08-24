@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import com.xevrae.expect.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -95,15 +96,6 @@ fun LibraryItem(
     var songEntity by remember { mutableStateOf<SongEntity?>(null) }
     val density = LocalDensity.current
     val screenInfo = getScreenSizeInfo()
-    var containerWidthDp by remember { mutableStateOf(0.dp) }
-    val scaleRatio =
-        if (screenInfo.wDP > 0 && containerWidthDp > 0.dp) {
-            (containerWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
-        } else {
-            1f
-        }
-    val dynamicThumbSize = (125.dp * scaleRatio).coerceAtLeast(100.dp)
-    val dynamicCanvasWidth = (170.dp * scaleRatio).coerceAtLeast(130.dp)
 
     val title =
         when (state.type) {
@@ -119,7 +111,16 @@ fun LibraryItem(
             is LibraryItemType.CanvasSong -> stringResource(Res.string.most_played)
             else -> return
         }
-    Box {
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val scaleRatio =
+            if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
+                (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+            } else {
+                1f
+            }
+        val dynamicThumbSize = (125.dp * scaleRatio).coerceAtLeast(120.dp)
+        val dynamicCanvasWidth = (170.dp * scaleRatio).coerceAtLeast(130.dp)
+
         if (showBottomSheet) {
             NowPlayingBottomSheet(
                 onDismiss = {
@@ -127,20 +128,13 @@ fun LibraryItem(
                     songEntity = null
                 },
                 navController = navController,
-                song = songEntity ?: return,
+                song = songEntity ?: return@BoxWithConstraints,
                 onLibraryDelete = {
                     songEntity?.videoId?.let { viewModel.deleteSong(it) }
                 },
             )
         }
-        Column(
-            modifier =
-                Modifier.onGloballyPositioned { coordinates ->
-                    with(density) {
-                        containerWidthDp = coordinates.size.width.toDp()
-                    }
-                },
-        ) {
+        Column {
             Row(
                 modifier = Modifier.padding(top = 15.dp, start = 10.dp, end = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
