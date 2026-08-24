@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -209,15 +210,6 @@ fun ArtistScreen(
     LaunchedEffect(firstItemVisible) {
         shouldHideTopBar = !firstItemVisible
     }
-
-    var shelfWidthDp by remember { mutableStateOf(0.dp) }
-    val scaleRatio =
-        if (screenInfo.wDP > 0 && shelfWidthDp > 0.dp) {
-            (shelfWidthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
-        } else {
-            1f
-        }
-    val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(120.dp)
 
     Crossfade(artistScreenState) { state ->
         when (state) {
@@ -497,15 +489,18 @@ fun ArtistScreen(
 
                         // Content shelves
                         item(contentType = "sections") {
-                            Column(
-                                modifier =
-                                    Modifier.onGloballyPositioned { coordinates ->
-                                        with(density) {
-                                            shelfWidthDp = coordinates.size.width.toDp()
-                                        }
-                                    },
-                            ) {
-                                // Popular Songs
+                            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                                val width = maxWidth
+                                val scaleRatio =
+                                    if (width > 0.dp) {
+                                        (width / 400.dp).coerceIn(0.7f, 1.2f)
+                                    } else {
+                                        1f
+                                    }
+                                val dynamicThumbSize = (180.dp * scaleRatio).coerceAtLeast(120.dp)
+
+                                Column {
+                                    // Popular Songs
                                 AnimatedVisibility(state.data.popularSongs.isNotEmpty()) {
                                     Column {
                                         Row(
@@ -942,6 +937,7 @@ fun ArtistScreen(
                                 EndOfPage()
                             }
                         }
+                    }
                     }
 
                     // Floating Haze top bar when scrolled away
