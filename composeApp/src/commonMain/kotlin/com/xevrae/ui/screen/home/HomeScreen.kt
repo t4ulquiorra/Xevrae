@@ -977,10 +977,11 @@ fun ChartData(
     navController: NavController,
 ) {
     BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val widthDp = maxWidth
         val screenInfo = getScreenSizeInfo()
         val scaleRatio =
-            if (screenInfo.wDP > 0 && maxWidth > 0.dp) {
-                (maxWidth.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
+            if (screenInfo.wDP > 0 && widthDp > 0.dp) {
+                (widthDp.value / screenInfo.wDP).coerceIn(0.4f, 1.2f)
             } else {
                 1f
             }
@@ -1057,7 +1058,7 @@ fun ChartData(
                             )
                         },
                         data = data,
-                        widthDp = maxWidth,
+                        widthDp = widthDp,
                     )
                 }
             }
